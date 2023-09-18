@@ -3,7 +3,6 @@ package com.se.kltn.spamanagement.model;
 import lombok.*;
 
 import javax.persistence.Embeddable;
-import java.io.Serial;
 import java.io.Serializable;
 
 @Setter
@@ -13,7 +12,6 @@ import java.io.Serializable;
 @NoArgsConstructor
 @EqualsAndHashCode
 public class InvoiceDetailId implements Serializable {
-    @Serial
     private static final long serialVersionUID = 1L;
 
     private long invoiceId;
