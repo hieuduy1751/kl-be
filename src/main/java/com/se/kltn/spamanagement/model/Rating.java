@@ -23,15 +23,15 @@ public class Rating {
 
     private String comment;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "customer_id")
     private Customer customer;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "spa_service_id")
-    private Treatment treament;
+    @ManyToOne
+    @JoinColumn(name = "treatment_id")
+    private Treatment treatment;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "product_id")
     private Product product;
 }

@@ -13,7 +13,7 @@ import javax.persistence.*;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "invoiceDetails")
+@Table(name = "invoice_details")
 public class InvoiceDetail {
     @EmbeddedId
     private InvoiceDetailId invoiceDetailId;
@@ -28,9 +28,12 @@ public class InvoiceDetail {
     @JoinColumn(name = "product_id")
     private Product product;
 
+    @Column(name = "total_quantity")
     private Integer totalQuantity;
 
+    @Column(name = "total_price")
     private Double totalPrice;
 
+    @Enumerated(EnumType.STRING)
     private Status status;
 }

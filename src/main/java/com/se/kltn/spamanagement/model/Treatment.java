@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Setter
@@ -22,8 +23,7 @@ public class Treatment {
 
     private String description;
 
-    @OneToMany
-    @JoinColumn(name = "treatment_id")
-    private TreatmentDetail treatmentDetail;
+    @OneToMany(mappedBy = "treatment", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<TreatmentDetail> treatmentDetails;
 
 }

@@ -6,17 +6,17 @@ import javax.persistence.Embeddable;
 import java.io.Serial;
 import java.io.Serializable;
 
+@Embeddable
 @Setter
 @Getter
-@Embeddable
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode
-public class InvoiceDetailId implements Serializable {
+public class AppointmentDetailId implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
-    private long invoiceId;
+    private Long appointmentId;
 
-    private long productId;
+    private Long customerId;
 }

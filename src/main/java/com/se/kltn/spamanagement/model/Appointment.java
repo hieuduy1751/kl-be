@@ -1,5 +1,6 @@
 package com.se.kltn.spamanagement.model;
 
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,11 +15,13 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "invoices")
-public class Invoice {
+@Table(name = "appointments")
+public class Appointment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
+
+    private Date time;
 
     private String note;
 
@@ -29,10 +32,15 @@ public class Invoice {
     private Date updatedDate;
 
     @ManyToOne
-    @JoinColumn(name = "customer_id")
-    private Customer customer;
+    @JoinColumn(name = "employee_id")
+    private Employee employee;
 
-    @OneToMany(mappedBy = "invoice", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<InvoiceDetail> invoiceDetails;
+    @ManyToOne
+    @JoinColumn(name = "treatment_id")
+    private Treatment treatment;
+
+    @OneToMany(mappedBy = "appointment")
+    private List<AppointmentDetail> appointmentDetails;
+
 
 }
