@@ -1,6 +1,5 @@
 package com.se.kltn.spamanagement.model;
 
-import com.se.kltn.spamanagement.enums.Role;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,6 +7,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Setter
@@ -40,4 +40,7 @@ public class Employee {
     @OneToOne
     @JoinColumn(name = "account_id")
     private Account account;
+
+    @OneToMany(mappedBy = "employee", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Invoice> invoices;
 }

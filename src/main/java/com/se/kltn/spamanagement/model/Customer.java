@@ -1,6 +1,6 @@
 package com.se.kltn.spamanagement.model;
 
-import com.se.kltn.spamanagement.enums.CustomerClass;
+import com.se.kltn.spamanagement.model.enums.CustomerClass;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

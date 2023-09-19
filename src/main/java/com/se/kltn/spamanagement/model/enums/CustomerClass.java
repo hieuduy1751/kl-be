@@ -1,4 +1,4 @@
-package com.se.kltn.spamanagement.enums;
+package com.se.kltn.spamanagement.model.enums;
 
 public enum CustomerClass {
     OLD,
