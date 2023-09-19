@@ -1,6 +1,7 @@
 package com.se.kltn.spamanagement.service.impl;
 
 import com.se.kltn.spamanagement.dto.response.ProductResponse;
+import com.se.kltn.spamanagement.exception.ResourceNotFoundException;
 import com.se.kltn.spamanagement.model.Product;
 import com.se.kltn.spamanagement.repository.ProductRepository;
 import com.se.kltn.spamanagement.service.ProductService;
@@ -22,7 +23,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductResponse getProductById(Long id) {
         return this.productRepository.findById(id).orElseThrow(
-                () -> new Resoure
+                () -> new ResourceNotFoundException()
         );
     }
 
