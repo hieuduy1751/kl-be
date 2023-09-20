@@ -6,7 +6,6 @@ import java.util.Date;
 
 @Setter
 @Getter
-@NoArgsConstructor
 @AllArgsConstructor
 public class ErrorResponse {
     private Date timeStamp;

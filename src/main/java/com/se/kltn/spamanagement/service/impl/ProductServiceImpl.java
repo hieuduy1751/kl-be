@@ -5,10 +5,14 @@ import com.se.kltn.spamanagement.exception.ResourceNotFoundException;
 import com.se.kltn.spamanagement.model.Product;
 import com.se.kltn.spamanagement.repository.ProductRepository;
 import com.se.kltn.spamanagement.service.ProductService;
+import com.se.kltn.spamanagement.utils.MappingData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.awt.print.Pageable;
 import java.util.List;
+
+import static com.se.kltn.spamanagement.constants.ErrorMessage.PRODUCT_NOT_FOUND;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -22,23 +26,28 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductResponse getProductById(Long id) {
-        return this.productRepository.findById(id).orElseThrow(
-                () -> new ResourceNotFoundException()
-        );
+        Product product = this.productRepository.findById(id).orElseThrow(
+                () -> new ResourceNotFoundException(PRODUCT_NOT_FOUND));
+        return MappingData.mapObject(product, ProductResponse.class);
     }
 
     @Override
-    public List<ProductResponse> getProducts() {
-        return null;
+    public List<ProductResponse> getProducts(Pageable pageable) {
+        List<Product> products = this.productRepository.findAllBy(pageable).getContent();
+        return MappingData.mapListObject(products, ProductResponse.class);
     }
 
     @Override
-    public ProductResponse deleteProduct(Long id) {
-        return null;
+    public void deleteProduct(Long id) {
+        Product product = this.productRepository.findById(id).orElseThrow(
+                () -> new ResourceNotFoundException(PRODUCT_NOT_FOUND));
+        this.productRepository.delete(product);
     }
 
     @Override
     public ProductResponse updateProduct(Long id, Product product) {
+        Product productFounded = this.productRepository.findById(id).orElseThrow(
+                () -> new ResourceNotFoundException(PRODUCT_NOT_FOUND));
         return null;
     }
 }

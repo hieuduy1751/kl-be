@@ -21,7 +21,7 @@ public class MappingData {
         return modelMapper.map(source, destination);
     }
 
-    public static <D, S> List<D> mapListObject(List<D> sources, Class<D> destination) {
+    public static <D, S> List<S> mapListObject(List<D> sources, Class<S> destination) {
         return sources.stream().map(source -> mapObject(source, destination)).collect(Collectors.toList());
     }
 }

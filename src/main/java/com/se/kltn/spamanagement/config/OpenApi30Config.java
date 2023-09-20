@@ -1,4 +1,4 @@
-package com.se.kltn.spamanagement.utils;
+package com.se.kltn.spamanagement.config;
 
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;

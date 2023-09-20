@@ -1,4 +1,4 @@
-package com.se.kltn.spamanagement.utils;
+package com.se.kltn.spamanagement.config;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
