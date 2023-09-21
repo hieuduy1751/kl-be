@@ -4,13 +4,15 @@ import com.se.kltn.spamanagement.dto.request.ProductRequest;
 import com.se.kltn.spamanagement.dto.response.ProductResponse;
 import com.se.kltn.spamanagement.exception.ResourceNotFoundException;
 import com.se.kltn.spamanagement.model.Product;
+import com.se.kltn.spamanagement.model.enums.Status;
 import com.se.kltn.spamanagement.repository.ProductRepository;
 import com.se.kltn.spamanagement.service.ProductService;
 import com.se.kltn.spamanagement.utils.MappingData;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.awt.print.Pageable;
 import java.util.Date;
 import java.util.List;
 
@@ -34,7 +36,8 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<ProductResponse> getProducts(Pageable pageable) {
+    public List<ProductResponse> getProducts(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
         List<Product> products = this.productRepository.findAllBy(pageable).getContent();
         return MappingData.mapListObject(products, ProductResponse.class);
     }
@@ -54,13 +57,25 @@ public class ProductServiceImpl implements ProductService {
         product.setPrice(productRequest.getPrice());
         product.setQuantity(productRequest.getQuantity());
         product.setImageUrl(productRequest.getImageUrl());
-        product.setStatus(productRequest.getStatus());
         product.setUpdatedDate(new Date());
-        return MappingData.mapObject(product, ProductResponse.class);
+        checkStatus(product);
+        Product productUpdated = this.productRepository.save(product);
+        return MappingData.mapObject(productUpdated, ProductResponse.class);
     }
 
     @Override
-    public Product createProduct(Product product) {
-        return null;
+    public Product createProduct(ProductRequest productRequest) {
+        Product product = MappingData.mapObject(productRequest, Product.class);
+        product.setCreatedDate(new Date());
+        checkStatus(product);
+        return this.productRepository.save(product);
+    }
+
+    private void checkStatus(Product product) {
+        if (product.getQuantity() > 0) {
+            product.setStatus(Status.ACTIVE);
+        } else {
+            product.setStatus(Status.INACTIVE);
+        }
     }
 }

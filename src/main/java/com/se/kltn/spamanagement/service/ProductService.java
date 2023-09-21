@@ -11,11 +11,11 @@ import java.util.List;
 public interface ProductService {
     ProductResponse getProductById(Long id);
 
-    List<ProductResponse> getProducts(Pageable pageable);
+    List<ProductResponse> getProducts(int page, int size);
 
     void deleteProduct(Long id);
 
     ProductResponse updateProduct(Long id, ProductRequest productRequest);
 
-    Product createProduct(Product product);
+    Product createProduct(ProductRequest product);
 }
