@@ -1,5 +1,6 @@
 package com.se.kltn.spamanagement.exception.global;
 
+import com.se.kltn.spamanagement.exception.JwtAuthenticationException;
 import com.se.kltn.spamanagement.exception.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
