@@ -1,8 +1,10 @@
 package com.se.kltn.spamanagement.security;
 
 import com.se.kltn.spamanagement.model.Account;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,6 +15,8 @@ import java.util.Set;
 
 @Data
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class UserPrinciple implements UserDetails {
     private Long id;
 
@@ -26,8 +30,8 @@ public class UserPrinciple implements UserDetails {
         Set<SimpleGrantedAuthority> grantedAuthorities = Collections.singleton(new SimpleGrantedAuthority(account.getRole().name()));
         return UserPrinciple.builder()
                 .id(account.getId())
-                .username(builder().username)
-                .password(builder().password)
+                .username(account.getUsername())
+                .password(account.getPassword())
                 .authorities(grantedAuthorities)
                 .build();
     }
@@ -64,6 +68,6 @@ public class UserPrinciple implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return false;
+        return true;
     }
 }

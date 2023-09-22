@@ -1,5 +1,6 @@
 package com.se.kltn.spamanagement.exception.global;
 
+import com.se.kltn.spamanagement.exception.BadRequestException;
 import com.se.kltn.spamanagement.exception.JwtAuthenticationException;
 import com.se.kltn.spamanagement.exception.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
@@ -16,6 +17,12 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Object> resourceNotFoundHandler(ResourceNotFoundException notFoundException, WebRequest webRequest) {
         ErrorResponse errorResponse = new ErrorResponse(new Date(), notFoundException.getMessage(), webRequest.getDescription(false));
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler({BadRequestException.class})
+    public ResponseEntity<Object> badRequestExceptionHandler(BadRequestException e, WebRequest webRequest) {
+        ErrorResponse errorResponse = new ErrorResponse(new Date(), e.getMessage(), webRequest.getDescription(false));
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
 }
