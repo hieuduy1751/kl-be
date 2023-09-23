@@ -20,7 +20,11 @@ public class Employee {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    private String name;
+    @Column(name = "first_name")
+    private String firstName;
+
+    @Column(name = "last_name")
+    private String lastName;
 
     private String email;
 
@@ -32,13 +36,16 @@ public class Employee {
     @Column(name = "birth_day")
     private Date birthDay;
 
-    private String password;
-
     @Column(name = "salary_gross")
     private Double salaryGross;
 
-    @OneToOne
-    @JoinColumn(name = "account_id")
+    @Column(name = "created_date")
+    private Date createdDate;
+
+    @Column(name = "updated_date")
+    private Date updatedDate;
+
+    @OneToOne(mappedBy = "employee", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Account account;
 
     @OneToMany(mappedBy = "employee", fetch = FetchType.LAZY, cascade = CascadeType.ALL)

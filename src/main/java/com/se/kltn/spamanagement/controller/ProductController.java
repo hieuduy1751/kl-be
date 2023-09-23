@@ -43,7 +43,7 @@ public class ProductController {
         return ResponseEntity.ok().body(this.productService.getProductById(id));
     }
 
-    @PostMapping("/{id}")
+    @PutMapping("/{id}")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "product updated"),
             @ApiResponse(responseCode = "400", description = "bad request")

@@ -63,7 +63,7 @@ public class AuthServiceImpl implements AuthService {
         }
         Account account = MappingData.mapObject(accountRequest, Account.class);
         account.setPassword(passwordEncoder.encode(accountRequest.getPassword()));
-        account.setRole(Role.STAFF);
+        account.setRole(Role.USER);
         Account accountRegister = this.accountRepository.save(account);
         return MappingData.mapObject(accountRegister, AccountResponse.class);
     }

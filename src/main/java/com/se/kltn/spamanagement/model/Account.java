@@ -27,6 +27,7 @@ public class Account {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @OneToOne(mappedBy = "account")
+    @OneToOne
+    @JoinColumn(name = "employee_id")
     private Employee employee;
 }
