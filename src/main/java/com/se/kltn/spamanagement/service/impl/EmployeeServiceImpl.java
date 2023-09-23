@@ -1,5 +1,6 @@
 package com.se.kltn.spamanagement.service.impl;
 
+import com.se.kltn.spamanagement.constants.ErrorMessage;
 import com.se.kltn.spamanagement.dto.request.EmployeeRequest;
 import com.se.kltn.spamanagement.dto.response.EmployeeResponse;
 import com.se.kltn.spamanagement.exception.ResourceNotFoundException;
@@ -8,13 +9,14 @@ import com.se.kltn.spamanagement.repository.EmployeeRepository;
 import com.se.kltn.spamanagement.service.EmployeeService;
 import com.se.kltn.spamanagement.utils.MappingData;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+
+import static com.se.kltn.spamanagement.constants.ErrorMessage.EMPLOYEE_NOT_FOUND;
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
@@ -29,7 +31,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public EmployeeResponse getEmployeeById(Long id) {
         Employee employee = this.employeeRepository.findById(id).orElseThrow(
-                () -> new ResourceNotFoundException("Employee not found"));
+                () -> new ResourceNotFoundException(EMPLOYEE_NOT_FOUND));
         return MappingData.mapObject(employee, EmployeeResponse.class);
     }
 
@@ -45,7 +47,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public EmployeeResponse updateEmployee(Long id, EmployeeRequest employeeRequest) {
         Employee employee = this.employeeRepository.findById(id).orElseThrow(
-                () -> new ResourceNotFoundException("Employee not found"));
+                () -> new ResourceNotFoundException(EMPLOYEE_NOT_FOUND));
         employee.setFirstName(employeeRequest.getFirstName());
         employee.setLastName(employeeRequest.getLastName());
         employee.setAddress(employeeRequest.getAddress());
@@ -60,7 +62,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public void deleteEmployee(Long id) {
         Employee employee = this.employeeRepository.findById(id).orElseThrow(
-                () -> new ResourceNotFoundException("Employee not found"));
+                () -> new ResourceNotFoundException(EMPLOYEE_NOT_FOUND));
         this.employeeRepository.delete(employee);
     }
 

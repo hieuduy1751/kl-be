@@ -1,16 +1,16 @@
 package com.se.kltn.spamanagement.dto.request;
 
+import com.se.kltn.spamanagement.model.enums.CustomerClass;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import java.util.Date;
 
 @Data
 @AllArgsConstructor
-@NoArgsConstructor
-public class EmployeeRequest {
+public class CustomerRequest {
 
     @NotBlank(message = "firstName is required")
     private String firstName;
@@ -22,9 +22,11 @@ public class EmployeeRequest {
 
     private String phoneNumber;
 
+    @NotBlank(message = "email is required")
+    @Email(message = "email is invalid")
     private String email;
 
     private Date birthDay;
 
-    private Double salaryGross;
+    private CustomerClass customerClass;
 }
