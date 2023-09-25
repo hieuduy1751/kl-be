@@ -8,6 +8,7 @@ import com.se.kltn.spamanagement.model.Customer;
 import com.se.kltn.spamanagement.repository.CustomerRepository;
 import com.se.kltn.spamanagement.service.CustomerService;
 import com.se.kltn.spamanagement.utils.MappingData;
+import com.se.kltn.spamanagement.utils.NullUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -44,15 +45,15 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public CustomerResponse updateCustomer(Long id, CustomerRequest customerResponse) {
+    public CustomerResponse updateCustomer(Long id, CustomerRequest customerRequest) {
         Customer customer = this.customerRepository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException(CUSTOMER_NOT_FOUND));
-        customer.setFirstName(customerResponse.getFirstName());
-        customer.setLastName(customerResponse.getLastName());
-        customer.setAddress(customerResponse.getAddress());
-        customer.setPhoneNumber(customerResponse.getPhoneNumber());
-        customer.setEmail(customerResponse.getEmail());
-        customer.setBirthDay(customerResponse.getBirthDay());
+        NullUtils.updateIfPresent(customer::setFirstName, customerRequest.getFirstName());
+        NullUtils.updateIfPresent(customer::setLastName, customerRequest.getLastName());
+        NullUtils.updateIfPresent(customer::setAddress, customerRequest.getAddress());
+        NullUtils.updateIfPresent(customer::setEmail, customerRequest.getEmail());
+        NullUtils.updateIfPresent(customer::setBirthDay,customerRequest.getBirthDay());
+        NullUtils.updateIfPresent(customer::setCustomerClass,customerRequest.getCustomerClass());
         customer.setUpdatedDate(new Date());
         return MappingData.mapObject(this.customerRepository.save(customer), CustomerResponse.class);
     }

@@ -13,4 +13,7 @@ public class ErrorMessage {
 
     public static final String ACCOUNT_NOT_FOUND = "account not found";
 
+    public static final String TREATMENT_NOT_FOUND = "treatment not found";
+    public static final String RATING_NOT_FOUND = "rating not found";
+
 }

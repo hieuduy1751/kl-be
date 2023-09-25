@@ -5,9 +5,11 @@ import com.se.kltn.spamanagement.dto.response.ProductResponse;
 import com.se.kltn.spamanagement.exception.ResourceNotFoundException;
 import com.se.kltn.spamanagement.model.Product;
 import com.se.kltn.spamanagement.model.enums.Status;
+import com.se.kltn.spamanagement.repository.CategoryRepository;
 import com.se.kltn.spamanagement.repository.ProductRepository;
 import com.se.kltn.spamanagement.service.ProductService;
 import com.se.kltn.spamanagement.utils.MappingData;
+import com.se.kltn.spamanagement.utils.NullUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -23,9 +25,12 @@ public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
 
+    private final CategoryRepository categoryRepository;
+
     @Autowired
-    public ProductServiceImpl(ProductRepository productRepository) {
+    public ProductServiceImpl(ProductRepository productRepository, CategoryRepository categoryRepository) {
         this.productRepository = productRepository;
+        this.categoryRepository = categoryRepository;
     }
 
     @Override
@@ -53,10 +58,11 @@ public class ProductServiceImpl implements ProductService {
     public ProductResponse updateProduct(Long id, ProductRequest productRequest) {
         Product product = this.productRepository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException(PRODUCT_NOT_FOUND));
-        product.setName(productRequest.getName());
-        product.setPrice(productRequest.getPrice());
-        product.setQuantity(productRequest.getQuantity());
-        product.setImageUrl(productRequest.getImageUrl());
+        NullUtils.updateIfPresent(product::setName, productRequest.getName());
+        NullUtils.updateIfPresent(product::setPrice, productRequest.getPrice());
+        NullUtils.updateIfPresent(product::setQuantity, productRequest.getQuantity());
+        NullUtils.updateIfPresent(product::setImageUrl, productRequest.getImageUrl());
+        NullUtils.updateIfPresent(product::setCategory, this.categoryRepository.findById(productRequest.getIdCategory()).orElse(null));
         product.setUpdatedDate(new Date());
         checkStatus(product);
         Product productUpdated = this.productRepository.save(product);

@@ -8,6 +8,7 @@ import com.se.kltn.spamanagement.model.Employee;
 import com.se.kltn.spamanagement.repository.EmployeeRepository;
 import com.se.kltn.spamanagement.service.EmployeeService;
 import com.se.kltn.spamanagement.utils.MappingData;
+import com.se.kltn.spamanagement.utils.NullUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -48,13 +49,12 @@ public class EmployeeServiceImpl implements EmployeeService {
     public EmployeeResponse updateEmployee(Long id, EmployeeRequest employeeRequest) {
         Employee employee = this.employeeRepository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException(EMPLOYEE_NOT_FOUND));
-        employee.setFirstName(employeeRequest.getFirstName());
-        employee.setLastName(employeeRequest.getLastName());
-        employee.setAddress(employeeRequest.getAddress());
-        employee.setPhoneNumber(employeeRequest.getPhoneNumber());
-        employee.setEmail(employeeRequest.getEmail());
-        employee.setSalaryGross(employeeRequest.getSalaryGross());
-        employee.setBirthDay(employeeRequest.getBirthDay());
+        NullUtils.updateIfPresent(employee::setFirstName, employeeRequest.getFirstName());
+        NullUtils.updateIfPresent(employee::setLastName, employeeRequest.getLastName());
+        NullUtils.updateIfPresent(employee::setAddress, employeeRequest.getAddress());
+        NullUtils.updateIfPresent(employee::setEmail, employeeRequest.getEmail());
+        NullUtils.updateIfPresent(employee::setBirthDay,employeeRequest.getBirthDay());
+        NullUtils.updateIfPresent(employee::setSalaryGross,employeeRequest.getSalaryGross());
         employee.setUpdatedDate(new Date());
         return MappingData.mapObject(this.employeeRepository.save(employee), EmployeeResponse.class);
     }
