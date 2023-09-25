@@ -5,6 +5,8 @@ public class ErrorMessage {
 
     public static final String CATEGORY_NOT_FOUND = "category not found";
 
+    public static final String CATEGORY_EXISTED = "category name existed";
+
     public static final String EMPLOYEE_NOT_FOUND = "employee not found";
 
     public static final String CUSTOMER_NOT_FOUND = "customer not found";

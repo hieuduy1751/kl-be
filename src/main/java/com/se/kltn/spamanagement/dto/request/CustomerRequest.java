@@ -4,6 +4,8 @@ import com.se.kltn.spamanagement.model.enums.CustomerClass;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import java.util.Date;
@@ -26,6 +28,7 @@ public class CustomerRequest {
     @Email(message = "email is invalid")
     private String email;
 
+    @Temporal(TemporalType.DATE)
     private Date birthDay;
 
     private CustomerClass customerClass;

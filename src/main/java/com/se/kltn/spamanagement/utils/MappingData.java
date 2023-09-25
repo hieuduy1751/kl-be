@@ -17,6 +17,7 @@ public class MappingData {
         MappingData.modelMapper = modelMapper;
     }
 
+
     public static <T, S> S mapObject(T source, Class<S> destination) {
         return modelMapper.map(source, destination);
     }

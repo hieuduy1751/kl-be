@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.NotBlank;
 import java.util.Date;
 
@@ -24,6 +26,7 @@ public class EmployeeRequest {
 
     private String email;
 
+    @Temporal(TemporalType.DATE)
     private Date birthDay;
 
     private Double salaryGross;
