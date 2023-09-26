@@ -4,6 +4,7 @@ import com.se.kltn.spamanagement.dto.request.RatingRequest;
 import com.se.kltn.spamanagement.dto.response.RatingResponse;
 import com.se.kltn.spamanagement.exception.ResourceNotFoundException;
 import com.se.kltn.spamanagement.model.Rating;
+import com.se.kltn.spamanagement.repository.CustomerRepository;
 import com.se.kltn.spamanagement.repository.ProductRepository;
 import com.se.kltn.spamanagement.repository.RatingRepository;
 import com.se.kltn.spamanagement.repository.TreatmentRepository;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 
 import static com.se.kltn.spamanagement.constants.ErrorMessage.*;
 
@@ -25,11 +27,14 @@ public class RatingServiceImpl implements RatingService {
 
     private final TreatmentRepository treatmentRepository;
 
+    private final CustomerRepository customerRepository;
+
     @Autowired
-    public RatingServiceImpl(RatingRepository ratingRepository, ProductRepository productRepository, TreatmentRepository treatmentRepository) {
+    public RatingServiceImpl(RatingRepository ratingRepository, ProductRepository productRepository, TreatmentRepository treatmentRepository, CustomerRepository customerRepository) {
         this.ratingRepository = ratingRepository;
         this.productRepository = productRepository;
         this.treatmentRepository = treatmentRepository;
+        this.customerRepository = customerRepository;
     }
 
     @Override
@@ -39,7 +44,10 @@ public class RatingServiceImpl implements RatingService {
         rating.setProduct(this.productRepository.findById(idProduct).orElseThrow(
                 () -> new ResourceNotFoundException(PRODUCT_NOT_FOUND)
         ));
-        return MappingData.mapObject(rating, RatingResponse.class);
+        rating.setCustomer(this.customerRepository.findById(ratingRequest.getIdCustomer()).orElseThrow(
+                () -> new ResourceNotFoundException(CUSTOMER_NOT_FOUND)
+        ));
+        return MappingData.mapObject(this.ratingRepository.save(rating), RatingResponse.class);
     }
 
     @Override
@@ -49,20 +57,21 @@ public class RatingServiceImpl implements RatingService {
         rating.setTreatment(this.treatmentRepository.findById(idTreatment).orElseThrow(
                 () -> new ResourceNotFoundException(TREATMENT_NOT_FOUND)
         ));
-        return MappingData.mapObject(rating, RatingResponse.class);
+        rating.setCustomer(this.customerRepository.findById(ratingRequest.getIdCustomer()).orElseThrow(
+                () -> new ResourceNotFoundException(CUSTOMER_NOT_FOUND)
+        ));
+        return MappingData.mapObject(this.ratingRepository.save(rating), RatingResponse.class);
     }
 
     @Override
-    public RatingResponse getRatingByProductId(Long idProduct) {
-        Rating rating = this.ratingRepository.findRatingByProduct_Id(idProduct).orElseThrow(
-                () -> new ResourceNotFoundException(RATING_NOT_FOUND));
-        return MappingData.mapObject(rating, RatingResponse.class);
+    public List<RatingResponse> getRatingByProductId(Long idProduct) {
+        List<Rating> ratings = this.ratingRepository.findRatingsByProduct_Id(idProduct).orElse(null);
+        return MappingData.mapListObject(ratings, RatingResponse.class);
     }
 
     @Override
-    public RatingResponse getRatingByTreatmentId(Long idTreatment) {
-        Rating rating = this.ratingRepository.findRatingByTreatment_Id(idTreatment).orElseThrow(
-                () -> new ResourceNotFoundException(RATING_NOT_FOUND));
-        return MappingData.mapObject(rating, RatingResponse.class);
+    public List<RatingResponse> getRatingByTreatmentId(Long idTreatment) {
+        List<Rating> ratings = this.ratingRepository.findRatingsByTreatment_Id(idTreatment).orElse(null);
+        return MappingData.mapListObject(ratings, RatingResponse.class);
     }
 }

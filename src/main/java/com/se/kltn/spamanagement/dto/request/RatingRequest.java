@@ -19,4 +19,7 @@ public class RatingRequest {
     @NotNull(message = "rating point is require")
     @Range(min = 0, max = 5, message = "point is start from 0 to 5")
     private Integer ratingPoint;
+
+    @NotNull(message = "id customer is require")
+    private Long idCustomer;
 }

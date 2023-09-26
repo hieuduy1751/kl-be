@@ -15,7 +15,7 @@ public class ProductRequest {
     @Range(min = 0, message = "price must not negative")
     private Double price;
 
-    @NotBlank(message = "quantity is require")
+    @NotNull(message = "quantity is require")
     @Range(min = 0, message = "quantity must not negative")
     private Integer quantity;
 

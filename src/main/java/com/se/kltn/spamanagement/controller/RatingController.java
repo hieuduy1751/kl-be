@@ -20,15 +20,27 @@ public class RatingController {
         this.ratingService = ratingService;
     }
 
-    @PostMapping("/add/{idProduct}")
+    @PostMapping("/product/{idProduct}")
     @Operation(summary = "add rating to product")
     public ResponseEntity<Object> addRatingToProduct(@Valid @RequestBody RatingRequest ratingRequest, @PathVariable Long idProduct) {
         return ResponseEntity.ok().body(this.ratingService.addRatingToProduct(ratingRequest, idProduct));
     }
 
-    @PostMapping("/add/{idTreatment}")
+    @PostMapping("/treatment/{idTreatment}")
     @Operation(summary = "add rating to treatment")
-    public ResponseEntity<Object> addRatingToProduct(@Valid @RequestBody RatingRequest ratingRequest, @PathVariable Long idProduct) {
-        return ResponseEntity.ok().body(this.ratingService.addRatingToProduct(ratingRequest, idProduct));
+    public ResponseEntity<Object> addRatingTreatment(@Valid @RequestBody RatingRequest ratingRequest, @PathVariable Long idTreatment) {
+        return ResponseEntity.ok().body(this.ratingService.addRatingToTreatment(ratingRequest, idTreatment));
+    }
+
+    @GetMapping("/product/{idProduct}")
+    @Operation(summary = "get rating by product id")
+    public ResponseEntity<Object> getRatingByProduct(@PathVariable Long idProduct) {
+        return ResponseEntity.ok().body(this.ratingService.getRatingByProductId(idProduct));
+    }
+
+    @GetMapping("/treatment/{idTreatment}")
+    @Operation(summary = "get rating by treatment id")
+    public ResponseEntity<Object> getRatingByTreatment(@PathVariable Long idTreatment) {
+        return ResponseEntity.ok().body(this.ratingService.getRatingByProductId(idTreatment));
     }
 }

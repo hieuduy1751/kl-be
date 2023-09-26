@@ -70,11 +70,11 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Product createProduct(ProductRequest productRequest) {
+    public ProductResponse createProduct(ProductRequest productRequest) {
         Product product = MappingData.mapObject(productRequest, Product.class);
         product.setCreatedDate(new Date());
         checkStatus(product);
-        return this.productRepository.save(product);
+        return MappingData.mapObject(this.productRepository.save(product), ProductResponse.class);
     }
 
     private void checkStatus(Product product) {

@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.Date;
 
 @Data
 @AllArgsConstructor
@@ -17,6 +18,6 @@ public class RatingResponse {
 
     private Integer ratingPoint;
 
-    private LocalDate createdDate;
+    private Date createdDate;
 
 }
