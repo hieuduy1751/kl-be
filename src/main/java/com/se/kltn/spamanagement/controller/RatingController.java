@@ -20,15 +20,15 @@ public class RatingController {
         this.ratingService = ratingService;
     }
 
-    @PostMapping("/product/{idProduct}")
+    @PostMapping("/product")
     @Operation(summary = "add rating to product")
-    public ResponseEntity<Object> addRatingToProduct(@Valid @RequestBody RatingRequest ratingRequest, @PathVariable Long idProduct) {
-        return ResponseEntity.ok().body(this.ratingService.addRatingToProduct(ratingRequest, idProduct));
+    public ResponseEntity<Object> addRatingToProduct(@Valid @RequestBody RatingRequest ratingRequest) {
+        return ResponseEntity.ok().body(this.ratingService.addRatingToProduct(ratingRequest));
     }
 
     @PostMapping("/treatment/{idTreatment}")
     @Operation(summary = "add rating to treatment")
-    public ResponseEntity<Object> addRatingTreatment(@Valid @RequestBody RatingRequest ratingRequest, @PathVariable Long idTreatment) {
+    public ResponseEntity<Object> addRatingTreatment(@Valid @RequestBody RatingRequest ratingRequest, @RequestParam Long idTreatment) {
         return ResponseEntity.ok().body(this.ratingService.addRatingToTreatment(ratingRequest, idTreatment));
     }
 

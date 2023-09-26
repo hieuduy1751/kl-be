@@ -22,4 +22,6 @@ public class RatingRequest {
 
     @NotNull(message = "id customer is require")
     private Long idCustomer;
+
+    private Long idProduct;
 }

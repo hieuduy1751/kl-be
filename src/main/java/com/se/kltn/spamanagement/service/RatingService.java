@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface RatingService {
 
-    RatingResponse addRatingToProduct(RatingRequest ratingRequest, Long idProduct);
+    RatingResponse addRatingToProduct(RatingRequest ratingRequest );
 
     RatingResponse addRatingToTreatment(RatingRequest ratingRequest, Long idTreatment);
 
