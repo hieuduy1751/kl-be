@@ -38,34 +38,33 @@ public class RatingServiceImpl implements RatingService {
     }
 
     @Override
-    public RatingResponse addRatingToProduct(RatingRequest ratingRequest) {
-        Rating ratingUpdate = creatRating(ratingRequest);
-        ratingUpdate.setProduct(this.productRepository.findById(ratingRequest.getIdProduct()).orElseThrow(
+    public RatingResponse addRatingToProduct(RatingRequest ratingRequest, Long idProduct, Long idCustomer) {
+        Rating rating = mapRating(ratingRequest);
+        rating.setProduct(this.productRepository.findById(idProduct).orElseThrow(
                 () -> new ResourceNotFoundException(PRODUCT_NOT_FOUND)
         ));
-        ratingUpdate.setCustomer(this.customerRepository.findById(ratingRequest.getIdCustomer()).orElseThrow(
+        rating.setCustomer(this.customerRepository.findById(idCustomer).orElseThrow(
                 () -> new ResourceNotFoundException(CUSTOMER_NOT_FOUND)
         ));
-        return MappingData.mapObject(this.ratingRepository.save(ratingUpdate), RatingResponse.class);
+        return MappingData.mapObject(this.ratingRepository.save(rating), RatingResponse.class);
     }
 
     @Override
-    public RatingResponse addRatingToTreatment(RatingRequest ratingRequest, Long idTreatment) {
-        Rating ratingUpdate = MappingData.mapObject(ratingRequest, Rating.class);
-        ratingUpdate.setCreatedDate(new Date());
-        ratingUpdate.setTreatment(this.treatmentRepository.findById(idTreatment).orElseThrow(
+    public RatingResponse addRatingToTreatment(RatingRequest ratingRequest, Long idTreatment, Long idCustomer) {
+        Rating rating = mapRating(ratingRequest);
+        rating.setTreatment(this.treatmentRepository.findById(idTreatment).orElseThrow(
                 () -> new ResourceNotFoundException(TREATMENT_NOT_FOUND)
         ));
-        ratingUpdate.setCustomer(this.customerRepository.findById(ratingRequest.getIdCustomer()).orElseThrow(
+        rating.setCustomer(this.customerRepository.findById(idCustomer).orElseThrow(
                 () -> new ResourceNotFoundException(CUSTOMER_NOT_FOUND)
         ));
-        return MappingData.mapObject(this.ratingRepository.save(ratingUpdate), RatingResponse.class);
+        return MappingData.mapObject(this.ratingRepository.save(rating), RatingResponse.class);
     }
 
-    private Rating creatRating(RatingRequest ratingRequest) {
+    private Rating mapRating(RatingRequest ratingRequest) {
         Rating rating = MappingData.mapObject(ratingRequest, Rating.class);
         rating.setCreatedDate(new Date());
-        return this.ratingRepository.save(rating);
+        return rating;
     }
 
     @Override
