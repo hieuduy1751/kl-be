@@ -6,4 +6,10 @@ public enum Status {
     PAID,
     UNPAID,
 
+    NEW,
+
+    IN_PROGRESS,
+
+    FINISH
+
 }
