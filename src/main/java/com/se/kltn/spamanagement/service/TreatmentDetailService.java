@@ -10,11 +10,11 @@ import java.util.List;
 
 public interface TreatmentDetailService {
 
-    TreatmentResponse addTreatmentDetail(TreatmentDetailId treatmentDetailId, TreatmentDetailRequest treatmentRequest);
+    TreatmentDetailResponse addTreatmentDetail(TreatmentDetailId treatmentDetailId, TreatmentDetailRequest treatmentRequest);
 
-    TreatmentResponse updateTreatmentDetail(TreatmentDetailId treatmentDetailId, TreatmentDetailRequest treatmentDetailRequest);
+    TreatmentDetailResponse updateTreatmentDetail(TreatmentDetailId treatmentDetailId, TreatmentDetailRequest treatmentDetailRequest);
 
-    TreatmentDetailResponse getTreatmentDetailByCustomer(Long customerId);
+    List<TreatmentDetailResponse> getTreatmentDetailByCustomer(Long customerId);
 
     List<TreatmentDetailResponse> getListTreatmentDetail(int page, int size);
 
