@@ -19,4 +19,6 @@ public class ErrorMessage {
 
     public static final String TREATMENT_DETAIL_NOT_FOUND = "treatment detail not found";
 
+    public static final String APPOINTMENT_NOT_FOUND = "appointment not found";
+
 }
