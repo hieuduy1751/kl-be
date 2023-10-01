@@ -2,6 +2,7 @@ package com.se.kltn.spamanagement.service.impl;
 
 import com.se.kltn.spamanagement.dto.request.AppointmentRequest;
 import com.se.kltn.spamanagement.dto.response.AppointmentResponse;
+import com.se.kltn.spamanagement.exception.BadRequestException;
 import com.se.kltn.spamanagement.exception.ResourceNotFoundException;
 import com.se.kltn.spamanagement.model.Appointment;
 import com.se.kltn.spamanagement.repository.AppointmentRepository;
@@ -31,6 +32,7 @@ public class AppointmentServiceImpl implements AppointmentService {
     @Override
     public AppointmentResponse createAppointment(AppointmentRequest appointmentRequest) {
         Appointment appointment = MappingData.mapObject(appointmentRequest, Appointment.class);
+        checkDateBefore(appointment.getTime());
         appointment.setCreatedDate(new Date());
         appointment.setUpdatedDate(new Date());
         return MappingData.mapObject(this.appointmentRepository.save(appointment), AppointmentResponse.class);
@@ -40,6 +42,7 @@ public class AppointmentServiceImpl implements AppointmentService {
     public AppointmentResponse updateAppointment(Long id, AppointmentRequest appointmentRequest) {
         Appointment appointment=this.appointmentRepository.findById(id).orElseThrow(
                 ()->new ResourceNotFoundException(APPOINTMENT_NOT_FOUND));
+        checkDateBefore(appointmentRequest.getTime());
         appointment.setUpdatedDate(new Date());
         NullUtils.updateIfPresent(appointment::setTime, appointmentRequest.getTime());
         NullUtils.updateIfPresent(appointment::setNote, appointmentRequest.getNote());
@@ -57,5 +60,11 @@ public class AppointmentServiceImpl implements AppointmentService {
     public List<AppointmentResponse> getAllAppointment(int page, int size) {
         Pageable pageable= PageRequest.of(page,size);
         return MappingData.mapListObject(this.appointmentRepository.findAll(pageable).getContent(),AppointmentResponse.class);
+    }
+
+    private void checkDateBefore(Date date) {
+        if (date.before(new Date())) {
+            throw new BadRequestException("Date before now");
+        }
     }
 }
