@@ -21,4 +21,6 @@ public class ErrorMessage {
 
     public static final String APPOINTMENT_NOT_FOUND = "appointment not found";
 
+    public static final String APPOINTMENT_DETAIL_NOT_FOUND = "appointment detail not found";
+
 }

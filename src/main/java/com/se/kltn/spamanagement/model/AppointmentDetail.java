@@ -1,5 +1,6 @@
 package com.se.kltn.spamanagement.model;
 
+import com.se.kltn.spamanagement.model.enums.Status;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,5 +28,6 @@ public class AppointmentDetail {
     @JoinColumn(name = "customerI_id")
     private Customer customer;
 
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private Status status;
 }

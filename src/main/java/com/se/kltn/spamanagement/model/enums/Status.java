@@ -5,11 +5,13 @@ public enum Status {
     INACTIVE,
     PAID,
     UNPAID,
-
     NEW,
-
     IN_PROGRESS,
-
-    FINISH
+    FINISH,
+    CHECKED,
+    WAITING,
+    CHANGED,
+    FINISHED,
+    CANCELLED,
 
 }
