@@ -25,7 +25,7 @@ public class AppointmentDetail {
 
     @MapsId("customerId")
     @ManyToOne
-    @JoinColumn(name = "customerI_id")
+    @JoinColumn(name = "customer_id")
     private Customer customer;
 
     @Enumerated(EnumType.STRING)

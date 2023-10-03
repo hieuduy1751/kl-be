@@ -27,16 +27,16 @@ public class AppointmentDetailController {
 
     @PostMapping
     @Operation(summary = "create appointment detail")
-    public ResponseEntity<Object> createAppointmentDetail(@RequestParam("customerId") Long customerId,
-                                                          @RequestParam("appointmentId") Long appointmentId,
+    public ResponseEntity<Object> createAppointmentDetail(@RequestParam("appointmentId") Long appointmentId,
+                                                          @RequestParam("customerId") Long customerId,
                                                           @RequestBody AppointmentDetailRequest appointmentDetailRequest) {
         return ResponseEntity.ok().body(this.appointmentDetailService.createAppointmentDetail(customerId, appointmentId, appointmentDetailRequest));
     }
 
     @PutMapping
     @Operation(summary = "update appointment detail")
-    public ResponseEntity<Object> updateAppointmentDetail(@RequestParam("customerId") Long customerId,
-                                                          @RequestParam("appointmentId") Long appointmentId,
+    public ResponseEntity<Object> updateAppointmentDetail(@RequestParam("appointmentId") Long appointmentId,
+                                                          @RequestParam("customerId") Long customerId,
                                                           @RequestBody AppointmentDetailRequest appointmentDetailRequest) {
         return ResponseEntity.ok().body(this.appointmentDetailService.updateAppointmentDetail(customerId, appointmentId, appointmentDetailRequest));
     }

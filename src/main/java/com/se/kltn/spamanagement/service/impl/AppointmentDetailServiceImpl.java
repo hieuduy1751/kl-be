@@ -1,6 +1,5 @@
 package com.se.kltn.spamanagement.service.impl;
 
-import com.se.kltn.spamanagement.constants.ErrorMessage;
 import com.se.kltn.spamanagement.dto.request.AppointmentDetailRequest;
 import com.se.kltn.spamanagement.dto.response.AppointmentDetailResponse;
 import com.se.kltn.spamanagement.dto.response.AppointmentResponse;
@@ -9,6 +8,8 @@ import com.se.kltn.spamanagement.exception.ResourceNotFoundException;
 import com.se.kltn.spamanagement.model.AppointmentDetail;
 import com.se.kltn.spamanagement.model.AppointmentDetailId;
 import com.se.kltn.spamanagement.repository.AppointmentDetailRepository;
+import com.se.kltn.spamanagement.repository.AppointmentRepository;
+import com.se.kltn.spamanagement.repository.CustomerRepository;
 import com.se.kltn.spamanagement.service.AppointmentDetailService;
 import com.se.kltn.spamanagement.utils.MappingData;
 import com.se.kltn.spamanagement.utils.NullUtils;
@@ -19,21 +20,33 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static com.se.kltn.spamanagement.constants.ErrorMessage.APPOINTMENT_DETAIL_NOT_FOUND;
+import static com.se.kltn.spamanagement.constants.ErrorMessage.*;
 
 @Service
 public class AppointmentDetailServiceImpl implements AppointmentDetailService {
 
     private final AppointmentDetailRepository appointmentDetailRepository;
 
+    private final AppointmentRepository appointmentRepository;
+
+    private final CustomerRepository  customerRepository;
+
     @Autowired
-    public AppointmentDetailServiceImpl(AppointmentDetailRepository appointmentDetailRepository) {
+    public AppointmentDetailServiceImpl(AppointmentDetailRepository appointmentDetailRepository, AppointmentRepository appointmentRepository, CustomerRepository customerRepository) {
         this.appointmentDetailRepository = appointmentDetailRepository;
+        this.appointmentRepository = appointmentRepository;
+        this.customerRepository = customerRepository;
     }
 
     @Override
     public AppointmentDetailResponse createAppointmentDetail(Long idCustomer, Long idAppointment, AppointmentDetailRequest appointmentDetailRequest) {
         AppointmentDetail appointmentDetail = MappingData.mapObject(appointmentDetailRequest, AppointmentDetail.class);
+        appointmentDetail.setAppointment(this.appointmentRepository.findById(idAppointment).orElseThrow(
+                () -> new ResourceNotFoundException(APPOINTMENT_NOT_FOUND)
+        ));
+        appointmentDetail.setCustomer(this.customerRepository.findById(idCustomer).orElseThrow(
+                () -> new ResourceNotFoundException(CUSTOMER_NOT_FOUND)
+        ));
         appointmentDetail.setAppointmentDetailId(new AppointmentDetailId(idAppointment, idCustomer));
         return mapToResponse(this.appointmentDetailRepository.save(appointmentDetail));
     }
