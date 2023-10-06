@@ -1,5 +1,6 @@
 package com.se.kltn.spamanagement.model;
 
+import com.se.kltn.spamanagement.model.enums.Status;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,6 +22,9 @@ public class Invoice {
     private long id;
 
     private String note;
+
+    @Enumerated(EnumType.STRING)
+    private Status status;
 
     @Column(name = "created_date")
     private Date createdDate;
