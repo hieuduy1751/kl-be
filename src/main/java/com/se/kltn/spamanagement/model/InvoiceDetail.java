@@ -34,6 +34,4 @@ public class InvoiceDetail {
     @Column(name = "total_price")
     private Double totalPrice;
 
-    @Enumerated(EnumType.STRING)
-    private Status status;
 }

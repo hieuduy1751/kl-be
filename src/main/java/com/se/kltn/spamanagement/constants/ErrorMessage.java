@@ -25,4 +25,6 @@ public class ErrorMessage {
 
     public static final String INVOICE_NOT_FOUND = "invoice not found";
 
+    public static final String INVOICE_DETAIL_NOT_FOUND = "invoice detail not found";
+
 }

@@ -12,5 +12,5 @@ public enum Status {
     WAITING,
     CHANGED,
     FINISHED,
-    CANCELLED,
+    CANCELLED
 }
