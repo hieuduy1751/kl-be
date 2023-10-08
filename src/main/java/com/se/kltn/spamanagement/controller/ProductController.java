@@ -73,4 +73,15 @@ public class ProductController {
     private ResponseEntity<Object> createProduct(@Valid @RequestBody ProductRequest productRequest) {
         return ResponseEntity.ok().body(this.productService.createProduct(productRequest));
     }
+
+    @GetMapping("/category")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "products founded"),
+            @ApiResponse(responseCode = "404", description = "not found")
+    })
+    @Operation(summary = "find products by category name")
+    private ResponseEntity<Object> getProductsByCategory(@RequestParam("categoryName") String categoryName) {
+        System.out.println(categoryName);
+        return ResponseEntity.ok().body(this.productService.getProductsByCategory(categoryName));
+    }
 }

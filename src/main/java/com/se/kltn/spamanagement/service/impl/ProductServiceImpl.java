@@ -43,7 +43,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<ProductResponse> getProducts(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        List<Product> products = this.productRepository.findAllBy(pageable).getContent();
+        List<Product> products = this.productRepository.findAll(pageable).getContent();
         return MappingData.mapListObject(products, ProductResponse.class);
     }
 
@@ -75,6 +75,12 @@ public class ProductServiceImpl implements ProductService {
         product.setCreatedDate(new Date());
         checkStatus(product);
         return MappingData.mapObject(this.productRepository.save(product), ProductResponse.class);
+    }
+
+    @Override
+    public List<ProductResponse> getProductsByCategory(String categoryName) {
+        List<Product> products = this.productRepository.findProductsByCategory_NameContainingIgnoreCase(categoryName).orElse(null);
+        return MappingData.mapListObject(products, ProductResponse.class);
     }
 
     private void checkStatus(Product product) {

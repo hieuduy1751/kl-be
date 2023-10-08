@@ -18,4 +18,6 @@ public interface ProductService {
     ProductResponse updateProduct(Long id, ProductRequest productRequest);
 
     ProductResponse createProduct(ProductRequest product);
+
+    List<ProductResponse> getProductsByCategory(String categoryName);
 }
