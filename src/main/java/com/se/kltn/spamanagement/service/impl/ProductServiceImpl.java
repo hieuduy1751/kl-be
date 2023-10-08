@@ -83,6 +83,12 @@ public class ProductServiceImpl implements ProductService {
         return MappingData.mapListObject(products, ProductResponse.class);
     }
 
+    @Override
+    public List<ProductResponse> filterProductsByPriceBetween(Double from, Double to) {
+        List<Product> products = this.productRepository.filterProductsByPriceBetween(from, to).orElse(null);
+        return MappingData.mapListObject(products, ProductResponse.class);
+    }
+
     private void checkStatus(Product product) {
         if (product.getQuantity() > 0) {
             product.setStatus(Status.ACTIVE);

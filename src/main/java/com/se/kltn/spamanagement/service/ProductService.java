@@ -20,4 +20,6 @@ public interface ProductService {
     ProductResponse createProduct(ProductRequest product);
 
     List<ProductResponse> getProductsByCategory(String categoryName);
+
+    List<ProductResponse> filterProductsByPriceBetween(Double from, Double to);
 }

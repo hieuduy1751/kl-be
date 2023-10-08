@@ -14,4 +14,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     @Query(value = "SELECT * from products p join categories c on p.category_id = c.id where c.name  ilike %:name%", nativeQuery = true)
     Optional<List<Product>> findProductsByCategory_NameContainingIgnoreCase(@Param("name") String name);
+
+    @Query(value = "SELECT * from products where price between :from and :to", nativeQuery = true)
+    Optional<List<Product>> filterProductsByPriceBetween(@Param("from") Double from, @Param("to") Double to);
 }
