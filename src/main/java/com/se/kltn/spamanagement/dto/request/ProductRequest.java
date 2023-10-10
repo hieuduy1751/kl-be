@@ -1,9 +1,13 @@
 package com.se.kltn.spamanagement.dto.request;
 
+import com.se.kltn.spamanagement.model.enums.Category;
 import com.se.kltn.spamanagement.model.enums.Status;
 import lombok.Data;
+import lombok.Value;
 import org.hibernate.validator.constraints.Range;
 
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.validation.constraints.*;
 import java.util.Date;
 
@@ -21,6 +25,7 @@ public class ProductRequest {
 
     private String imageUrl;
 
-    private Long idCategory;
+    private String category;
 
+    private String description;
 }

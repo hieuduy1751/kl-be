@@ -15,18 +15,22 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Table(name = "invoice_details")
 public class InvoiceDetail {
-    @EmbeddedId
-    private InvoiceDetailId invoiceDetailId;
 
-    @MapsId("invoiceId")
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     @ManyToOne
     @JoinColumn(name = "invoice_id")
     private Invoice invoice;
 
-    @MapsId("productId")
     @ManyToOne
     @JoinColumn(name = "product_id")
     private Product product;
+
+    @ManyToOne
+    @JoinColumn(name = "treatment_id")
+    private Treatment treatment;
 
     @Column(name = "total_quantity")
     private Integer totalQuantity;

@@ -6,7 +6,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Setter
@@ -21,9 +23,15 @@ public class Treatment {
 
     private String name;
 
+    @Column(name = "number_of_month")
+    private Integer numberOfMonth;
+
     private String description;
 
     @OneToMany(mappedBy = "treatment", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<TreatmentDetail> treatmentDetails;
+    private Set<TreatmentDetail> treatmentDetails;
+
+    @OneToMany(mappedBy = "treatment", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<InvoiceDetail> invoiceDetails;
 
 }

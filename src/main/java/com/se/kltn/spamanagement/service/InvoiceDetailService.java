@@ -5,9 +5,9 @@ import com.se.kltn.spamanagement.dto.response.InvoiceDetailResponse;
 
 public interface InvoiceDetailService {
 
-    InvoiceDetailResponse createInvoiceDetail(Long idInvoice, Long idProduct, InvoiceDetailRequest invoiceDetailRequest);
+    InvoiceDetailResponse createInvoiceDetail(InvoiceDetailRequest invoiceDetailRequest);
 
-    InvoiceDetailResponse updateInvoiceDetail(Long idInvoice, Long idProduct, InvoiceDetailRequest invoiceDetailRequest);
+    InvoiceDetailResponse updateInvoiceDetail(Long id, InvoiceDetailRequest invoiceDetailRequest);
 
-    void deleteInvoiceDetail(Long idInvoice, Long idProduct);
+    void deleteInvoiceDetail(Long id);
 }

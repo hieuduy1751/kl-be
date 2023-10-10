@@ -1,5 +1,6 @@
 package com.se.kltn.spamanagement.model;
 
+import com.se.kltn.spamanagement.model.enums.Category;
 import com.se.kltn.spamanagement.model.enums.Status;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -34,15 +35,16 @@ public class Product {
     @Column(name = "image_url")
     private String imageUrl;
 
+    @Enumerated(EnumType.STRING)
+    private Category category;
+
+    private String description;
+
     @Column(name = "created_date")
     private Date createdDate;
 
     @Column(name = "updated_date")
     private Date updatedDate;
-
-    @ManyToOne
-    @JoinColumn(name = "category_id")
-    private Category category;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Rating> ratings;

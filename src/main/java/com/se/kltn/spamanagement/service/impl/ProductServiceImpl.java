@@ -4,8 +4,8 @@ import com.se.kltn.spamanagement.dto.request.ProductRequest;
 import com.se.kltn.spamanagement.dto.response.ProductResponse;
 import com.se.kltn.spamanagement.exception.ResourceNotFoundException;
 import com.se.kltn.spamanagement.model.Product;
+import com.se.kltn.spamanagement.model.enums.Category;
 import com.se.kltn.spamanagement.model.enums.Status;
-import com.se.kltn.spamanagement.repository.CategoryRepository;
 import com.se.kltn.spamanagement.repository.ProductRepository;
 import com.se.kltn.spamanagement.service.ProductService;
 import com.se.kltn.spamanagement.utils.MappingData;
@@ -25,12 +25,9 @@ public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
 
-    private final CategoryRepository categoryRepository;
-
     @Autowired
-    public ProductServiceImpl(ProductRepository productRepository, CategoryRepository categoryRepository) {
+    public ProductServiceImpl(ProductRepository productRepository) {
         this.productRepository = productRepository;
-        this.categoryRepository = categoryRepository;
     }
 
     @Override
@@ -62,7 +59,8 @@ public class ProductServiceImpl implements ProductService {
         NullUtils.updateIfPresent(product::setPrice, productRequest.getPrice());
         NullUtils.updateIfPresent(product::setQuantity, productRequest.getQuantity());
         NullUtils.updateIfPresent(product::setImageUrl, productRequest.getImageUrl());
-        NullUtils.updateIfPresent(product::setCategory, this.categoryRepository.findById(productRequest.getIdCategory()).orElse(null));
+        NullUtils.updateIfPresent(product::setCategory, Category.valueOf(productRequest.getCategory().toUpperCase()));
+        NullUtils.updateIfPresent(product::setDescription, productRequest.getDescription());
         product.setUpdatedDate(new Date());
         checkStatus(product);
         Product productUpdated = this.productRepository.save(product);
@@ -79,7 +77,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<ProductResponse> getProductsByCategory(String categoryName) {
-        List<Product> products = this.productRepository.findProductsByCategory_NameContainingIgnoreCase(categoryName).orElse(null);
+        List<Product> products = this.productRepository.getProductsByCategory(Category.valueOf(categoryName.toUpperCase())).orElse(null);
         return MappingData.mapListObject(products, ProductResponse.class);
     }
 

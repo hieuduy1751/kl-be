@@ -6,10 +6,10 @@ import com.se.kltn.spamanagement.dto.response.InvoiceResponse;
 import com.se.kltn.spamanagement.dto.response.ProductResponse;
 import com.se.kltn.spamanagement.exception.ResourceNotFoundException;
 import com.se.kltn.spamanagement.model.InvoiceDetail;
-import com.se.kltn.spamanagement.model.InvoiceDetailId;
 import com.se.kltn.spamanagement.repository.InvoiceDetailRepository;
 import com.se.kltn.spamanagement.repository.InvoiceRepository;
 import com.se.kltn.spamanagement.repository.ProductRepository;
+import com.se.kltn.spamanagement.repository.TreatmentRepository;
 import com.se.kltn.spamanagement.service.InvoiceDetailService;
 import com.se.kltn.spamanagement.utils.MappingData;
 import com.se.kltn.spamanagement.utils.NullUtils;
@@ -25,35 +25,40 @@ public class InvoiceDetailServiceImpl implements InvoiceDetailService {
 
     private final InvoiceRepository invoiceRepository;
 
+    private final TreatmentRepository treatmentRepository;
+
     private final ProductRepository productRepository;
 
     @Autowired
-    public InvoiceDetailServiceImpl(InvoiceDetailRepository invoiceDetailRepository, InvoiceRepository invoiceRepository, ProductRepository productRepository) {
+    public InvoiceDetailServiceImpl(InvoiceDetailRepository invoiceDetailRepository, InvoiceRepository invoiceRepository, TreatmentRepository treatmentRepository, ProductRepository productRepository) {
         this.invoiceDetailRepository = invoiceDetailRepository;
         this.invoiceRepository = invoiceRepository;
-
+        this.treatmentRepository = treatmentRepository;
         this.productRepository = productRepository;
     }
 
 
     @Override
-    public InvoiceDetailResponse createInvoiceDetail(Long idInvoice, Long idProduct, InvoiceDetailRequest invoiceDetailRequest) {
+    public InvoiceDetailResponse createInvoiceDetail(InvoiceDetailRequest invoiceDetailRequest) {
         InvoiceDetail invoiceDetail = MappingData.mapObject(invoiceDetailRequest, InvoiceDetail.class);
-        invoiceDetail.setInvoice(this.invoiceRepository.findById(idInvoice).orElseThrow(
+        invoiceDetail.setInvoice(this.invoiceRepository.findById(invoiceDetailRequest.getIdInvoice()).orElseThrow(
                 () -> new ResourceNotFoundException(INVOICE_NOT_FOUND)
         ));
-        invoiceDetail.setProduct(this.productRepository.findById(idProduct).orElseThrow(
+        invoiceDetail.setProduct(this.productRepository.findById(invoiceDetailRequest.getIdProduct()).orElseThrow(
                 () -> new ResourceNotFoundException(PRODUCT_NOT_FOUND)
         ));
+        invoiceDetail.setTreatment(this.treatmentRepository.findById(invoiceDetailRequest.getIdTreatment()).orElseThrow(
+                () -> new ResourceNotFoundException(TREATMENT_NOT_FOUND)
+        ));
+
         invoiceDetail.setTotalPrice(invoiceDetail.getProduct().getPrice() * invoiceDetail.getTotalQuantity());
-        invoiceDetail.setInvoiceDetailId(new InvoiceDetailId(idInvoice, idProduct));
         return mapToResponse(this.invoiceDetailRepository.save(invoiceDetail));
     }
 
 
     @Override
-    public InvoiceDetailResponse updateInvoiceDetail(Long idInvoice, Long idProduct, InvoiceDetailRequest invoiceDetailRequest) {
-        InvoiceDetail invoiceDetail = this.invoiceDetailRepository.findById(new InvoiceDetailId(idInvoice, idProduct)).orElseThrow(
+    public InvoiceDetailResponse updateInvoiceDetail(Long id, InvoiceDetailRequest invoiceDetailRequest) {
+        InvoiceDetail invoiceDetail = this.invoiceDetailRepository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException(INVOICE_DETAIL_NOT_FOUND));
         NullUtils.updateIfPresent(invoiceDetail::setTotalQuantity, invoiceDetailRequest.getTotalQuantity());
         invoiceDetail.setTotalPrice(invoiceDetail.getProduct().getPrice() * invoiceDetail.getTotalQuantity());
@@ -61,8 +66,8 @@ public class InvoiceDetailServiceImpl implements InvoiceDetailService {
     }
 
     @Override
-    public void deleteInvoiceDetail(Long idInvoice, Long idProduct) {
-        InvoiceDetail invoiceDetail = this.invoiceDetailRepository.findById(new InvoiceDetailId(idInvoice, idProduct)).orElseThrow(
+    public void deleteInvoiceDetail(Long id) {
+        InvoiceDetail invoiceDetail = this.invoiceDetailRepository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException(INVOICE_DETAIL_NOT_FOUND));
         this.invoiceDetailRepository.delete(invoiceDetail);
     }

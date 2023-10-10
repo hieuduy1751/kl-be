@@ -20,25 +20,21 @@ public class InvoiceDetailController {
 
     @PostMapping
     @Operation(summary = "create invoice detail")
-    public ResponseEntity<Object> createInvoiceDetail(@RequestParam("invoiceId") Long invoiceId,
-                                                      @RequestParam("productId") Long productId,
-                                                      @RequestBody InvoiceDetailRequest invoiceDetailRequest) {
-        return ResponseEntity.ok().body(this.invoiceDetailService.createInvoiceDetail(invoiceId, productId, invoiceDetailRequest));
+    public ResponseEntity<Object> createInvoiceDetail(@RequestBody InvoiceDetailRequest invoiceDetailRequest) {
+        return ResponseEntity.ok().body(this.invoiceDetailService.createInvoiceDetail(invoiceDetailRequest));
     }
 
-    @PutMapping
+    @PutMapping("/{id}")
     @Operation(summary = "update invoice detail")
-    public ResponseEntity<Object> updateInvoiceDetail(@RequestParam("invoiceId") Long invoiceId,
-                                                      @RequestParam("productId") Long productId,
+    public ResponseEntity<Object> updateInvoiceDetail(@PathVariable Long id,
                                                       @RequestBody InvoiceDetailRequest invoiceDetailRequest) {
-        return ResponseEntity.ok().body(this.invoiceDetailService.updateInvoiceDetail(invoiceId, productId, invoiceDetailRequest));
+        return ResponseEntity.ok().body(this.invoiceDetailService.updateInvoiceDetail(id, invoiceDetailRequest));
     }
 
-    @DeleteMapping
+    @DeleteMapping("/{id}")
     @Operation(summary = "delete invoice detail")
-    public ResponseEntity<String> deleteInvoiceDetail(@RequestParam("invoiceId") Long invoiceId,
-                                                      @RequestParam("productId") Long productId) {
-        this.invoiceDetailService.deleteInvoiceDetail(invoiceId, productId);
+    public ResponseEntity<String> deleteInvoiceDetail(@PathVariable Long id) {
+        this.invoiceDetailService.deleteInvoiceDetail(id);
         return ResponseEntity.ok().body("Invoice detail deleted");
     }
 }

@@ -1,5 +1,6 @@
 package com.se.kltn.spamanagement.dto.response;
 
+import com.se.kltn.spamanagement.model.enums.Category;
 import com.se.kltn.spamanagement.model.enums.Status;
 import lombok.Data;
 
@@ -19,6 +20,10 @@ public class ProductResponse {
     private Status status;
 
     private String imageUrl;
+
+    private Category category;
+
+    private String description;
 
     private Date createdDate;
 
