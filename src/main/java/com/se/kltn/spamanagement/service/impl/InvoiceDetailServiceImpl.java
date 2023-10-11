@@ -9,7 +9,6 @@ import com.se.kltn.spamanagement.model.InvoiceDetail;
 import com.se.kltn.spamanagement.repository.InvoiceDetailRepository;
 import com.se.kltn.spamanagement.repository.InvoiceRepository;
 import com.se.kltn.spamanagement.repository.ProductRepository;
-import com.se.kltn.spamanagement.repository.TreatmentRepository;
 import com.se.kltn.spamanagement.service.InvoiceDetailService;
 import com.se.kltn.spamanagement.utils.MappingData;
 import com.se.kltn.spamanagement.utils.NullUtils;
@@ -25,15 +24,12 @@ public class InvoiceDetailServiceImpl implements InvoiceDetailService {
 
     private final InvoiceRepository invoiceRepository;
 
-    private final TreatmentRepository treatmentRepository;
-
     private final ProductRepository productRepository;
 
     @Autowired
-    public InvoiceDetailServiceImpl(InvoiceDetailRepository invoiceDetailRepository, InvoiceRepository invoiceRepository, TreatmentRepository treatmentRepository, ProductRepository productRepository) {
+    public InvoiceDetailServiceImpl(InvoiceDetailRepository invoiceDetailRepository, InvoiceRepository invoiceRepository, ProductRepository productRepository) {
         this.invoiceDetailRepository = invoiceDetailRepository;
         this.invoiceRepository = invoiceRepository;
-        this.treatmentRepository = treatmentRepository;
         this.productRepository = productRepository;
     }
 
@@ -47,10 +43,6 @@ public class InvoiceDetailServiceImpl implements InvoiceDetailService {
         invoiceDetail.setProduct(this.productRepository.findById(invoiceDetailRequest.getIdProduct()).orElseThrow(
                 () -> new ResourceNotFoundException(PRODUCT_NOT_FOUND)
         ));
-        invoiceDetail.setTreatment(this.treatmentRepository.findById(invoiceDetailRequest.getIdTreatment()).orElseThrow(
-                () -> new ResourceNotFoundException(TREATMENT_NOT_FOUND)
-        ));
-
         invoiceDetail.setTotalPrice(invoiceDetail.getProduct().getPrice() * invoiceDetail.getTotalQuantity());
         return mapToResponse(this.invoiceDetailRepository.save(invoiceDetail));
     }
@@ -78,4 +70,5 @@ public class InvoiceDetailServiceImpl implements InvoiceDetailService {
         response.setProductResponse(MappingData.mapObject(invoiceDetail.getProduct(), ProductResponse.class));
         return response;
     }
+
 }

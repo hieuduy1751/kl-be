@@ -11,6 +11,4 @@ import java.util.Optional;
 public interface RatingRepository extends JpaRepository<Rating, Long> {
     Optional<List<Rating>> findRatingsByProduct_Id(Long id);
 
-    Optional<List<Rating>> findRatingsByTreatment_Id(Long id);
-
 }

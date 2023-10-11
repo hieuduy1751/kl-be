@@ -28,10 +28,6 @@ public class InvoiceDetail {
     @JoinColumn(name = "product_id")
     private Product product;
 
-    @ManyToOne
-    @JoinColumn(name = "treatment_id")
-    private Treatment treatment;
-
     @Column(name = "total_quantity")
     private Integer totalQuantity;
 

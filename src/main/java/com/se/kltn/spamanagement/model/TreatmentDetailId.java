@@ -14,7 +14,7 @@ import java.io.Serializable;
 public class TreatmentDetailId implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    private Long treatmentId;
+    private Long productId;
 
     private Long customerId;
 }

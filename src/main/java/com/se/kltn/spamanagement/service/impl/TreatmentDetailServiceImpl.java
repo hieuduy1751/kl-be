@@ -2,17 +2,17 @@ package com.se.kltn.spamanagement.service.impl;
 
 import com.se.kltn.spamanagement.dto.request.TreatmentDetailRequest;
 import com.se.kltn.spamanagement.dto.response.CustomerResponse;
+import com.se.kltn.spamanagement.dto.response.ProductResponse;
 import com.se.kltn.spamanagement.dto.response.TreatmentDetailResponse;
-import com.se.kltn.spamanagement.dto.response.TreatmentResponse;
 import com.se.kltn.spamanagement.exception.ResourceNotFoundException;
 import com.se.kltn.spamanagement.model.Customer;
-import com.se.kltn.spamanagement.model.Treatment;
+import com.se.kltn.spamanagement.model.Product;
 import com.se.kltn.spamanagement.model.TreatmentDetail;
 import com.se.kltn.spamanagement.model.TreatmentDetailId;
 import com.se.kltn.spamanagement.model.enums.Status;
 import com.se.kltn.spamanagement.repository.CustomerRepository;
+import com.se.kltn.spamanagement.repository.ProductRepository;
 import com.se.kltn.spamanagement.repository.TreatmentDetailRepository;
-import com.se.kltn.spamanagement.repository.TreatmentRepository;
 import com.se.kltn.spamanagement.service.TreatmentDetailService;
 import com.se.kltn.spamanagement.utils.MappingData;
 import com.se.kltn.spamanagement.utils.NullUtils;
@@ -32,19 +32,19 @@ public class TreatmentDetailServiceImpl implements TreatmentDetailService {
 
     private final CustomerRepository customerRepository;
 
-    private final TreatmentRepository treatmentRepository;
+    private final ProductRepository productRepository;
 
     @Autowired
-    public TreatmentDetailServiceImpl(TreatmentDetailRepository treatmentDetailRepository, CustomerRepository customerRepository, TreatmentRepository treatmentRepository) {
+    public TreatmentDetailServiceImpl(TreatmentDetailRepository treatmentDetailRepository, CustomerRepository customerRepository, ProductRepository productRepository) {
         this.treatmentDetailRepository = treatmentDetailRepository;
         this.customerRepository = customerRepository;
-        this.treatmentRepository = treatmentRepository;
+        this.productRepository = productRepository;
     }
 
     @Override
     public TreatmentDetailResponse addTreatmentDetail(TreatmentDetailId treatmentDetailId, TreatmentDetailRequest treatmentDetailRequest) {
         TreatmentDetail treatmentDetail = MappingData.mapObject(treatmentDetailRequest, TreatmentDetail.class);
-        treatmentDetail.setTreatment(getTreatmentById(treatmentDetailId.getTreatmentId()));
+        treatmentDetail.setProduct(getTreatmentById(treatmentDetailId.getProductId()));
         treatmentDetail.setCustomer(getCustomerById(treatmentDetailId.getCustomerId()));
         treatmentDetail.setTreatmentDetailId(treatmentDetailId);
         treatmentDetail.setStatus(Status.NEW);
@@ -88,8 +88,8 @@ public class TreatmentDetailServiceImpl implements TreatmentDetailService {
         return this.customerRepository.findById(customerId).orElseThrow(() -> new ResourceNotFoundException(CUSTOMER_NOT_FOUND));
     }
 
-    private Treatment getTreatmentById(Long treatmentId) {
-        return this.treatmentRepository.findById(treatmentId).orElseThrow(() -> new ResourceNotFoundException(TREATMENT_NOT_FOUND));
+    private Product getTreatmentById(Long productId) {
+        return this.productRepository.findById(productId).orElseThrow(() -> new ResourceNotFoundException(PRODUCT_NOT_FOUND));
     }
 
     private List<TreatmentDetailResponse> mappingTreatmentDetails(List<TreatmentDetail> treatmentDetails) {
@@ -98,8 +98,8 @@ public class TreatmentDetailServiceImpl implements TreatmentDetailService {
                 treatmentDetailResponse -> {
                     treatmentDetailResponse.setCustomerResponse(MappingData.mapObject(treatmentDetails
                             .get(treatmentDetailResponses.indexOf(treatmentDetailResponse)).getCustomer(), CustomerResponse.class));
-                    treatmentDetailResponse.setTreatmentResponse(MappingData.mapObject(treatmentDetails
-                            .get(treatmentDetailResponses.indexOf(treatmentDetailResponse)).getTreatment(), TreatmentResponse.class));
+                    treatmentDetailResponse.setProductResponse(MappingData.mapObject(treatmentDetails
+                            .get(treatmentDetailResponses.indexOf(treatmentDetailResponse)).getProduct(), ProductResponse.class));
                 }
         );
         return treatmentDetailResponses;
@@ -108,7 +108,7 @@ public class TreatmentDetailServiceImpl implements TreatmentDetailService {
     private TreatmentDetailResponse mapToTreatmentDetailResponse(TreatmentDetail treatmentDetail) {
         TreatmentDetailResponse treatmentDetailResponse = MappingData.mapObject(treatmentDetail, TreatmentDetailResponse.class);
         treatmentDetailResponse.setCustomerResponse(MappingData.mapObject(treatmentDetail.getCustomer(), CustomerResponse.class));
-        treatmentDetailResponse.setTreatmentResponse(MappingData.mapObject(treatmentDetail.getTreatment(), TreatmentResponse.class));
+        treatmentDetailResponse.setProductResponse(MappingData.mapObject(treatmentDetail.getProduct(), ProductResponse.class));
         return treatmentDetailResponse;
     }
 

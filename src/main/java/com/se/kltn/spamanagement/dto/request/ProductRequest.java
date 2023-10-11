@@ -25,6 +25,7 @@ public class ProductRequest {
 
     private String imageUrl;
 
+    @NotBlank(message = "category is require and must be PRODUCT or SERVICE or TREATMENT")
     private String category;
 
     private String description;

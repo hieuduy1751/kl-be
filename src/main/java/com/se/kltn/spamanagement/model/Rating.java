@@ -33,10 +33,6 @@ public class Rating {
     private Customer customer;
 
     @ManyToOne
-    @JoinColumn(name = "treatment_id")
-    private Treatment treatment;
-
-    @ManyToOne
     @JoinColumn(name = "product_id")
     private Product product;
 }

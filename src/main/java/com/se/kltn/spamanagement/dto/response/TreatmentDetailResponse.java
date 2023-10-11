@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Data
 public class TreatmentDetailResponse {
 
-    private TreatmentResponse treatmentResponse;
+    private ProductResponse productResponse;
 
     private CustomerResponse customerResponse;
 

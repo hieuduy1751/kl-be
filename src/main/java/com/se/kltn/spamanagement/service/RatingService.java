@@ -9,9 +9,6 @@ public interface RatingService {
 
     RatingResponse addRatingToProduct(RatingRequest ratingRequest, Long idProduct, Long idCustomer );
 
-    RatingResponse addRatingToTreatment(RatingRequest ratingRequest, Long idTreatment, Long idCustomer);
-
     List<RatingResponse> getRatingByProductId(Long idCustomer);
 
-    List<RatingResponse> getRatingByTreatmentId(Long idTreatment);
 }

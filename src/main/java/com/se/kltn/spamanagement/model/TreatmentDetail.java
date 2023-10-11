@@ -19,10 +19,10 @@ public class TreatmentDetail {
     @EmbeddedId
     private TreatmentDetailId treatmentDetailId;
 
-    @MapsId("treatmentId")
+    @MapsId("productId")
     @ManyToOne
-    @JoinColumn(name = "treatment_id")
-    private Treatment treatment;
+    @JoinColumn(name = "product_id")
+    private Product product;
 
     @MapsId("customerId")
     @ManyToOne
@@ -46,4 +46,6 @@ public class TreatmentDetail {
     @Column(name = "created_date")
     private Date createdDate;
 
+    @Column(name = "updated_date")
+    private Date updatedDate;
 }

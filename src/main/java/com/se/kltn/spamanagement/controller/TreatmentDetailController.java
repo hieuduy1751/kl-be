@@ -24,17 +24,17 @@ public class TreatmentDetailController {
     @PostMapping
     @Operation(summary = "add treatment detail")
     public ResponseEntity<Object> addTreatmentDetail(@RequestParam("customerId") Long customerId,
-                                                     @RequestParam("treatmentId") Long treatmentId,
+                                                     @RequestParam("productId") Long productId,
                                                      @RequestBody TreatmentDetailRequest treatmentDetailRequest) {
-        return ResponseEntity.ok().body(this.treatmentDetailService.addTreatmentDetail(new TreatmentDetailId(treatmentId, customerId), treatmentDetailRequest));
+        return ResponseEntity.ok().body(this.treatmentDetailService.addTreatmentDetail(new TreatmentDetailId(productId, customerId), treatmentDetailRequest));
     }
 
     @PutMapping
     @Operation(summary = "update treatment detail")
     public ResponseEntity<Object> updateTreatmentDetail(@RequestParam("customerId") Long customerId,
-                                                        @RequestParam("treatmentId") Long treatmentId,
+                                                        @RequestParam("productId") Long productId,
                                                         @Valid @RequestBody TreatmentDetailRequest treatmentDetailRequest) {
-        return ResponseEntity.ok().body(this.treatmentDetailService.updateTreatmentDetail(new TreatmentDetailId(treatmentId, customerId), treatmentDetailRequest));
+        return ResponseEntity.ok().body(this.treatmentDetailService.updateTreatmentDetail(new TreatmentDetailId(productId, customerId), treatmentDetailRequest));
     }
 
     @GetMapping("/customer/{customerId}")

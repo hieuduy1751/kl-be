@@ -39,8 +39,8 @@ public class Appointment {
     private Employee employee;
 
     @ManyToOne
-    @JoinColumn(name = "treatment_id")
-    private Treatment treatment;
+    @JoinColumn(name = "product_id")
+    private Product product;
 
     @OneToMany(mappedBy = "appointment")
     private Set<AppointmentDetail> appointmentDetails;
