@@ -1,5 +1,6 @@
 package com.se.kltn.spamanagement.dto.response;
 
+import com.se.kltn.spamanagement.model.enums.Status;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,9 +14,15 @@ public class InvoiceResponse {
 
     private Long id;
 
+    private Double totalAmount;
+
+    private Date dueDate;
+
     private String note;
 
-    private String status;
+    private String paymentMethod;
+
+    private Status status;
 
     private Date createdDate;
 

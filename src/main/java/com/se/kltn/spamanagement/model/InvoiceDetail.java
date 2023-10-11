@@ -16,14 +16,15 @@ import javax.persistence.*;
 @Table(name = "invoice_details")
 public class InvoiceDetail {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @EmbeddedId
+    private InvoiceDetailId id;
 
+    @MapsId("invoiceId")
     @ManyToOne
     @JoinColumn(name = "invoice_id")
     private Invoice invoice;
 
+    @MapsId("productId")
     @ManyToOne
     @JoinColumn(name = "product_id")
     private Product product;

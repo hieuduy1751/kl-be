@@ -55,7 +55,6 @@ public class InvoiceServiceImpl implements InvoiceService {
         Invoice invoice = this.invoiceRepository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException(INVOICE_NOT_FOUND));
         NullUtils.updateIfPresent(invoice::setNote, invoiceRequest.getNote());
-        NullUtils.updateIfPresent(invoice::setStatus, invoiceRequest.getStatus());
         invoice.setUpdatedDate(new Date());
         return MappingData.mapObject(this.invoiceRepository.save(invoice), InvoiceResponse.class);
     }

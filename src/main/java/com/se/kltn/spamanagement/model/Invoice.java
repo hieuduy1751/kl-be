@@ -1,5 +1,6 @@
 package com.se.kltn.spamanagement.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.se.kltn.spamanagement.model.enums.Status;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -21,7 +22,17 @@ public class Invoice {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @Column(name = "total_amount")
+    private Double totalAmount;
+
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @Column(name = "due_date")
+    private Date dueDate;
+
     private String note;
+
+    @Column(name = "payment_method")
+    private String paymentMethod;
 
     @Enumerated(EnumType.STRING)
     private Status status;
@@ -42,5 +53,13 @@ public class Invoice {
     @ManyToOne
     @JoinColumn(name = "employee_id")
     private Employee employee;
+
+    public Double setTotalAmount(Double totalAmount) {
+        totalAmount = 0.0;
+        for (InvoiceDetail invoiceDetail : invoiceDetails) {
+            totalAmount += invoiceDetail.getTotalPrice();
+        }
+        return totalAmount;
+    }
 
 }

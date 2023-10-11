@@ -70,14 +70,16 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductResponse createProduct(ProductRequest productRequest) {
         Product product = MappingData.mapObject(productRequest, Product.class);
+        product.setCategory(Category.valueOf(productRequest.getCategory().toUpperCase()));
         product.setCreatedDate(new Date());
         checkStatus(product);
         return MappingData.mapObject(this.productRepository.save(product), ProductResponse.class);
     }
 
     @Override
-    public List<ProductResponse> getProductsByCategory(String categoryName) {
-        List<Product> products = this.productRepository.getProductsByCategory(Category.valueOf(categoryName.toUpperCase())).orElse(null);
+    public List<ProductResponse> getProductsByCategory(String categoryName, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        List<Product> products = this.productRepository.getProductsByCategory(Category.valueOf(categoryName.toUpperCase()), pageable).getContent();
         return MappingData.mapListObject(products, ProductResponse.class);
     }
 

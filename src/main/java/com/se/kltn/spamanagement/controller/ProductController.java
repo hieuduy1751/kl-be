@@ -80,9 +80,10 @@ public class ProductController {
             @ApiResponse(responseCode = "404", description = "not found")
     })
     @Operation(summary = "find products by category name")
-    private ResponseEntity<Object> getProductsByCategory( @RequestParam("categoryName") String categoryName) {
-        System.out.println(categoryName);
-        return ResponseEntity.ok().body(this.productService.getProductsByCategory(categoryName));
+    private ResponseEntity<Object> getProductsByCategory(@RequestParam("categoryName") String categoryName,
+                                                         @RequestParam(defaultValue = "0", value = "page", required = false) int page,
+                                                         @RequestParam(defaultValue = "10", value = "size", required = false) int size) {
+        return ResponseEntity.ok().body(this.productService.getProductsByCategory(categoryName, page, size));
     }
 
     @GetMapping("/filter-price")

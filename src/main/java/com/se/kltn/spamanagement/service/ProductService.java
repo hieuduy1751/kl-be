@@ -19,7 +19,7 @@ public interface ProductService {
 
     ProductResponse createProduct(ProductRequest product);
 
-    List<ProductResponse> getProductsByCategory(String categoryName);
+    List<ProductResponse> getProductsByCategory(String categoryName, int page, int size);
 
     List<ProductResponse> filterProductsByPriceBetween(Double from, Double to);
 }
