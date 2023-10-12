@@ -1,11 +1,13 @@
 package com.se.kltn.spamanagement.dto.response;
 
+import com.se.kltn.spamanagement.model.enums.PaymentMethod;
 import com.se.kltn.spamanagement.model.enums.Status;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -20,11 +22,13 @@ public class InvoiceResponse {
 
     private String note;
 
-    private String paymentMethod;
+    private PaymentMethod paymentMethod;
 
     private Status status;
 
     private Date createdDate;
 
     private Date updatedDate;
+
+    private List<InvoiceDetailResponse> invoiceDetailResponses;
 }

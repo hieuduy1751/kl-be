@@ -1,6 +1,7 @@
 package com.se.kltn.spamanagement.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.se.kltn.spamanagement.model.enums.PaymentMethod;
 import com.se.kltn.spamanagement.model.enums.Status;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -32,7 +33,8 @@ public class Invoice {
     private String note;
 
     @Column(name = "payment_method")
-    private String paymentMethod;
+    @Enumerated(EnumType.STRING)
+    private PaymentMethod paymentMethod;
 
     @Enumerated(EnumType.STRING)
     private Status status;
@@ -54,12 +56,5 @@ public class Invoice {
     @JoinColumn(name = "employee_id")
     private Employee employee;
 
-    public Double setTotalAmount(Double totalAmount) {
-        totalAmount = 0.0;
-        for (InvoiceDetail invoiceDetail : invoiceDetails) {
-            totalAmount += invoiceDetail.getTotalPrice();
-        }
-        return totalAmount;
-    }
 
 }

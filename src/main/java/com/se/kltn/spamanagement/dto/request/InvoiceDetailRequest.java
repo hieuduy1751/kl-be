@@ -16,12 +16,7 @@ public class InvoiceDetailRequest {
 
     private Integer totalQuantity;
 
-    @NotNull(message = "idInvoice is require")
-    private Long idInvoice;
-
     @NotNull(message = "idProduct is require")
     private Long idProduct;
-
-    private Long idTreatment;
 
 }

@@ -9,8 +9,6 @@ import lombok.NoArgsConstructor;
 @Data
 public class InvoiceDetailResponse {
 
-    private InvoiceResponse invoiceResponse;
-
     private ProductResponse productResponse;
 
     private Integer totalQuantity;
