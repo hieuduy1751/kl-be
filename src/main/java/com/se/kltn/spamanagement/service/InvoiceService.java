@@ -1,15 +1,16 @@
 package com.se.kltn.spamanagement.service;
 
-import com.se.kltn.spamanagement.dto.request.InvoiceRequest;
+import com.se.kltn.spamanagement.dto.request.InvoiceCreateRequest;
+import com.se.kltn.spamanagement.dto.request.InvoiceUpdateRequest;
 import com.se.kltn.spamanagement.dto.response.InvoiceResponse;
 
 import java.util.List;
 
 public interface InvoiceService {
 
-    InvoiceResponse createInvoice(InvoiceRequest invoiceRequest);
+    InvoiceResponse createInvoice(InvoiceCreateRequest invoiceCreateRequest);
 
-    InvoiceResponse updateInvoice(Long id, InvoiceRequest invoiceRequest);
+    InvoiceResponse updateInvoice(Long id, InvoiceUpdateRequest invoiceUpdateRequest);
 
     List<InvoiceResponse> getInvoicesByCustomer(Long idCustomer);
 

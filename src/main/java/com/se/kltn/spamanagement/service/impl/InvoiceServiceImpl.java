@@ -1,7 +1,8 @@
 package com.se.kltn.spamanagement.service.impl;
 
+import com.se.kltn.spamanagement.dto.request.InvoiceCreateRequest;
 import com.se.kltn.spamanagement.dto.request.InvoiceDetailRequest;
-import com.se.kltn.spamanagement.dto.request.InvoiceRequest;
+import com.se.kltn.spamanagement.dto.request.InvoiceUpdateRequest;
 import com.se.kltn.spamanagement.dto.response.InvoiceDetailResponse;
 import com.se.kltn.spamanagement.dto.response.InvoiceResponse;
 import com.se.kltn.spamanagement.exception.ResourceNotFoundException;
@@ -47,7 +48,7 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     @Override
     @Transactional
-    public InvoiceResponse createInvoice(InvoiceRequest invoiceRequest) {
+    public InvoiceResponse createInvoice(InvoiceCreateRequest invoiceRequest) {
         Invoice invoice = MappingData.mapObject(invoiceRequest, Invoice.class);
         invoice.setCustomer(this.customerRepository.findById(invoiceRequest.getCustomerId()).orElseThrow(
                 () -> new ResourceNotFoundException(CUSTOMER_NOT_FOUND)
@@ -62,14 +63,13 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     @Override
-    public InvoiceResponse updateInvoice(Long id, InvoiceRequest invoiceRequest) {
+    public InvoiceResponse updateInvoice(Long id, InvoiceUpdateRequest invoiceRequest) {
         Invoice invoice = this.invoiceRepository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException(INVOICE_NOT_FOUND));
         NullUtils.updateIfPresent(invoice::setNote, invoiceRequest.getNote());
         NullUtils.updateIfPresent(invoice::setDueDate, invoiceRequest.getDueDate());
         NullUtils.updateIfPresent(invoice::setPaymentMethod, invoiceRequest.getPaymentMethod());
         invoice.setUpdatedDate(new Date());
-        invoice.setTotalAmount(calculateTotalAmount(invoice));
         return MappingData.mapObject(this.invoiceRepository.save(invoice), InvoiceResponse.class);
     }
 
@@ -81,6 +81,7 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     @Override
+    @Transactional
     public void deleteInvoice(Long id) {
         Invoice invoice = this.invoiceRepository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException(INVOICE_NOT_FOUND));
@@ -96,25 +97,22 @@ public class InvoiceServiceImpl implements InvoiceService {
         return MappingData.mapListObject(this.invoiceRepository.findAll(pageable).getContent(), InvoiceResponse.class);
     }
 
-    private InvoiceResponse saveInvoiceDetail(Invoice invoiceSaved, InvoiceRequest invoiceRequest) {
-        InvoiceResponse invoiceResponse = MappingData.mapObject(invoiceSaved, InvoiceResponse.class);
+    private InvoiceResponse saveInvoiceDetail(Invoice invoiceSaved, InvoiceCreateRequest invoiceRequest) {
         List<InvoiceDetailRequest> invoiceDetailRequests = invoiceRequest.getInvoiceDetailRequests();
         List<InvoiceDetailResponse> detailResponseList = new ArrayList<>();
+        Double totalAmount = 0.0;
         for (InvoiceDetailRequest invoiceDetailRequest : invoiceDetailRequests) {
             InvoiceDetail invoiceDetail = MappingData.mapObject(invoiceDetailRequest, InvoiceDetail.class);
             invoiceDetail.setInvoice(invoiceSaved);
             InvoiceDetailResponse invoiceDetailResponse = invoiceDetailService.createInvoiceDetail(invoiceDetail, invoiceDetailRequest.getIdProduct());
             detailResponseList.add(invoiceDetailResponse);
+            totalAmount += invoiceDetailResponse.getTotalPrice();
         }
+        invoiceSaved.setTotalAmount(totalAmount);
+        this.invoiceRepository.save(invoiceSaved);
+        InvoiceResponse invoiceResponse = MappingData.mapObject(invoiceSaved, InvoiceResponse.class);
         invoiceResponse.setInvoiceDetailResponses(detailResponseList);
         return invoiceResponse;
     }
 
-    private Double calculateTotalAmount(Invoice invoice) {
-        Double totalAmount = 0.0;
-        for (InvoiceDetail invoiceDetail : invoice.getInvoiceDetails()) {
-            totalAmount += invoiceDetail.getTotalPrice();
-        }
-        return totalAmount;
-    }
 }

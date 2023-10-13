@@ -16,7 +16,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class InvoiceRequest {
+public class InvoiceCreateRequest {
 
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date dueDate;
