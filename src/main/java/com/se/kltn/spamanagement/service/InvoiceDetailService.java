@@ -5,6 +5,8 @@ import com.se.kltn.spamanagement.dto.response.InvoiceDetailResponse;
 import com.se.kltn.spamanagement.model.InvoiceDetail;
 import com.se.kltn.spamanagement.model.InvoiceDetailId;
 
+import java.util.List;
+
 public interface InvoiceDetailService {
 
     InvoiceDetailResponse createInvoiceDetail(InvoiceDetail invoiceDetail, Long idProduct);
@@ -12,4 +14,6 @@ public interface InvoiceDetailService {
     InvoiceDetailResponse updateInvoiceDetail(InvoiceDetailId invoiceDetailId, InvoiceDetailRequest invoiceDetailRequest);
 
     void deleteInvoiceDetail(InvoiceDetailId invoiceDetailId);
+
+    List<InvoiceDetailResponse> getInvoiceDetailsByInvoiceId(Long invoiceId);
 }

@@ -9,5 +9,5 @@ import java.util.Optional;
 
 @Repository
 public interface InvoiceRepository extends JpaRepository<Invoice, Long>{
-    Optional<List<Invoice>> findInvoicesByCustomer_Id(Long idCustomer);
+    List<Invoice> findInvoicesByCustomer_Id(Long idCustomer);
 }

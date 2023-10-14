@@ -5,6 +5,7 @@ import com.se.kltn.spamanagement.dto.request.InvoiceDetailRequest;
 import com.se.kltn.spamanagement.dto.request.InvoiceUpdateRequest;
 import com.se.kltn.spamanagement.dto.response.InvoiceDetailResponse;
 import com.se.kltn.spamanagement.dto.response.InvoiceResponse;
+import com.se.kltn.spamanagement.dto.response.ProductResponse;
 import com.se.kltn.spamanagement.exception.ResourceNotFoundException;
 import com.se.kltn.spamanagement.model.Invoice;
 import com.se.kltn.spamanagement.model.InvoiceDetail;
@@ -28,6 +29,7 @@ import java.util.List;
 import static com.se.kltn.spamanagement.constants.ErrorMessage.*;
 
 @Service
+@Transactional
 public class InvoiceServiceImpl implements InvoiceService {
 
     private final InvoiceRepository invoiceRepository;
@@ -47,7 +49,6 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     @Override
-    @Transactional
     public InvoiceResponse createInvoice(InvoiceCreateRequest invoiceRequest) {
         Invoice invoice = MappingData.mapObject(invoiceRequest, Invoice.class);
         invoice.setCustomer(this.customerRepository.findById(invoiceRequest.getCustomerId()).orElseThrow(
@@ -70,18 +71,22 @@ public class InvoiceServiceImpl implements InvoiceService {
         NullUtils.updateIfPresent(invoice::setDueDate, invoiceRequest.getDueDate());
         NullUtils.updateIfPresent(invoice::setPaymentMethod, invoiceRequest.getPaymentMethod());
         invoice.setUpdatedDate(new Date());
+        Double totalAmount = 0.0;
+        for (InvoiceDetail invoiceDetail : invoice.getInvoiceDetails()) {
+            totalAmount += invoiceDetail.getTotalPrice();
+        }
+        invoice.setTotalAmount(totalAmount);
         return MappingData.mapObject(this.invoiceRepository.save(invoice), InvoiceResponse.class);
     }
 
     @Override
     public List<InvoiceResponse> getInvoicesByCustomer(Long idCustomer) {
-        List<Invoice> invoices = this.invoiceRepository.findInvoicesByCustomer_Id(idCustomer).orElse(null);
-        assert invoices != null;
-        return MappingData.mapListObject(invoices, InvoiceResponse.class);
+        List<Invoice> invoices = this.invoiceRepository.findInvoicesByCustomer_Id(idCustomer);
+        return mapToResponse(invoices);
     }
 
+
     @Override
-    @Transactional
     public void deleteInvoice(Long id) {
         Invoice invoice = this.invoiceRepository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException(INVOICE_NOT_FOUND));
@@ -94,7 +99,7 @@ public class InvoiceServiceImpl implements InvoiceService {
     @Override
     public List<InvoiceResponse> getAllInvoice(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        return MappingData.mapListObject(this.invoiceRepository.findAll(pageable).getContent(), InvoiceResponse.class);
+        return mapToResponse(this.invoiceRepository.findAll(pageable).getContent());
     }
 
     private InvoiceResponse saveInvoiceDetail(Invoice invoiceSaved, InvoiceCreateRequest invoiceRequest) {
@@ -115,4 +120,23 @@ public class InvoiceServiceImpl implements InvoiceService {
         return invoiceResponse;
     }
 
+    private List<InvoiceResponse> mapToResponse(List<Invoice> invoices) {
+        List<InvoiceResponse> invoiceResponses = MappingData.mapListObject(invoices, InvoiceResponse.class);
+        invoiceResponses.forEach(invoiceResponse -> {
+            invoices.forEach(invoice -> {
+                if (invoiceResponse.getId().equals(invoice.getId())) {
+                    List<InvoiceDetailResponse> invoiceDetailResponses = MappingData.mapListObject(invoice.getInvoiceDetails(), InvoiceDetailResponse.class);
+                    invoiceDetailResponses.forEach(invoiceDetailResponse -> {
+                        invoice.getInvoiceDetails().forEach(
+                                invoiceDetail -> {
+                                    invoiceDetailResponse.setProductResponse(MappingData.mapObject(invoiceDetail.getProduct(), ProductResponse.class));
+                                }
+                        );
+                    });
+                    invoiceResponse.setInvoiceDetailResponses(invoiceDetailResponses);
+                }
+            });
+        });
+        return invoiceResponses;
+    }
 }

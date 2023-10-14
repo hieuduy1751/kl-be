@@ -1,6 +1,7 @@
 package com.se.kltn.spamanagement.controller;
 
-import com.se.kltn.spamanagement.dto.request.InvoiceRequest;
+import com.se.kltn.spamanagement.dto.request.InvoiceCreateRequest;
+import com.se.kltn.spamanagement.dto.request.InvoiceUpdateRequest;
 import com.se.kltn.spamanagement.service.InvoiceService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,14 +34,14 @@ public class InvoiceController {
 
     @PostMapping
     @Operation(summary = "create invoice")
-    public ResponseEntity<Object> createInvoice(@RequestBody InvoiceRequest invoiceRequest) {
+    public ResponseEntity<Object> createInvoice(@RequestBody InvoiceCreateRequest invoiceRequest) {
         return ResponseEntity.ok().body(this.invoiceService.createInvoice(invoiceRequest));
     }
 
     @PutMapping("/{id}")
     @Operation(summary = "update invoice")
     public ResponseEntity<Object> updateInvoice(@PathVariable("id") Long id,
-                                                @RequestBody InvoiceRequest invoiceRequest) {
+                                                @RequestBody InvoiceUpdateRequest invoiceRequest) {
         return ResponseEntity.ok().body(this.invoiceService.updateInvoice(id, invoiceRequest));
     }
 

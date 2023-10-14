@@ -61,7 +61,13 @@ public class InvoiceDetailServiceImpl implements InvoiceDetailService {
         this.invoiceDetailRepository.delete(invoiceDetail);
     }
 
-    private InvoiceDetailResponse mapToResponse(InvoiceDetail invoiceDetail) {
+    @Override
+    public List<InvoiceDetailResponse> getInvoiceDetailsByInvoiceId(Long invoiceId) {
+        List<InvoiceDetail> invoiceDetails = this.invoiceDetailRepository.findInvoiceDetailsByInvoice_Id(invoiceId);
+        return MappingData.mapListObject(invoiceDetails, InvoiceDetailResponse.class);
+    }
+
+    public InvoiceDetailResponse mapToResponse(InvoiceDetail invoiceDetail) {
         InvoiceDetailResponse response = MappingData.mapObject(invoiceDetail, InvoiceDetailResponse.class);
         response.setProductResponse(MappingData.mapObject(invoiceDetail.getProduct(), ProductResponse.class));
         return response;
