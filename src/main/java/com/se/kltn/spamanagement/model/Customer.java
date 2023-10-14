@@ -55,7 +55,7 @@ public class Customer {
     private List<Invoice> invoices;
 
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<AppointmentDetail> appointmentDetails;
+    private List<Appointment> appointments;
 
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Rating> ratings;

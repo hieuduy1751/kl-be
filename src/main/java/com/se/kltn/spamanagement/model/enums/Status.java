@@ -8,7 +8,7 @@ public enum Status {
     NEW,
     IN_PROGRESS,
     FINISH,
-    CHECKED,
+    CHECKED_IN,
     WAITING,
     CHANGED,
     FINISHED,

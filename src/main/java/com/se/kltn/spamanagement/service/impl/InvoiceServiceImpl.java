@@ -9,10 +9,12 @@ import com.se.kltn.spamanagement.dto.response.ProductResponse;
 import com.se.kltn.spamanagement.exception.ResourceNotFoundException;
 import com.se.kltn.spamanagement.model.Invoice;
 import com.se.kltn.spamanagement.model.InvoiceDetail;
+import com.se.kltn.spamanagement.model.enums.Category;
 import com.se.kltn.spamanagement.model.enums.Status;
 import com.se.kltn.spamanagement.repository.CustomerRepository;
 import com.se.kltn.spamanagement.repository.EmployeeRepository;
 import com.se.kltn.spamanagement.repository.InvoiceRepository;
+import com.se.kltn.spamanagement.repository.ProductRepository;
 import com.se.kltn.spamanagement.service.InvoiceService;
 import com.se.kltn.spamanagement.utils.MappingData;
 import com.se.kltn.spamanagement.utils.NullUtils;
@@ -40,12 +42,15 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     private final InvoiceDetailServiceImpl invoiceDetailService;
 
+    private final ProductRepository productRepository;
+
     @Autowired
-    public InvoiceServiceImpl(InvoiceRepository invoiceRepository, CustomerRepository customerRepository, EmployeeRepository employeeRepository, InvoiceDetailServiceImpl invoiceDetailService) {
+    public InvoiceServiceImpl(InvoiceRepository invoiceRepository, CustomerRepository customerRepository, EmployeeRepository employeeRepository, InvoiceDetailServiceImpl invoiceDetailService, ProductRepository productRepository) {
         this.invoiceRepository = invoiceRepository;
         this.customerRepository = customerRepository;
         this.employeeRepository = employeeRepository;
         this.invoiceDetailService = invoiceDetailService;
+        this.productRepository = productRepository;
     }
 
     @Override
@@ -70,19 +75,22 @@ public class InvoiceServiceImpl implements InvoiceService {
         NullUtils.updateIfPresent(invoice::setNote, invoiceRequest.getNote());
         NullUtils.updateIfPresent(invoice::setDueDate, invoiceRequest.getDueDate());
         NullUtils.updateIfPresent(invoice::setPaymentMethod, invoiceRequest.getPaymentMethod());
+        NullUtils.updateIfPresent(invoice::setStatus, invoiceRequest.getStatus());
+        checkToReduceProduct(invoiceRequest.getStatus(), invoice);
         invoice.setUpdatedDate(new Date());
         Double totalAmount = 0.0;
         for (InvoiceDetail invoiceDetail : invoice.getInvoiceDetails()) {
             totalAmount += invoiceDetail.getTotalPrice();
         }
         invoice.setTotalAmount(totalAmount);
-        return MappingData.mapObject(this.invoiceRepository.save(invoice), InvoiceResponse.class);
+        return mapToResponse(this.invoiceRepository.save(invoice));
     }
+
 
     @Override
     public List<InvoiceResponse> getInvoicesByCustomer(Long idCustomer) {
         List<Invoice> invoices = this.invoiceRepository.findInvoicesByCustomer_Id(idCustomer);
-        return mapToResponse(invoices);
+        return mapToListResponse(invoices);
     }
 
 
@@ -99,44 +107,54 @@ public class InvoiceServiceImpl implements InvoiceService {
     @Override
     public List<InvoiceResponse> getAllInvoice(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        return mapToResponse(this.invoiceRepository.findAll(pageable).getContent());
+        return mapToListResponse(this.invoiceRepository.findAll(pageable).getContent());
     }
 
     private InvoiceResponse saveInvoiceDetail(Invoice invoiceSaved, InvoiceCreateRequest invoiceRequest) {
         List<InvoiceDetailRequest> invoiceDetailRequests = invoiceRequest.getInvoiceDetailRequests();
-        List<InvoiceDetailResponse> detailResponseList = new ArrayList<>();
         Double totalAmount = 0.0;
         for (InvoiceDetailRequest invoiceDetailRequest : invoiceDetailRequests) {
             InvoiceDetail invoiceDetail = MappingData.mapObject(invoiceDetailRequest, InvoiceDetail.class);
             invoiceDetail.setInvoice(invoiceSaved);
             InvoiceDetailResponse invoiceDetailResponse = invoiceDetailService.createInvoiceDetail(invoiceDetail, invoiceDetailRequest.getIdProduct());
-            detailResponseList.add(invoiceDetailResponse);
             totalAmount += invoiceDetailResponse.getTotalPrice();
         }
         invoiceSaved.setTotalAmount(totalAmount);
-        this.invoiceRepository.save(invoiceSaved);
-        InvoiceResponse invoiceResponse = MappingData.mapObject(invoiceSaved, InvoiceResponse.class);
-        invoiceResponse.setInvoiceDetailResponses(detailResponseList);
-        return invoiceResponse;
+        return mapToResponse(this.invoiceRepository.save(invoiceSaved));
     }
 
-    private List<InvoiceResponse> mapToResponse(List<Invoice> invoices) {
+    private List<InvoiceResponse> mapToListResponse(List<Invoice> invoices) {
         List<InvoiceResponse> invoiceResponses = MappingData.mapListObject(invoices, InvoiceResponse.class);
-        invoiceResponses.forEach(invoiceResponse -> {
-            invoices.forEach(invoice -> {
-                if (invoiceResponse.getId().equals(invoice.getId())) {
-                    List<InvoiceDetailResponse> invoiceDetailResponses = MappingData.mapListObject(invoice.getInvoiceDetails(), InvoiceDetailResponse.class);
-                    invoiceDetailResponses.forEach(invoiceDetailResponse -> {
-                        invoice.getInvoiceDetails().forEach(
-                                invoiceDetail -> {
-                                    invoiceDetailResponse.setProductResponse(MappingData.mapObject(invoiceDetail.getProduct(), ProductResponse.class));
-                                }
-                        );
-                    });
-                    invoiceResponse.setInvoiceDetailResponses(invoiceDetailResponses);
-                }
-            });
-        });
+        invoiceResponses.forEach(invoiceResponse -> invoices.forEach(invoice -> {
+            if (invoiceResponse.getId().equals(invoice.getId())) {
+                List<InvoiceDetailResponse> invoiceDetailResponses = MappingData.mapListObject(invoice.getInvoiceDetails(), InvoiceDetailResponse.class);
+                invoiceDetailResponses.forEach(invoiceDetailResponse -> invoice.getInvoiceDetails().forEach(
+                        invoiceDetail -> invoiceDetailResponse.setProductResponse(MappingData.mapObject(invoiceDetail.getProduct(), ProductResponse.class))
+                ));
+                invoiceResponse.setInvoiceDetailResponses(invoiceDetailResponses);
+            }
+        }));
         return invoiceResponses;
+    }
+
+    private void checkToReduceProduct(Status status, Invoice invoice) {
+        if (status.equals(Status.PAID)) {
+            for (InvoiceDetail invoiceDetail : invoice.getInvoiceDetails()) {
+                if (invoiceDetail.getProduct().getCategory().equals(Category.PRODUCT)) {
+                    invoiceDetail.getProduct().setQuantity(invoiceDetail.getProduct().getQuantity() - invoiceDetail.getTotalQuantity());
+                    this.productRepository.save(invoiceDetail.getProduct());
+                }
+            }
+        }
+    }
+
+    private InvoiceResponse mapToResponse(Invoice invoice) {
+        InvoiceResponse invoiceResponse = MappingData.mapObject(invoice, InvoiceResponse.class);
+        List<InvoiceDetailResponse> invoiceDetailResponses = MappingData.mapListObject(invoice.getInvoiceDetails(), InvoiceDetailResponse.class);
+        invoiceDetailResponses.forEach(invoiceDetailResponse -> invoice.getInvoiceDetails().forEach(
+                invoiceDetail -> invoiceDetailResponse.setProductResponse(MappingData.mapObject(invoiceDetail.getProduct(), ProductResponse.class))
+        ));
+        invoiceResponse.setInvoiceDetailResponses(invoiceDetailResponses);
+        return invoiceResponse;
     }
 }

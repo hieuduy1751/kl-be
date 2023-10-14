@@ -45,4 +45,12 @@ public class AppointmentController {
         this.appointmentService.deleteAppointment(id);
         return ResponseEntity.ok().body("Appointment deleted");
     }
+
+    @GetMapping("/customer/{idCustomer}")
+    @Operation(summary = "get list appointment by customerId")
+    public ResponseEntity<Object> getListAppointmentByCustomer(@PathVariable Long idCustomer,
+                                                               @RequestParam(defaultValue = "0", value = "page", required = false) int page,
+                                                               @RequestParam(defaultValue = "10", value = "size", required = false) int size) {
+        return ResponseEntity.ok().body(this.appointmentService.getAllAppointmentByCustomer(idCustomer, page, size));
+    }
 }

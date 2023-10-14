@@ -15,4 +15,6 @@ public interface AppointmentService {
 
     List<AppointmentResponse> getAllAppointment(int page, int size);
 
+    List<AppointmentResponse> getAllAppointmentByCustomer(Long idCustomer, int page, int size);
+
 }

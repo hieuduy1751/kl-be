@@ -1,6 +1,7 @@
 package com.se.kltn.spamanagement.dto.request;
 
 import com.se.kltn.spamanagement.model.enums.PaymentMethod;
+import com.se.kltn.spamanagement.model.enums.Status;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,6 +17,8 @@ public class InvoiceUpdateRequest {
     private String note;
 
     private PaymentMethod paymentMethod;
+
+    private Status status;
 
     private Long customerId;
 

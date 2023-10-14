@@ -2,6 +2,7 @@ package com.se.kltn.spamanagement.model;
 
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.se.kltn.spamanagement.model.enums.Status;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,6 +27,9 @@ public class Appointment {
     @JsonFormat(pattern="yyyy-MM-dd")
     private Date time;
 
+    @Enumerated(EnumType.STRING)
+    private Status status;
+
     private String note;
 
     @Column(name = "created_date")
@@ -42,8 +46,9 @@ public class Appointment {
     @JoinColumn(name = "product_id")
     private Product product;
 
-    @OneToMany(mappedBy = "appointment")
-    private Set<AppointmentDetail> appointmentDetails;
+    @ManyToOne
+    @JoinColumn(name = "customer_id")
+    private Customer customer;
 
 
 }
