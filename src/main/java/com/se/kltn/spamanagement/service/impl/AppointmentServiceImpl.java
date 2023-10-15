@@ -47,7 +47,7 @@ public class AppointmentServiceImpl implements AppointmentService {
     public AppointmentResponse createAppointment(AppointmentRequest appointmentRequest) {
         Appointment appointment = MappingData.mapObject(appointmentRequest, Appointment.class);
         checkDateBefore(appointment.getTime());
-        if (appointmentRequest.getStatus() == null){
+        if (appointmentRequest.getStatus() == null) {
             appointment.setStatus(Status.WAITING);
         }
         appointment.setCreatedDate(new Date());
@@ -69,6 +69,7 @@ public class AppointmentServiceImpl implements AppointmentService {
         Appointment appointment = this.appointmentRepository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException(APPOINTMENT_NOT_FOUND));
         appointment.setUpdatedDate(new Date());
+        checkDateBefore(appointmentRequest.getTime());
         NullUtils.updateIfPresent(appointment::setTime, appointmentRequest.getTime());
         NullUtils.updateIfPresent(appointment::setStatus, appointmentRequest.getStatus());
         NullUtils.updateIfPresent(appointment::setNote, appointmentRequest.getNote());
@@ -95,7 +96,7 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
     private void checkDateBefore(Date date) {
-        if (date.before(new Date())) {
+        if (date != null && date.before(new Date())) {
             throw new BadRequestException("Date request is before now");
         }
     }

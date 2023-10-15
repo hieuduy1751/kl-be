@@ -21,6 +21,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 import static com.se.kltn.spamanagement.constants.ErrorMessage.*;
@@ -48,6 +49,7 @@ public class TreatmentDetailServiceImpl implements TreatmentDetailService {
         treatmentDetail.setCustomer(getCustomerById(treatmentDetailId.getCustomerId()));
         treatmentDetail.setTreatmentDetailId(treatmentDetailId);
         treatmentDetail.setStatus(Status.NEW);
+        treatmentDetail.setCreatedDate(new Date());
         return mapToTreatmentDetailResponse(this.treatmentDetailRepository.save(treatmentDetail));
     }
 
