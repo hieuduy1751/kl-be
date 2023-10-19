@@ -27,6 +27,8 @@ public class ImageServiceImpl implements ImageService {
 
     private static final String DOWNLOAD_URL = "https://firebasestorage.googleapis.com/v0/b/kltn-spamanagement.appspot.com/o/%s?alt=media&token=%s";
 
+    private static final String CREDENTIAL_PATH="D:\\personal\\KLTN\\code\\KLTN-SpaManagement-BackEnd\\src\\main\\resources\\static\\credential.json";
+
     @Override
     public String upload(MultipartFile multipartFile) throws IOException {
         String fileName = multipartFile.getOriginalFilename();
@@ -44,7 +46,7 @@ public class ImageServiceImpl implements ImageService {
         map.put("firebaseStorageDownloadToken", fileName);
         BlobInfo blobInfo = BlobInfo.newBuilder(id).setMetadata(map).setContentType("media").build();
         Credentials credentials = GoogleCredentials.fromStream(
-                Files.newInputStream(Paths.get("D:\\personal\\KLTN\\code\\KLTN-SpaManagement-BackEnd\\src\\main\\resources\\static\\credential.json")));
+                Files.newInputStream(Paths.get(CREDENTIAL_PATH)));
         Storage storage = StorageOptions.newBuilder().setCredentials(credentials).build().getService();
         storage.create(blobInfo, Files.readAllBytes(file.toPath()));
         return String.format(DOWNLOAD_URL, encode(fileName, StandardCharsets.UTF_8), encode(fileName, StandardCharsets.UTF_8));
