@@ -1,7 +1,7 @@
 package com.se.kltn.spamanagement.repository;
 
 import com.se.kltn.spamanagement.model.Product;
-import com.se.kltn.spamanagement.model.enums.Category;
+import com.se.kltn.spamanagement.constants.enums.Category;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

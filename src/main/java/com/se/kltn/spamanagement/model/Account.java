@@ -1,6 +1,6 @@
 package com.se.kltn.spamanagement.model;
 
-import com.se.kltn.spamanagement.model.enums.Role;
+import com.se.kltn.spamanagement.constants.enums.Role;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

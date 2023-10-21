@@ -4,7 +4,7 @@ import com.se.kltn.spamanagement.dto.request.AccountRequest;
 import com.se.kltn.spamanagement.dto.response.AccountResponse;
 import com.se.kltn.spamanagement.exception.BadRequestException;
 import com.se.kltn.spamanagement.model.Account;
-import com.se.kltn.spamanagement.model.enums.Role;
+import com.se.kltn.spamanagement.constants.enums.Role;
 import com.se.kltn.spamanagement.repository.AccountRepository;
 import com.se.kltn.spamanagement.security.jwt.JwtProvider;
 import com.se.kltn.spamanagement.service.AuthService;

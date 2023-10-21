@@ -1,6 +1,6 @@
 package com.se.kltn.spamanagement.dto.request;
 
-import com.se.kltn.spamanagement.model.enums.CustomerClass;
+import com.se.kltn.spamanagement.constants.enums.CustomerClass;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 

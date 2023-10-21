@@ -1,12 +1,11 @@
 package com.se.kltn.spamanagement.service.impl;
 
-import com.se.kltn.spamanagement.constants.ErrorMessage;
 import com.se.kltn.spamanagement.dto.request.AppointmentRequest;
 import com.se.kltn.spamanagement.dto.response.AppointmentResponse;
 import com.se.kltn.spamanagement.exception.BadRequestException;
 import com.se.kltn.spamanagement.exception.ResourceNotFoundException;
 import com.se.kltn.spamanagement.model.Appointment;
-import com.se.kltn.spamanagement.model.enums.Status;
+import com.se.kltn.spamanagement.constants.enums.Status;
 import com.se.kltn.spamanagement.repository.AppointmentRepository;
 import com.se.kltn.spamanagement.repository.CustomerRepository;
 import com.se.kltn.spamanagement.repository.EmployeeRepository;

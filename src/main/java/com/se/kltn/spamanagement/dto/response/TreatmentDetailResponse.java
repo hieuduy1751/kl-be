@@ -1,6 +1,6 @@
 package com.se.kltn.spamanagement.dto.response;
 
-import com.se.kltn.spamanagement.model.enums.Status;
+import com.se.kltn.spamanagement.constants.enums.Status;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

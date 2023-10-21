@@ -1,14 +1,11 @@
 package com.se.kltn.spamanagement.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.se.kltn.spamanagement.model.enums.PaymentMethod;
-import com.se.kltn.spamanagement.model.enums.Status;
+import com.se.kltn.spamanagement.constants.enums.PaymentMethod;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.validation.constraints.NotBlank;
 import java.util.Date;
 import java.util.List;

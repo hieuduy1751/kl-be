@@ -1,13 +1,11 @@
 package com.se.kltn.spamanagement.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.se.kltn.spamanagement.model.enums.Status;
+import com.se.kltn.spamanagement.constants.enums.Status;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 

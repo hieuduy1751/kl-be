@@ -9,7 +9,7 @@ import com.se.kltn.spamanagement.model.Customer;
 import com.se.kltn.spamanagement.model.Product;
 import com.se.kltn.spamanagement.model.TreatmentDetail;
 import com.se.kltn.spamanagement.model.TreatmentDetailId;
-import com.se.kltn.spamanagement.model.enums.Status;
+import com.se.kltn.spamanagement.constants.enums.Status;
 import com.se.kltn.spamanagement.repository.CustomerRepository;
 import com.se.kltn.spamanagement.repository.ProductRepository;
 import com.se.kltn.spamanagement.repository.TreatmentDetailRepository;

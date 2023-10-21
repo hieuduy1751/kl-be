@@ -1,4 +1,4 @@
-package com.se.kltn.spamanagement.model.enums;
+package com.se.kltn.spamanagement.constants.enums;
 
 public enum Status {
     ACTIVE,

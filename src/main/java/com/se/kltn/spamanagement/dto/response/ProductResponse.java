@@ -1,7 +1,7 @@
 package com.se.kltn.spamanagement.dto.response;
 
-import com.se.kltn.spamanagement.model.enums.Category;
-import com.se.kltn.spamanagement.model.enums.Status;
+import com.se.kltn.spamanagement.constants.enums.Category;
+import com.se.kltn.spamanagement.constants.enums.Status;
 import lombok.Data;
 
 import java.util.Date;

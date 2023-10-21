@@ -9,8 +9,8 @@ import com.se.kltn.spamanagement.dto.response.ProductResponse;
 import com.se.kltn.spamanagement.exception.ResourceNotFoundException;
 import com.se.kltn.spamanagement.model.Invoice;
 import com.se.kltn.spamanagement.model.InvoiceDetail;
-import com.se.kltn.spamanagement.model.enums.Category;
-import com.se.kltn.spamanagement.model.enums.Status;
+import com.se.kltn.spamanagement.constants.enums.Category;
+import com.se.kltn.spamanagement.constants.enums.Status;
 import com.se.kltn.spamanagement.repository.CustomerRepository;
 import com.se.kltn.spamanagement.repository.EmployeeRepository;
 import com.se.kltn.spamanagement.repository.InvoiceRepository;
@@ -24,7 +24,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 

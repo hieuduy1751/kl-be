@@ -1,6 +1,5 @@
 package com.se.kltn.spamanagement.model;
 
-import com.se.kltn.spamanagement.model.enums.Status;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
