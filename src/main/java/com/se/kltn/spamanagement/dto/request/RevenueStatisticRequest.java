@@ -13,12 +13,9 @@ import java.util.Date;
 @NoArgsConstructor
 public class RevenueStatisticRequest {
 
-    @NotBlank(message = "startDate is required")
     private Date startDate;
 
-    @NotBlank(message = "endDate is required")
     private Date endDate;
 
-    @NotBlank(message = "timeType is required")
     private TimeType timeType;
 }

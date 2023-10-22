@@ -16,13 +16,13 @@ public class RevenueStatisticResponse {
 
     private TimeType timeType;
 
-    private Integer totalQuantity;
+    private Integer totalQuantityInvoice;
 
-    private Integer totalService;
+    private Integer totalQuantityService;
 
-    private Integer totalProduct;
+    private Integer totalQuantityProduct;
 
-    private Integer totalTreatment;
+    private Integer totalQuantityTreatment;
 
     private Double totalServiceRevenue;
 

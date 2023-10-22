@@ -2,6 +2,8 @@ package com.se.kltn.spamanagement.controller;
 
 import com.se.kltn.spamanagement.dto.request.InvoiceCreateRequest;
 import com.se.kltn.spamanagement.dto.request.InvoiceUpdateRequest;
+import com.se.kltn.spamanagement.model.InvoiceDetailId;
+import com.se.kltn.spamanagement.service.InvoiceDetailService;
 import com.se.kltn.spamanagement.service.InvoiceService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 public class InvoiceController {
 
     private final InvoiceService invoiceService;
+
 
     @Autowired
     public InvoiceController(InvoiceService invoiceService) {
