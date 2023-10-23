@@ -18,12 +18,14 @@ import com.se.kltn.spamanagement.repository.ProductRepository;
 import com.se.kltn.spamanagement.service.InvoiceService;
 import com.se.kltn.spamanagement.utils.MappingData;
 import com.se.kltn.spamanagement.utils.NullUtils;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -31,6 +33,7 @@ import static com.se.kltn.spamanagement.constants.ErrorMessage.*;
 
 @Service
 @Transactional
+@Log4j2
 public class InvoiceServiceImpl implements InvoiceService {
 
     private final InvoiceRepository invoiceRepository;
@@ -54,6 +57,7 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     @Override
     public InvoiceResponse createInvoice(InvoiceCreateRequest invoiceRequest) {
+        log.info("Create invoice");
         Invoice invoice = MappingData.mapObject(invoiceRequest, Invoice.class);
         invoice.setCustomer(this.customerRepository.findById(invoiceRequest.getCustomerId()).orElseThrow(
                 () -> new ResourceNotFoundException(CUSTOMER_NOT_FOUND)
@@ -64,30 +68,35 @@ public class InvoiceServiceImpl implements InvoiceService {
         invoice.setStatus(Status.UNPAID);
         invoice.setCreatedDate(new Date());
         invoice.setUpdatedDate(new Date());
-        return saveInvoiceDetail(this.invoiceRepository.save(invoice), invoiceRequest);
+        Invoice invoiceSaved = this.invoiceRepository.saveAndFlush(invoice);
+        return saveInvoiceDetail(invoiceSaved, invoiceRequest);
     }
 
     @Override
     public InvoiceResponse updateInvoice(Long id, InvoiceUpdateRequest invoiceRequest) {
+        log.info("Update invoice");
         Invoice invoice = this.invoiceRepository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException(INVOICE_NOT_FOUND));
         NullUtils.updateIfPresent(invoice::setNote, invoiceRequest.getNote());
         NullUtils.updateIfPresent(invoice::setDueDate, invoiceRequest.getDueDate());
         NullUtils.updateIfPresent(invoice::setPaymentMethod, invoiceRequest.getPaymentMethod());
         NullUtils.updateIfPresent(invoice::setStatus, invoiceRequest.getStatus());
-        checkToReduceProduct(invoiceRequest.getStatus(), invoice);
         invoice.setUpdatedDate(new Date());
+        //calculate total amount
         Double totalAmount = 0.0;
         for (InvoiceDetail invoiceDetail : invoice.getInvoiceDetails()) {
             totalAmount += invoiceDetail.getTotalPrice();
         }
         invoice.setTotalAmount(totalAmount);
-        return mapToResponse(this.invoiceRepository.save(invoice));
+        Invoice invoiceSaved = this.invoiceRepository.saveAndFlush(invoice);
+        checkToReduceProduct(invoiceSaved.getStatus(), invoice);
+        return mapToResponse(invoiceSaved);
     }
 
 
     @Override
     public List<InvoiceResponse> getInvoicesByCustomer(Long idCustomer) {
+        log.info("Get invoices by customer");
         List<Invoice> invoices = this.invoiceRepository.findInvoicesByCustomer_Id(idCustomer);
         return mapToListResponse(invoices);
     }
@@ -95,6 +104,7 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     @Override
     public void deleteInvoice(Long id) {
+        log.info("Delete invoice");
         Invoice invoice = this.invoiceRepository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException(INVOICE_NOT_FOUND));
         for (InvoiceDetail invoiceDetail : invoice.getInvoiceDetails()) {
@@ -105,6 +115,7 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     @Override
     public List<InvoiceResponse> getAllInvoice(int page, int size) {
+        log.info("Get all invoice paginated");
         Pageable pageable = PageRequest.of(page, size);
         return mapToListResponse(this.invoiceRepository.findAll(pageable).getContent());
     }
@@ -112,14 +123,17 @@ public class InvoiceServiceImpl implements InvoiceService {
     private InvoiceResponse saveInvoiceDetail(Invoice invoiceSaved, InvoiceCreateRequest invoiceRequest) {
         List<InvoiceDetailRequest> invoiceDetailRequests = invoiceRequest.getInvoiceDetailRequests();
         Double totalAmount = 0.0;
+        List<InvoiceDetail> invoiceDetails = new ArrayList<>();
         for (InvoiceDetailRequest invoiceDetailRequest : invoiceDetailRequests) {
             InvoiceDetail invoiceDetail = MappingData.mapObject(invoiceDetailRequest, InvoiceDetail.class);
             invoiceDetail.setInvoice(invoiceSaved);
             InvoiceDetailResponse invoiceDetailResponse = invoiceDetailService.createInvoiceDetail(invoiceDetail, invoiceDetailRequest.getIdProduct());
             totalAmount += invoiceDetailResponse.getTotalPrice();
+            invoiceDetails.add(invoiceDetail);
         }
         invoiceSaved.setTotalAmount(totalAmount);
-        return mapToResponse(this.invoiceRepository.save(invoiceSaved));
+        invoiceSaved.setInvoiceDetails(invoiceDetails);
+        return mapToResponse(this.invoiceRepository.saveAndFlush(invoiceSaved));
     }
 
     private List<InvoiceResponse> mapToListResponse(List<Invoice> invoices) {

@@ -2,6 +2,7 @@ package com.se.kltn.spamanagement.repository;
 
 import com.se.kltn.spamanagement.constants.enums.Status;
 import com.se.kltn.spamanagement.model.Invoice;
+import com.se.kltn.spamanagement.model.InvoiceDetail;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
