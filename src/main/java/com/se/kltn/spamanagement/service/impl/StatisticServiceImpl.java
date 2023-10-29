@@ -42,13 +42,13 @@ public class StatisticServiceImpl implements StatisticService {
     public RevenueStatisticResponse getRevenueStatistic(RevenueStatisticRequest statisticRequest) {
         log.info("Get revenue statistic");
         switch (statisticRequest.getTimeType()) {
-            case DAY:
+            case "DAY":
                 return getRevenueStatisticByDay();
-            case MONTH:
+            case "MONTH":
                 return getRevenueStatisticByMonth();
-            case YEAR:
+            case "YEAR":
                 return getRevenueStatisticByYear();
-            case WEEK:
+            case "WEEK":
                 return getRevenueStatisticByWeek();
             default:
                 return getRevenueStatisticByDate(statisticRequest.getStartDate(), statisticRequest.getEndDate());

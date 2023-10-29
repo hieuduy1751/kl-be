@@ -17,5 +17,5 @@ public class RevenueStatisticRequest {
 
     private Date endDate;
 
-    private TimeType timeType;
+    private String timeType;
 }

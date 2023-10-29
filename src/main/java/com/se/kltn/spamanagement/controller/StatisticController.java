@@ -23,7 +23,7 @@ public class StatisticController {
 
     @GetMapping("/revenue")
     @Operation(summary = "get revenue statistic")
-    public ResponseEntity<Object> getRevenueStatisticByDate(@RequestParam(required = false) TimeType timeType,
+    public ResponseEntity<Object> getRevenueStatisticByDate(@RequestParam(required = false) String timeType,
                                                             @RequestParam(required = false) Date startDate,
                                                             @RequestParam(required = false) Date endDate) {
         return ResponseEntity.ok().body(this.statisticService.getRevenueStatistic(new RevenueStatisticRequest(startDate, endDate, timeType)));
