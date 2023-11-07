@@ -89,6 +89,14 @@ public class ProductServiceImpl implements ProductService {
         return MappingData.mapListObject(products, ProductResponse.class);
     }
 
+    @Override
+    public List<ProductResponse> searchByText(String text) {
+        if (text == null) {
+            return getProducts(0, 10);
+        }
+        return MappingData.mapListObject(this.productRepository.getProductsByText(text), ProductResponse.class);
+    }
+
     private void checkStatus(Product product) {
         if (product.getQuantity() > 0) {
             product.setStatus(Status.ACTIVE);

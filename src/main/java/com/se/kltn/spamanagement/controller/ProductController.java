@@ -95,4 +95,14 @@ public class ProductController {
     private ResponseEntity<Object> filterProductsByPriceBetween(@RequestParam("from") Double from, @RequestParam("to") Double to) {
         return ResponseEntity.ok().body(this.productService.filterProductsByPriceBetween(from, to));
     }
+
+    @GetMapping("/search/text")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "products founded"),
+            @ApiResponse(responseCode = "400", description = "bad request")
+    })
+    @Operation(summary = "search product by text")
+    public ResponseEntity<Object> findProductByText(@RequestParam(value = "text", required = false) String text) {
+        return ResponseEntity.ok().body(this.productService.searchByText(text));
+    }
 }

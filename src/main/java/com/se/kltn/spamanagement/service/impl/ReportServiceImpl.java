@@ -17,7 +17,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
-import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -44,12 +43,13 @@ public class ReportServiceImpl implements ReportService {
 
     private Path getUploadPath(String fileFormat, JasperPrint jasperPrint) throws IOException, JRException {
         String uploadDir = StringUtils.cleanPath("./generated-reports");
-        Path uploadPath = Paths.get(uploadDir);
+        Path uploadPath = Paths.get(uploadDir).toAbsolutePath().normalize();
         if (!Files.exists(uploadPath)) {
             Files.createDirectories(uploadPath);
         }
         if (fileFormat.equalsIgnoreCase("pdf")) {
-            JasperExportManager.exportReportToPdfFile(jasperPrint, uploadPath + "productReport.pdf");
+            String filePath = uploadPath.resolve("productReport.pdf").toString();
+            JasperExportManager.exportReportToPdfFile(jasperPrint, filePath);
         }
         return uploadPath;
     }
@@ -63,7 +63,6 @@ public class ReportServiceImpl implements ReportService {
         List<ProductResponse> objects = this.productService.getProductsByCategory(Category.PRODUCT.name(), 0, 10);
         String resourceLocation = "src/main/resources/report/productReport.jrxml";
         JasperPrint jasperPrint = getJasperPrint(objects, resourceLocation);
-        String fileName = "/" + "productReport.pdf";
         Path uploadPath = getUploadPath(fileFormat, jasperPrint);
         return getPdfFileLink(uploadPath.toString());
     }
