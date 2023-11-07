@@ -79,4 +79,12 @@ public class EmployeeServiceImpl implements EmployeeService {
         List<Employee> employeePage = this.employeeRepository.findAll(pageable).getContent();
         return MappingData.mapListObject(employeePage, EmployeeResponse.class);
     }
+
+    @Override
+    public List<EmployeeResponse> searchEmployeeByText(String text) {
+        if (text == null) {
+            return this.getAllEmployeePaging(0, 10);
+        }
+        return MappingData.mapListObject(this.employeeRepository.getEmployeesByText(text), EmployeeResponse.class);
+    }
 }

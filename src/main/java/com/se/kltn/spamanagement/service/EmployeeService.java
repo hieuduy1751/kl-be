@@ -17,4 +17,6 @@ public interface EmployeeService {
     void deleteEmployee(Long id);
 
     List<EmployeeResponse> getAllEmployeePaging(int page, int size);
+
+    List<EmployeeResponse> searchEmployeeByText(String text);
 }

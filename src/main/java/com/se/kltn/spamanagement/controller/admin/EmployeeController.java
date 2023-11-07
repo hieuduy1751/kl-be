@@ -51,4 +51,10 @@ public class EmployeeController {
         this.employeeService.deleteEmployee(id);
         return ResponseEntity.ok().body("Employee deleted");
     }
+
+    @GetMapping("search")
+    @Operation(summary = "search employee by name")
+    public ResponseEntity<Object> getEmployeeByText(@RequestParam(required = false) String text){
+        return ResponseEntity.ok().body(this.employeeService.searchEmployeeByText(text));
+    }
 }

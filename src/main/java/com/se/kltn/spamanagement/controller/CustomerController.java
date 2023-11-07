@@ -52,4 +52,9 @@ public class CustomerController {
         return ResponseEntity.ok().body("Customer deleted");
     }
 
+    @GetMapping("search")
+    @Operation(summary = "search customer by text")
+    public ResponseEntity<Object> findCustomerByName(@RequestParam(required = false) String text) {
+        return ResponseEntity.ok().body(this.customerService.getCustomerByText(text));
+    }
 }

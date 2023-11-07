@@ -16,4 +16,6 @@ public interface CustomerService {
     void deleteCustomer(Long id);
 
     List<CustomerResponse> getAllCustomer(int page, int size);
+
+    List<CustomerResponse> getCustomerByText(String name);
 }

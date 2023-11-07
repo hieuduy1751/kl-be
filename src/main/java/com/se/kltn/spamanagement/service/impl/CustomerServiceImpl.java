@@ -52,8 +52,8 @@ public class CustomerServiceImpl implements CustomerService {
         NullUtils.updateIfPresent(customer::setLastName, customerRequest.getLastName());
         NullUtils.updateIfPresent(customer::setAddress, customerRequest.getAddress());
         NullUtils.updateIfPresent(customer::setEmail, customerRequest.getEmail());
-        NullUtils.updateIfPresent(customer::setBirthDay,customerRequest.getBirthDay());
-        NullUtils.updateIfPresent(customer::setCustomerClass,customerRequest.getCustomerClass());
+        NullUtils.updateIfPresent(customer::setBirthDay, customerRequest.getBirthDay());
+        NullUtils.updateIfPresent(customer::setCustomerClass, customerRequest.getCustomerClass());
         customer.setUpdatedDate(new Date());
         return MappingData.mapObject(this.customerRepository.save(customer), CustomerResponse.class);
     }
@@ -70,5 +70,13 @@ public class CustomerServiceImpl implements CustomerService {
         Pageable pageable = PageRequest.of(page, size);
         List<Customer> customers = this.customerRepository.findAll(pageable).getContent();
         return MappingData.mapListObject(customers, CustomerResponse.class);
+    }
+
+    @Override
+    public List<CustomerResponse> getCustomerByText(String name) {
+        if (name == null) {
+            return getAllCustomer(0, 10);
+        }
+        return MappingData.mapListObject(this.customerRepository.getCustomersByText(name), CustomerResponse.class);
     }
 }
