@@ -14,6 +14,6 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
 
     @Query(value = "SELECT * FROM customers c WHERE " +
             "LOWER(REPLACE(CONCAT(UNACCENT(c.first_name), ' ', UNACCENT(c.last_name), ' ', UNACCENT(c.email), ' ', c.phone_number), ' ', ''))" +
-            "LIKE LOWER(REPLACE(CONCAT('%', UNACCENT(:name), '%'), ' ', ''))", nativeQuery = true)
+            "LIKE LOWER(REPLACE(CONCAT('%', UNACCENT(:text), '%'), ' ', ''))", nativeQuery = true)
     List<Customer> getCustomersByText(@Param("text") String text);
 }
