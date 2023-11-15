@@ -2,25 +2,26 @@ package com.se.kltn.spamanagement.service.impl;
 
 import com.se.kltn.spamanagement.constants.enums.Category;
 import com.se.kltn.spamanagement.constants.enums.TimeType;
+import com.se.kltn.spamanagement.dto.projection.TopCustomerStatisticInterface;
 import com.se.kltn.spamanagement.dto.request.RevenueStatisticRequest;
 import com.se.kltn.spamanagement.dto.response.RevenueStatisticResponse;
+import com.se.kltn.spamanagement.dto.response.TopCustomerStatisticResponse;
+import com.se.kltn.spamanagement.model.Customer;
 import com.se.kltn.spamanagement.model.Invoice;
 import com.se.kltn.spamanagement.model.InvoiceDetail;
+import com.se.kltn.spamanagement.repository.CustomerRepository;
 import com.se.kltn.spamanagement.repository.InvoiceDetailRepository;
 import com.se.kltn.spamanagement.repository.InvoiceRepository;
-import com.se.kltn.spamanagement.repository.ProductRepository;
 import com.se.kltn.spamanagement.service.StatisticService;
 import com.se.kltn.spamanagement.utils.DateByType;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static com.se.kltn.spamanagement.constants.enums.Status.PAID;
 
@@ -32,10 +33,13 @@ public class StatisticServiceImpl implements StatisticService {
 
     private final InvoiceDetailRepository invoiceDetailRepository;
 
+    private final CustomerRepository customerRepository;
+
     @Autowired
-    public StatisticServiceImpl(InvoiceRepository invoiceRepository, InvoiceDetailRepository invoiceDetailRepository) {
+    public StatisticServiceImpl(InvoiceRepository invoiceRepository, InvoiceDetailRepository invoiceDetailRepository, CustomerRepository customerRepository) {
         this.invoiceRepository = invoiceRepository;
         this.invoiceDetailRepository = invoiceDetailRepository;
+        this.customerRepository = customerRepository;
     }
 
     @Override
@@ -53,6 +57,45 @@ public class StatisticServiceImpl implements StatisticService {
             default:
                 return getRevenueStatisticByDate(statisticRequest.getStartDate(), statisticRequest.getEndDate());
         }
+    }
+
+    @Override
+    public List<TopCustomerStatisticResponse> getTopCustomerSpendingStatistic(int numOfRow) {
+//        List<Customer> customers = this.customerRepository.getCustomersByInvoiceIsPaid();
+//        List<TopCustomerStatisticResponse> customerStatisticResponseList = new ArrayList<>();
+//        for (Customer customer : customers) {
+//            Double totalSpending = 0.0;
+//            TopCustomerStatisticResponse topCustomerStatisticResponse = new TopCustomerStatisticResponse();
+//            for (Invoice invoice : customer.getInvoices()) {
+//                totalSpending += invoice.getTotalAmount();
+//            }
+//            topCustomerStatisticResponse.setIdCustomer(customer.getId());
+//            topCustomerStatisticResponse.setCustomerClass(customer.getCustomerClass().name());
+//            topCustomerStatisticResponse.setTotalSpending(BigDecimal.valueOf(totalSpending));
+//            topCustomerStatisticResponse.setFirstName(customer.getFirstName());
+//            topCustomerStatisticResponse.setLastName(customer.getLastName());
+//            topCustomerStatisticResponse.setPhoneNumber(customer.getPhoneNumber());
+//            customerStatisticResponseList.add(topCustomerStatisticResponse);
+//        }
+//        return customerStatisticResponseList.sort((topCustomerStatisticResponse, t1) -> );
+        List<TopCustomerStatisticInterface> interfaceList = this.customerRepository.getCustomersByInvoiceIsPaid(numOfRow);
+        List<TopCustomerStatisticResponse> customerStatisticResponseList = new ArrayList<>();
+        for (TopCustomerStatisticInterface customerStatisticInterface : interfaceList) {
+            TopCustomerStatisticResponse topCustomerStatisticResponse = getTopCustomerStatisticResponse(customerStatisticInterface);
+            customerStatisticResponseList.add(topCustomerStatisticResponse);
+        }
+        return customerStatisticResponseList;
+    }
+
+    private static TopCustomerStatisticResponse getTopCustomerStatisticResponse(TopCustomerStatisticInterface customerStatisticInterface) {
+        TopCustomerStatisticResponse topCustomerStatisticResponse = new TopCustomerStatisticResponse();
+        topCustomerStatisticResponse.setIdCustomer(customerStatisticInterface.getIdCustomer());
+        topCustomerStatisticResponse.setCustomerClass(customerStatisticInterface.getCustomerClass());
+        topCustomerStatisticResponse.setTotalSpending(customerStatisticInterface.getTotalSpending());
+        topCustomerStatisticResponse.setFirstName(customerStatisticInterface.getFirstName());
+        topCustomerStatisticResponse.setLastName(customerStatisticInterface.getLastName());
+        topCustomerStatisticResponse.setPhoneNumber(customerStatisticInterface.getPhoneNumber());
+        return topCustomerStatisticResponse;
     }
 
     private RevenueStatisticResponse getRevenueStatisticByDate(Date startDate, Date endDate) {
@@ -102,14 +145,14 @@ public class StatisticServiceImpl implements StatisticService {
         Double totalRevenue = getTotalRevenue(invoices);
         Integer totalQuantity = invoices.size();
         //TODO: get total quantity of each product type
-        Map<String, Object> totalQuantityOfProductType = getTotalRevenueAndQuantityByType(invoices);
-        Integer totalService = (Integer) totalQuantityOfProductType.get("totalService");
-        Integer totalProduct = (Integer) totalQuantityOfProductType.get("totalProduct");
-        Integer totalTreatment = (Integer) totalQuantityOfProductType.get("totalTreatment");
+        Map<String, Object> totalQuantityAndRevenue = getTotalRevenueAndQuantityByType(invoices);
+        Integer totalService = (Integer) totalQuantityAndRevenue.get("totalService");
+        Integer totalProduct = (Integer) totalQuantityAndRevenue.get("totalProduct");
+        Integer totalTreatment = (Integer) totalQuantityAndRevenue.get("totalTreatment");
         //TODO: get total revenue of each product type
-        Double totalServiceRevenue = (Double) totalQuantityOfProductType.get("totalServiceRevenue");
-        Double totalProductRevenue = (Double) totalQuantityOfProductType.get("totalProductRevenue");
-        Double totalTreatmentRevenue = (Double) totalQuantityOfProductType.get("totalTreatmentRevenue");
+        Double totalServiceRevenue = (Double) totalQuantityAndRevenue.get("totalServiceRevenue");
+        Double totalProductRevenue = (Double) totalQuantityAndRevenue.get("totalProductRevenue");
+        Double totalTreatmentRevenue = (Double) totalQuantityAndRevenue.get("totalTreatmentRevenue");
         return RevenueStatisticResponse.builder()
                 .revenue(totalRevenue)
                 .totalQuantityInvoice(totalQuantity)

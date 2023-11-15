@@ -32,8 +32,8 @@
         <field name="productName" class="java.lang.String"/>
         <field name="productType" class="java.lang.String"/>
         <field name="productQuantity" class="java.lang.Integer"/>
-        <field name="productPrice" class="java.lang.Double"/>
-        <field name="totalPrice" class="java.lang.Double"/>
+        <field name="productPrice" class="java.lang.String"/>
+        <field name="totalPrice" class="java.lang.String"/>
     </subDataset>
     <parameter name="detailDataset" class="net.sf.jasperreports.engine.data.JRBeanCollectionDataSource"/>
     <parameter name="invoice" class="com.se.kltn.spamanagement.dto.pojo.InvoiceGeneratePojo" isForPrompting="false"/>

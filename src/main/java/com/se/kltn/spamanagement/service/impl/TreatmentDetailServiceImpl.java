@@ -113,5 +113,4 @@ public class TreatmentDetailServiceImpl implements TreatmentDetailService {
         treatmentDetailResponse.setProductResponse(MappingData.mapObject(treatmentDetail.getProduct(), ProductResponse.class));
         return treatmentDetailResponse;
     }
-
 }

@@ -28,4 +28,10 @@ public class StatisticController {
                                                             @RequestParam(required = false) Date endDate) {
         return ResponseEntity.ok().body(this.statisticService.getRevenueStatistic(new RevenueStatisticRequest(startDate, endDate, timeType)));
     }
+
+    @GetMapping("/topCustomer")
+    @Operation(summary = "get top customer spending in spa statistic")
+    public ResponseEntity<Object> getTopCustomerSpending(@RequestParam(defaultValue = "50") int numOfRow) {
+        return ResponseEntity.ok().body(this.statisticService.getTopCustomerSpendingStatistic(numOfRow));
+    }
 }

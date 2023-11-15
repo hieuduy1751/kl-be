@@ -63,14 +63,14 @@ public class GeneratingServiceImpl implements GeneratingService {
         }
     }
 
-    private Path getUploadPath(String fileFormat, JasperPrint jasperPrint) throws IOException, JRException {
-        String uploadDir = StringUtils.cleanPath("./generated-reports");
+    private Path getUploadPath(String fileFormat, JasperPrint jasperPrint, String fileName) throws IOException, JRException {
+        String uploadDir = StringUtils.cleanPath("../generated-file");
         Path uploadPath = Paths.get(uploadDir).toAbsolutePath().normalize();
         if (!Files.exists(uploadPath)) {
             Files.createDirectories(uploadPath);
         }
         if (fileFormat.equalsIgnoreCase("pdf")) {
-            String filePath = uploadPath.resolve("productReport.pdf").toString();
+            String filePath = uploadPath.resolve(fileName).toString();
             JasperExportManager.exportReportToPdfFile(jasperPrint, filePath);
         }
         return uploadPath;
@@ -84,7 +84,7 @@ public class GeneratingServiceImpl implements GeneratingService {
     public String generateReport(String fileFormat) throws JRException, IOException {
         List<ProductResponse> objects = this.productService.getProductsByCategory(Category.PRODUCT.name(), 0, 10);
         JasperPrint jasperPrint = getJasperPrint(objects, null, RESOURCE_REPORT);
-        Path uploadPath = getUploadPath(fileFormat, jasperPrint);
+        Path uploadPath = getUploadPath(fileFormat, jasperPrint, "report.pdf");
         return getPdfFileLink(uploadPath.toString());
     }
 
@@ -100,12 +100,13 @@ public class GeneratingServiceImpl implements GeneratingService {
             List<InvoiceDetailGeneratePojo> listInvoiceDetailPojo = getListInvoiceDetailPojo(invoice);
             Map<String, Object> parameters = new HashMap<>();
             parameters.put("invoice", invoiceGeneratePojo);
+            String fileName = "invoice_" + invoiceGeneratePojo.getIdInvoice() + "_" + invoiceGeneratePojo.getCustomerName() + ".pdf";
 
             JasperPrint jasperPrint = getJasperPrint(listInvoiceDetailPojo, parameters, RESOURCE_INVOICE);
-            Path uploadPath = getUploadPath(fileFormat, jasperPrint);
+            Path uploadPath = getUploadPath(fileFormat, jasperPrint, fileName);
 
             // Log thông tin
-            System.out.println("Invoice generated successfully. Path: " + uploadPath.toString());
+            log.info("file invoice generated to pdf");
 
             return getPdfFileLink(uploadPath.toString());
         } catch (Exception e) {
@@ -131,10 +132,10 @@ public class GeneratingServiceImpl implements GeneratingService {
         Product product = invoiceDetail.getProduct();
         invoiceDetailGeneratePojo.setIndex(index);
         invoiceDetailGeneratePojo.setProductQuantity(invoiceDetail.getTotalQuantity());
-        invoiceDetailGeneratePojo.setProductPrice(product.getPrice());
+        invoiceDetailGeneratePojo.setProductPrice(String.format("%.0f", product.getPrice()));
         invoiceDetailGeneratePojo.setProductName(product.getName());
         invoiceDetailGeneratePojo.setProductType(convertTypeToString(product.getCategory()));
-        invoiceDetailGeneratePojo.setTotalPrice(invoiceDetail.getTotalPrice());
+        invoiceDetailGeneratePojo.setTotalPrice(String.format("%.0f", invoiceDetail.getTotalPrice()));
         return invoiceDetailGeneratePojo;
     }
 
@@ -165,7 +166,7 @@ public class GeneratingServiceImpl implements GeneratingService {
                 .customerPhone(customerPhone)
                 .customerEmail(customerEmail)
                 .paymentMethod(paymentMethod)
-                .totalAmount(totalAmount)
+                .totalAmount(String.format("%.0f", totalAmount))
                 .createdDate(createdDate)
                 .build();
     }

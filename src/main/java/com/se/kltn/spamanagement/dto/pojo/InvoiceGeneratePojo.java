@@ -25,7 +25,7 @@ public class InvoiceGeneratePojo {
 
     private String paymentMethod;
 
-    private Double totalAmount;
+    private String totalAmount;
 
     private Date createdDate;
 

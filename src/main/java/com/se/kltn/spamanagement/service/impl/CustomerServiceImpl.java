@@ -1,6 +1,7 @@
 package com.se.kltn.spamanagement.service.impl;
 
 import com.se.kltn.spamanagement.constants.ErrorMessage;
+import com.se.kltn.spamanagement.constants.enums.CustomerClass;
 import com.se.kltn.spamanagement.dto.request.CustomerRequest;
 import com.se.kltn.spamanagement.dto.response.CustomerResponse;
 import com.se.kltn.spamanagement.exception.ResourceNotFoundException;

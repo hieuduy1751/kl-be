@@ -18,7 +18,7 @@ public class InvoiceDetailGeneratePojo {
 
     private Integer productQuantity;
 
-    private Double productPrice;
+    private String productPrice;
 
-    private Double totalPrice;
+    private String totalPrice;
 }
