@@ -34,4 +34,10 @@ public class StatisticController {
     public ResponseEntity<Object> getTopCustomerSpending(@RequestParam(defaultValue = "50") int numOfRow) {
         return ResponseEntity.ok().body(this.statisticService.getTopCustomerSpendingStatistic(numOfRow));
     }
+
+    @GetMapping("/mostPopularProduct")
+    @Operation(summary = "get most popular product have many appointment statistic")
+    public ResponseEntity<Object> getMostPopularProduct(@RequestParam(defaultValue = "50") int numOfRow) {
+        return ResponseEntity.ok().body(this.statisticService.getTopMostPopularProduct(numOfRow));
+    }
 }

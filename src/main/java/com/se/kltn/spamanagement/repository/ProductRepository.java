@@ -1,5 +1,7 @@
 package com.se.kltn.spamanagement.repository;
 
+import com.se.kltn.spamanagement.dto.projection.TopMostPopularProductInterface;
+import com.se.kltn.spamanagement.dto.response.TopMostPopularProductResponse;
 import com.se.kltn.spamanagement.model.Product;
 import com.se.kltn.spamanagement.constants.enums.Category;
 import org.springframework.data.domain.Page;
@@ -26,4 +28,17 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             "LOWER(REPLACE(CONCAT(UNACCENT(p.name), ' ', UNACCENT(p.description)), ' ', '')) LIKE " +
             "LOWER(REPLACE(CONCAT('%', UNACCENT(:text), '%'), ' ', ''))", nativeQuery = true)
     List<Product> getProductsByText(@Param("text") String text);
+
+    @Query(value = "SELECT \n" +
+            "    p.id,p.\"name\" ,p.description ,p.category ,p.price ,\n" +
+            "    count(a.id) as numOfAppointment \n" +
+            "FROM \n" +
+            "   products p \n" +
+            "join \n" +
+            "\tappointments a on p.id =a.product_id \n" +
+            "where a.status = 'FINISHED'\n" +
+            "group by p.id, p.\"name\"\n" +
+            "order by numOfAppointment desc\n" +
+            "fetch first :numOfRow row only",nativeQuery = true)
+    List<TopMostPopularProductInterface> getTopPopularProductByAppointment(@Param("numOfRow") int numOfRow);
 }

@@ -3,22 +3,23 @@ package com.se.kltn.spamanagement.service.impl;
 import com.se.kltn.spamanagement.constants.enums.Category;
 import com.se.kltn.spamanagement.constants.enums.TimeType;
 import com.se.kltn.spamanagement.dto.projection.TopCustomerStatisticInterface;
+import com.se.kltn.spamanagement.dto.projection.TopMostPopularProductInterface;
 import com.se.kltn.spamanagement.dto.request.RevenueStatisticRequest;
 import com.se.kltn.spamanagement.dto.response.RevenueStatisticResponse;
 import com.se.kltn.spamanagement.dto.response.TopCustomerStatisticResponse;
-import com.se.kltn.spamanagement.model.Customer;
+import com.se.kltn.spamanagement.dto.response.TopMostPopularProductResponse;
 import com.se.kltn.spamanagement.model.Invoice;
 import com.se.kltn.spamanagement.model.InvoiceDetail;
 import com.se.kltn.spamanagement.repository.CustomerRepository;
 import com.se.kltn.spamanagement.repository.InvoiceDetailRepository;
 import com.se.kltn.spamanagement.repository.InvoiceRepository;
+import com.se.kltn.spamanagement.repository.ProductRepository;
 import com.se.kltn.spamanagement.service.StatisticService;
 import com.se.kltn.spamanagement.utils.DateByType;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -35,11 +36,14 @@ public class StatisticServiceImpl implements StatisticService {
 
     private final CustomerRepository customerRepository;
 
+    private final ProductRepository productRepository;
+
     @Autowired
-    public StatisticServiceImpl(InvoiceRepository invoiceRepository, InvoiceDetailRepository invoiceDetailRepository, CustomerRepository customerRepository) {
+    public StatisticServiceImpl(InvoiceRepository invoiceRepository, InvoiceDetailRepository invoiceDetailRepository, CustomerRepository customerRepository, ProductRepository productRepository) {
         this.invoiceRepository = invoiceRepository;
         this.invoiceDetailRepository = invoiceDetailRepository;
         this.customerRepository = customerRepository;
+        this.productRepository = productRepository;
     }
 
     @Override
@@ -61,23 +65,7 @@ public class StatisticServiceImpl implements StatisticService {
 
     @Override
     public List<TopCustomerStatisticResponse> getTopCustomerSpendingStatistic(int numOfRow) {
-//        List<Customer> customers = this.customerRepository.getCustomersByInvoiceIsPaid();
-//        List<TopCustomerStatisticResponse> customerStatisticResponseList = new ArrayList<>();
-//        for (Customer customer : customers) {
-//            Double totalSpending = 0.0;
-//            TopCustomerStatisticResponse topCustomerStatisticResponse = new TopCustomerStatisticResponse();
-//            for (Invoice invoice : customer.getInvoices()) {
-//                totalSpending += invoice.getTotalAmount();
-//            }
-//            topCustomerStatisticResponse.setIdCustomer(customer.getId());
-//            topCustomerStatisticResponse.setCustomerClass(customer.getCustomerClass().name());
-//            topCustomerStatisticResponse.setTotalSpending(BigDecimal.valueOf(totalSpending));
-//            topCustomerStatisticResponse.setFirstName(customer.getFirstName());
-//            topCustomerStatisticResponse.setLastName(customer.getLastName());
-//            topCustomerStatisticResponse.setPhoneNumber(customer.getPhoneNumber());
-//            customerStatisticResponseList.add(topCustomerStatisticResponse);
-//        }
-//        return customerStatisticResponseList.sort((topCustomerStatisticResponse, t1) -> );
+        log.debug("get statistic about top customers spending in spa");
         List<TopCustomerStatisticInterface> interfaceList = this.customerRepository.getCustomersByInvoiceIsPaid(numOfRow);
         List<TopCustomerStatisticResponse> customerStatisticResponseList = new ArrayList<>();
         for (TopCustomerStatisticInterface customerStatisticInterface : interfaceList) {
@@ -85,6 +73,29 @@ public class StatisticServiceImpl implements StatisticService {
             customerStatisticResponseList.add(topCustomerStatisticResponse);
         }
         return customerStatisticResponseList;
+    }
+
+    @Override
+    public List<TopMostPopularProductResponse> getTopMostPopularProduct(int numOfRow) {
+        log.debug("get statistic about top the most popular product have many appointment in spa");
+        List<TopMostPopularProductInterface> popularProductInterfaceList = this.productRepository.getTopPopularProductByAppointment(numOfRow);
+        List<TopMostPopularProductResponse> popularProductResponseList = new ArrayList<>();
+        for (TopMostPopularProductInterface popularProductInterface : popularProductInterfaceList) {
+            TopMostPopularProductResponse topMostPopularProductResponse = getTopMostPopularProductResponse(popularProductInterface);
+            popularProductResponseList.add(topMostPopularProductResponse);
+        }
+        return popularProductResponseList;
+    }
+
+    private static TopMostPopularProductResponse getTopMostPopularProductResponse(TopMostPopularProductInterface popularProductInterface) {
+        TopMostPopularProductResponse topMostPopularProductResponse = new TopMostPopularProductResponse();
+        topMostPopularProductResponse.setId(popularProductInterface.getId());
+        topMostPopularProductResponse.setName(popularProductInterface.getName());
+        topMostPopularProductResponse.setCategory(popularProductInterface.getCategory());
+        topMostPopularProductResponse.setPrice(popularProductInterface.getPrice());
+        topMostPopularProductResponse.setDescription(popularProductInterface.getDescription());
+        topMostPopularProductResponse.setNumOfAppointment(popularProductInterface.getNumOfAppointment());
+        return topMostPopularProductResponse;
     }
 
     private static TopCustomerStatisticResponse getTopCustomerStatisticResponse(TopCustomerStatisticInterface customerStatisticInterface) {
