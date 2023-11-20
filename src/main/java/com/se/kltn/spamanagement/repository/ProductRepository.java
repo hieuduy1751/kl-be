@@ -41,4 +41,10 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             "order by numOfAppointment desc\n" +
             "fetch first :numOfRow row only",nativeQuery = true)
     List<TopMostPopularProductInterface> getTopPopularProductByAppointment(@Param("numOfRow") int numOfRow);
+
+    @Query(value = "SELECT * FROM products p WHERE " +
+            "LOWER(REPLACE(CONCAT(UNACCENT(p.name), ' ', UNACCENT(p.description)), ' ', '')) LIKE " +
+            "LOWER(REPLACE(CONCAT('%', UNACCENT(:text), '%'), ' ', '')" +
+            "AND p.category = 'DEVICE')", nativeQuery = true)
+    List<Product> getProductsByTextAndCategoryIsDevice(@Param("text") String text);
 }

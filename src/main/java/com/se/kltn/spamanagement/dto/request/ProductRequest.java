@@ -23,4 +23,8 @@ public class ProductRequest {
     private String category;
 
     private String description;
+
+    private String supplier;
+
+    private String status;
 }

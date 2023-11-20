@@ -24,4 +24,6 @@ public interface ProductService {
     List<ProductResponse> filterProductsByPriceBetween(Double from, Double to);
 
     List<ProductResponse> searchByText(String text);
+
+    List<ProductResponse> searchByTextForSupplies(String text);
 }

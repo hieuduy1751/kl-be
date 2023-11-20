@@ -64,7 +64,7 @@ public class GeneratingServiceImpl implements GeneratingService {
     }
 
     private Path getUploadPath(String fileFormat, JasperPrint jasperPrint, String fileName) throws IOException, JRException {
-        String uploadDir = StringUtils.cleanPath("../generated-file");
+        String uploadDir = StringUtils.cleanPath(".../generated-file");
         Path uploadPath = Paths.get(uploadDir).toAbsolutePath().normalize();
         if (!Files.exists(uploadPath)) {
             Files.createDirectories(uploadPath);
@@ -105,10 +105,11 @@ public class GeneratingServiceImpl implements GeneratingService {
             JasperPrint jasperPrint = getJasperPrint(listInvoiceDetailPojo, parameters, RESOURCE_INVOICE);
             Path uploadPath = getUploadPath(fileFormat, jasperPrint, fileName);
 
+            String pdfFileLink = getPdfFileLink(uploadPath.toString());
             // Log thông tin
-            log.info("file invoice generated to pdf");
+            log.info("file invoice pdf generated to pdf: " + pdfFileLink);
 
-            return getPdfFileLink(uploadPath.toString());
+            return pdfFileLink;
         } catch (Exception e) {
             e.printStackTrace();
             throw new JRException("Error generating JasperPrint.");

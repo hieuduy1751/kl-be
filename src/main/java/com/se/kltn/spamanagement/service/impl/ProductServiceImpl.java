@@ -61,6 +61,8 @@ public class ProductServiceImpl implements ProductService {
         NullUtils.updateIfPresent(product::setImageUrl, productRequest.getImageUrl());
         NullUtils.updateIfPresent(product::setCategory, Category.valueOf(productRequest.getCategory().toUpperCase()));
         NullUtils.updateIfPresent(product::setDescription, productRequest.getDescription());
+        NullUtils.updateIfPresent(product::setStatus, Status.valueOf(productRequest.getStatus().toUpperCase()));
+        NullUtils.updateIfPresent(product::setSupplier, product.getSupplier());
         product.setUpdatedDate(new Date());
         checkStatus(product);
         Product productUpdated = this.productRepository.save(product);
@@ -95,6 +97,14 @@ public class ProductServiceImpl implements ProductService {
             return getProducts(0, 10);
         }
         return MappingData.mapListObject(this.productRepository.getProductsByText(text), ProductResponse.class);
+    }
+
+    @Override
+    public List<ProductResponse> searchByTextForSupplies(String text) {
+        if (text == null) {
+            this.getProductsByCategory(String.valueOf(Category.SUPPLIES), 0, 10);
+        }
+        return MappingData.mapListObject(this.productRepository.getProductsByTextAndCategoryIsDevice(text), ProductResponse.class);
     }
 
     private void checkStatus(Product product) {

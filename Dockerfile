@@ -1,4 +1,4 @@
-FROM openjdk:11-windowsservercore
+FROM maven:3.8.5-openjdk-17
 LABEL authors="vietho"
 WORKDIR /myapp
 COPY target/KLTN-SpaManagement-BackEnd-0.0.1-SNAPSHOT.war /myapp/kltn.war
