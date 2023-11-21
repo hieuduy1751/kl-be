@@ -9,6 +9,7 @@ import com.se.kltn.spamanagement.repository.AccountRepository;
 import com.se.kltn.spamanagement.security.jwt.JwtProvider;
 import com.se.kltn.spamanagement.service.AuthService;
 import com.se.kltn.spamanagement.utils.MappingData;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -23,6 +24,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Service
+@Log4j2
 public class AuthServiceImpl implements AuthService {
 
     private final AccountRepository accountRepository;
@@ -40,6 +42,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public Map<String, String> login(String username, String password) {
+        log.debug("login account: " + username);
         try {
             Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
             String role = authentication.getAuthorities().iterator().next().getAuthority();
@@ -56,6 +59,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public AccountResponse register(AccountRequest accountRequest) {
+        log.debug("register new account");
         if (!accountRequest.getPasswordConfirm().equals(accountRequest.getPassword())) {
             throw new BadRequestException("password confirm is not same");
         } else if (accountRepository.findAccountByUsername(accountRequest.getUsername()).isPresent()) {
@@ -70,6 +74,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public void logout(HttpServletRequest request, HttpServletResponse response) {
+        log.debug("logout account");
         SecurityContextLogoutHandler logoutHandler = new SecurityContextLogoutHandler();
         logoutHandler.logout(request, response, null);
     }

@@ -23,4 +23,6 @@ public class ErrorMessage {
 
     public static final String SEND_MAIL_ERROR = "Error while sending mail..";
 
+    public static final String DATE_BEFORE_EXCEPTION = "Date is before current";
+
 }

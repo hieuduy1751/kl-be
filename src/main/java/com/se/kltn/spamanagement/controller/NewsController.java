@@ -49,7 +49,7 @@ public class NewsController {
 
     @PostMapping
     @Operation(summary = "create news")
-    public ResponseEntity<Object> createNews(@RequestBody @Valid NewsRequest newsRequest) {
+    public ResponseEntity<Object> createNews(@Valid @RequestBody NewsRequest newsRequest) {
         return ResponseEntity.ok().body(this.newsService.createNews(newsRequest));
     }
 }

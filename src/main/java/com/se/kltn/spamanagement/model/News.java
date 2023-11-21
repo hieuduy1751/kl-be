@@ -28,8 +28,10 @@ public class News {
 
     private String description;
 
+    @Enumerated(EnumType.STRING)
     private TypeNews type;
 
+    @Enumerated(EnumType.STRING)
     private Status status;
 
     @Column(name = "image_url")

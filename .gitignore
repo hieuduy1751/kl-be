@@ -32,3 +32,6 @@ build/
 ### VS Code ###
 .vscode/
 /generated-reports/productReport.pdf
+
+### environments ###
+.env
