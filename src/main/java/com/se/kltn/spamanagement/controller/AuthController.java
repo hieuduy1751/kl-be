@@ -28,10 +28,10 @@ public class AuthController {
         return ResponseEntity.ok().body(this.authService.login(username, password));
     }
 
-    @PostMapping("/register")
+    @PostMapping("/register-customer")
     @Operation(summary = "register new account")
     public ResponseEntity<Object> register(@Valid @RequestBody AccountRequest accountRequest) {
-        return ResponseEntity.ok().body(this.authService.register(accountRequest));
+        return ResponseEntity.ok().body(this.authService.registerCustomer(accountRequest));
     }
 
     @PostMapping("/logout")

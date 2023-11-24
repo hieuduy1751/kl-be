@@ -2,6 +2,7 @@ package com.se.kltn.spamanagement.service.impl;
 
 import com.se.kltn.spamanagement.constants.ErrorMessage;
 import com.se.kltn.spamanagement.constants.enums.CustomerClass;
+import com.se.kltn.spamanagement.constants.enums.Gender;
 import com.se.kltn.spamanagement.dto.request.CustomerRequest;
 import com.se.kltn.spamanagement.dto.response.CustomerResponse;
 import com.se.kltn.spamanagement.exception.ResourceNotFoundException;
@@ -51,6 +52,8 @@ public class CustomerServiceImpl implements CustomerService {
                 () -> new ResourceNotFoundException(CUSTOMER_NOT_FOUND));
         NullUtils.updateIfPresent(customer::setFirstName, customerRequest.getFirstName());
         NullUtils.updateIfPresent(customer::setLastName, customerRequest.getLastName());
+        NullUtils.updateIfPresent(customer::setGender, Gender.valueOf(customerRequest.getGender()));
+        NullUtils.updateIfPresent(customer::setAvatarUrl, customerRequest.getAvatarUrl());
         NullUtils.updateIfPresent(customer::setAddress, customerRequest.getAddress());
         NullUtils.updateIfPresent(customer::setEmail, customerRequest.getEmail());
         NullUtils.updateIfPresent(customer::setBirthDay, customerRequest.getBirthDay());

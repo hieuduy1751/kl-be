@@ -20,6 +20,11 @@ public class EmployeeRequest {
     @NotBlank(message = "lastName is required")
     private String lastName;
 
+    @NotBlank(message = "gender is required")
+    private String gender;
+
+    private String avatarUrl;
+
     private String address;
 
     private String phoneNumber;

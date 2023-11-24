@@ -4,5 +4,5 @@ public enum CustomerClass {
     OLD,
     NEW,
     VIP,
-    DIAMOND
+
 }

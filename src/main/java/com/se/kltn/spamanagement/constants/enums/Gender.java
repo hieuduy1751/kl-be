@@ -1,7 +1,7 @@
 package com.se.kltn.spamanagement.constants.enums;
 
-public enum Role {
-    ADMIN,
-    USER,
-    CUSTOMER,
+public enum Gender {
+
+    MALE,
+    FEMALE
 }

@@ -1,9 +1,11 @@
 package com.se.kltn.spamanagement.dto.request;
 
 import com.se.kltn.spamanagement.constants.enums.CustomerClass;
+import com.se.kltn.spamanagement.constants.enums.Gender;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import javax.persistence.Column;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.Email;
@@ -19,6 +21,11 @@ public class CustomerRequest {
 
     @NotBlank(message = "lastName is required")
     private String lastName;
+
+    @NotBlank(message = "gender is required")
+    private String gender;
+
+    private String avatarUrl;
 
     private String address;
 

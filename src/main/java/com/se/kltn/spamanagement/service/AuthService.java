@@ -10,7 +10,9 @@ import java.util.Map;
 public interface AuthService {
     Map<String,String> login(String username, String password);
 
-    AccountResponse register(AccountRequest accountRequest);
+    AccountResponse registerCustomer(AccountRequest accountRequest);
+
+    AccountResponse registerEmployee(AccountRequest accountRequest, Long idEmployee);
 
     void logout(HttpServletRequest request, HttpServletResponse response);
 }

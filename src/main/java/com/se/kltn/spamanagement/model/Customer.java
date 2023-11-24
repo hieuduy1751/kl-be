@@ -1,6 +1,7 @@
 package com.se.kltn.spamanagement.model;
 
 import com.se.kltn.spamanagement.constants.enums.CustomerClass;
+import com.se.kltn.spamanagement.constants.enums.Gender;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,6 +27,12 @@ public class Customer {
 
     @Column(name = "last_name")
     private String lastName;
+
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
+
+    @Column(name = "avatar_url")
+    private String avatarUrl;
 
     @Column(unique = true)
     private String email;
@@ -60,5 +67,7 @@ public class Customer {
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Rating> ratings;
 
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Account> accounts;
 
 }

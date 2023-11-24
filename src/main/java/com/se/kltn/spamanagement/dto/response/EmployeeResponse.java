@@ -15,6 +15,10 @@ public class EmployeeResponse {
 
     private String lastName;
 
+    private String gender;
+
+    private String avatarUrl;
+
     private String address;
 
     private String phone;
