@@ -23,7 +23,7 @@ public class CustomerRequest {
     private String lastName;
 
     @NotBlank(message = "gender is required")
-    private String gender;
+    private Gender gender;
 
     private String avatarUrl;
 

@@ -4,7 +4,7 @@ import com.se.kltn.spamanagement.dto.request.ProductRequest;
 import com.se.kltn.spamanagement.dto.response.ProductResponse;
 import com.se.kltn.spamanagement.exception.ResourceNotFoundException;
 import com.se.kltn.spamanagement.model.Product;
-import com.se.kltn.spamanagement.constants.enums.Category;
+import com.se.kltn.spamanagement.constants.enums.ProductType;
 import com.se.kltn.spamanagement.constants.enums.Status;
 import com.se.kltn.spamanagement.repository.ProductRepository;
 import com.se.kltn.spamanagement.service.ProductService;
@@ -59,7 +59,7 @@ public class ProductServiceImpl implements ProductService {
         NullUtils.updateIfPresent(product::setPrice, productRequest.getPrice());
         NullUtils.updateIfPresent(product::setQuantity, productRequest.getQuantity());
         NullUtils.updateIfPresent(product::setImageUrl, productRequest.getImageUrl());
-        NullUtils.updateIfPresent(product::setCategory, Category.valueOf(productRequest.getCategory().toUpperCase()));
+        NullUtils.updateIfPresent(product::setCategory, ProductType.valueOf(productRequest.getCategory().toUpperCase()));
         NullUtils.updateIfPresent(product::setDescription, productRequest.getDescription());
         NullUtils.updateIfPresent(product::setStatus, Status.valueOf(productRequest.getStatus().toUpperCase()));
         NullUtils.updateIfPresent(product::setSupplier, product.getSupplier());
@@ -72,7 +72,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductResponse createProduct(ProductRequest productRequest) {
         Product product = MappingData.mapObject(productRequest, Product.class);
-        product.setCategory(Category.valueOf(productRequest.getCategory().toUpperCase()));
+        product.setCategory(ProductType.valueOf(productRequest.getCategory().toUpperCase()));
         product.setCreatedDate(new Date());
         checkStatus(product);
         return MappingData.mapObject(this.productRepository.save(product), ProductResponse.class);
@@ -81,7 +81,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<ProductResponse> getProductsByCategory(String categoryName, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        List<Product> products = this.productRepository.getProductsByCategory(Category.valueOf(categoryName.toUpperCase()), pageable).getContent();
+        List<Product> products = this.productRepository.getProductsByCategory(ProductType.valueOf(categoryName.toUpperCase()), pageable).getContent();
         return MappingData.mapListObject(products, ProductResponse.class);
     }
 
@@ -102,7 +102,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<ProductResponse> searchByTextForSupplies(String text) {
         if (text == null) {
-            this.getProductsByCategory(String.valueOf(Category.SUPPLIES), 0, 10);
+            this.getProductsByCategory(String.valueOf(ProductType.SUPPLIES), 0, 10);
         }
         return MappingData.mapListObject(this.productRepository.getProductsByTextAndCategoryIsDevice(text), ProductResponse.class);
     }

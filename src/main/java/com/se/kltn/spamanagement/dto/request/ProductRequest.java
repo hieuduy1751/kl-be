@@ -1,5 +1,6 @@
 package com.se.kltn.spamanagement.dto.request;
 
+import com.se.kltn.spamanagement.constants.enums.ProductType;
 import lombok.Data;
 import org.hibernate.validator.constraints.Range;
 
@@ -19,8 +20,8 @@ public class ProductRequest {
 
     private String imageUrl;
 
-    @NotBlank(message = "category is require and must be PRODUCT or SERVICE or TREATMENT")
-    private String category;
+    @NotBlank(message = "product type is require")
+    private ProductType category;
 
     private String description;
 

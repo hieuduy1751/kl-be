@@ -1,12 +1,13 @@
 package com.se.kltn.spamanagement.service.impl;
 
-import com.se.kltn.spamanagement.constants.ErrorMessage;
 import com.se.kltn.spamanagement.constants.enums.Gender;
 import com.se.kltn.spamanagement.constants.enums.Position;
 import com.se.kltn.spamanagement.dto.request.EmployeeRequest;
 import com.se.kltn.spamanagement.dto.response.EmployeeResponse;
 import com.se.kltn.spamanagement.exception.ResourceNotFoundException;
+import com.se.kltn.spamanagement.model.Account;
 import com.se.kltn.spamanagement.model.Employee;
+import com.se.kltn.spamanagement.repository.AccountRepository;
 import com.se.kltn.spamanagement.repository.EmployeeRepository;
 import com.se.kltn.spamanagement.service.EmployeeService;
 import com.se.kltn.spamanagement.utils.MappingData;
@@ -17,20 +18,26 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import static com.se.kltn.spamanagement.constants.ErrorMessage.EMPLOYEE_NOT_FOUND;
 
 @Service
+@Transactional
 @Log4j2
 public class EmployeeServiceImpl implements EmployeeService {
 
     private final EmployeeRepository employeeRepository;
 
+    private final AccountRepository accountRepository;
+
     @Autowired
-    public EmployeeServiceImpl(EmployeeRepository employeeRepository) {
+    public EmployeeServiceImpl(EmployeeRepository employeeRepository, AccountRepository accountRepository) {
         this.employeeRepository = employeeRepository;
+        this.accountRepository = accountRepository;
     }
 
     @Override
@@ -38,8 +45,11 @@ public class EmployeeServiceImpl implements EmployeeService {
         log.info("get employee by id");
         Employee employee = this.employeeRepository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException(EMPLOYEE_NOT_FOUND));
-        return MappingData.mapObject(employee, EmployeeResponse.class);
+        EmployeeResponse employeeResponse = MappingData.mapObject(employee, EmployeeResponse.class);
+        checkEmployeeAccount(employeeResponse, employee);
+        return employeeResponse;
     }
+
 
     @Override
     public EmployeeResponse createEmployee(EmployeeRequest employeeRequest) {
@@ -48,7 +58,9 @@ public class EmployeeServiceImpl implements EmployeeService {
         employee.setCreatedDate(new Date());
         employee.setUpdatedDate(new Date());
         Employee employeeCreated = this.employeeRepository.save(employee);
-        return MappingData.mapObject(employeeCreated, EmployeeResponse.class);
+        EmployeeResponse employeeResponse = MappingData.mapObject(employeeCreated, EmployeeResponse.class);
+        checkEmployeeAccount(employeeResponse, employeeCreated);
+        return employeeResponse;
     }
 
     @Override
@@ -58,15 +70,17 @@ public class EmployeeServiceImpl implements EmployeeService {
                 () -> new ResourceNotFoundException(EMPLOYEE_NOT_FOUND));
         NullUtils.updateIfPresent(employee::setFirstName, employeeRequest.getFirstName());
         NullUtils.updateIfPresent(employee::setLastName, employeeRequest.getLastName());
-        NullUtils.updateIfPresent(employee::setGender, Gender.valueOf(employeeRequest.getGender()));
+        NullUtils.updateIfPresent(employee::setGender, employeeRequest.getGender());
         NullUtils.updateIfPresent(employee::setAvatarUrl, employeeRequest.getAvatarUrl());
         NullUtils.updateIfPresent(employee::setAddress, employeeRequest.getAddress());
-        NullUtils.updateIfPresent(employee::setPosition, Position.valueOf(employeeRequest.getPosition()));
+        NullUtils.updateIfPresent(employee::setPosition, employeeRequest.getPosition());
         NullUtils.updateIfPresent(employee::setEmail, employeeRequest.getEmail());
         NullUtils.updateIfPresent(employee::setBirthDay, employeeRequest.getBirthDay());
         NullUtils.updateIfPresent(employee::setSalaryGross, employeeRequest.getSalaryGross());
         employee.setUpdatedDate(new Date());
-        return MappingData.mapObject(this.employeeRepository.save(employee), EmployeeResponse.class);
+        EmployeeResponse employeeResponse = MappingData.mapObject(this.employeeRepository.save(employee), EmployeeResponse.class);
+        checkEmployeeAccount(employeeResponse, employee);
+        return employeeResponse;
     }
 
     @Override
@@ -82,14 +96,38 @@ public class EmployeeServiceImpl implements EmployeeService {
         log.info("get all employee paging");
         Pageable pageable = PageRequest.of(page, size);
         List<Employee> employeePage = this.employeeRepository.findAll(pageable).getContent();
-        return MappingData.mapListObject(employeePage, EmployeeResponse.class);
+        return mappingEmployeeResponse(employeePage);
     }
+
 
     @Override
     public List<EmployeeResponse> searchEmployeeByText(String text) {
         if (text == null) {
             return this.getAllEmployeePaging(0, 10);
         }
-        return MappingData.mapListObject(this.employeeRepository.getEmployeesByText(text), EmployeeResponse.class);
+        return mappingEmployeeResponse(this.employeeRepository.getEmployeesByText(text));
+    }
+
+    private void checkEmployeeAccount(EmployeeResponse employeeResponse, Employee employee) {
+        if (employee.getAccount() == null) {
+            employeeResponse.setUsername(null);
+        } else {
+            employeeResponse.setUsername(employee.getAccount().getUsername());
+        }
+    }
+
+    private List<EmployeeResponse> mappingEmployeeResponse(List<Employee> employeeList) {
+        List<EmployeeResponse> employeeResponses = new ArrayList<>();
+        for (Employee employee : employeeList) {
+            Account account = this.accountRepository.findAccountByEmployee_Id(employee.getId()).orElse(null);
+            EmployeeResponse employeeResponse = MappingData.mapObject(employee, EmployeeResponse.class);
+            if (account == null) {
+                employeeResponse.setUsername(null);
+            } else {
+                employeeResponse.setUsername(account.getUsername());
+            }
+            employeeResponses.add(employeeResponse);
+        }
+        return employeeResponses;
     }
 }

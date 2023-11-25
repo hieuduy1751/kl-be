@@ -9,7 +9,7 @@ import com.se.kltn.spamanagement.dto.response.ProductResponse;
 import com.se.kltn.spamanagement.exception.ResourceNotFoundException;
 import com.se.kltn.spamanagement.model.Invoice;
 import com.se.kltn.spamanagement.model.InvoiceDetail;
-import com.se.kltn.spamanagement.constants.enums.Category;
+import com.se.kltn.spamanagement.constants.enums.ProductType;
 import com.se.kltn.spamanagement.constants.enums.Status;
 import com.se.kltn.spamanagement.repository.CustomerRepository;
 import com.se.kltn.spamanagement.repository.EmployeeRepository;
@@ -153,7 +153,7 @@ public class InvoiceServiceImpl implements InvoiceService {
     private void checkToReduceProduct(Status status, Invoice invoice) {
         if (status.equals(Status.PAID)) {
             for (InvoiceDetail invoiceDetail : invoice.getInvoiceDetails()) {
-                if (invoiceDetail.getProduct().getCategory().equals(Category.PRODUCT)) {
+                if (invoiceDetail.getProduct().getCategory().equals(ProductType.PRODUCT)) {
                     invoiceDetail.getProduct().setQuantity(invoiceDetail.getProduct().getQuantity() - invoiceDetail.getTotalQuantity());
                     this.productRepository.save(invoiceDetail.getProduct());
                 }

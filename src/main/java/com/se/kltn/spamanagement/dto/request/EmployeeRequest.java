@@ -1,5 +1,7 @@
 package com.se.kltn.spamanagement.dto.request;
 
+import com.se.kltn.spamanagement.constants.enums.Gender;
+import com.se.kltn.spamanagement.constants.enums.Position;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,11 +23,11 @@ public class EmployeeRequest {
     private String lastName;
 
     @NotBlank(message = "gender is required")
-    private String gender;
+    private Gender gender;
 
     private String avatarUrl;
 
-    private String position;
+    private Position position;
 
     private String address;
 

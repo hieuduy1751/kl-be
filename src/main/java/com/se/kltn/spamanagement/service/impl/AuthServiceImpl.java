@@ -37,7 +37,6 @@ import static com.se.kltn.spamanagement.constants.ErrorMessage.EMPLOYEE_NOT_FOUN
 public class AuthServiceImpl implements AuthService {
 
     private final AccountRepository accountRepository;
-
     private final EmployeeRepository employeeRepository;
     private final CustomerRepository customerRepository;
     private final PasswordEncoder passwordEncoder;

@@ -24,6 +24,9 @@ public class Account {
 
     private String password;
 
+    @Column(name = "email_verification_code")
+    private String emailVerificationCode;
+
     @Enumerated(EnumType.STRING)
     private Role role;
 

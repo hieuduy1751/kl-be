@@ -1,11 +1,9 @@
 package com.se.kltn.spamanagement.dto.response;
 
-import com.se.kltn.spamanagement.constants.enums.Category;
+import com.se.kltn.spamanagement.constants.enums.ProductType;
 import com.se.kltn.spamanagement.constants.enums.Status;
 import lombok.Data;
 
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
 @Data
@@ -23,7 +21,7 @@ public class ProductResponse {
 
     private String imageUrl;
 
-    private Category category;
+    private ProductType category;
 
     private String description;
 

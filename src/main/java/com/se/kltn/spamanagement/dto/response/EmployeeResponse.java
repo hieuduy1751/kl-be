@@ -11,6 +11,8 @@ import java.util.Date;
 @NoArgsConstructor
 public class EmployeeResponse {
 
+    private Long id;
+
     private String firstName;
 
     private String lastName;
@@ -34,4 +36,6 @@ public class EmployeeResponse {
     private Date createdDate;
 
     private Date updatedDate;
+
+    private String username;
 }

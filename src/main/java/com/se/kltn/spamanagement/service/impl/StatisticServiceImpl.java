@@ -1,6 +1,6 @@
 package com.se.kltn.spamanagement.service.impl;
 
-import com.se.kltn.spamanagement.constants.enums.Category;
+import com.se.kltn.spamanagement.constants.enums.ProductType;
 import com.se.kltn.spamanagement.constants.enums.TimeType;
 import com.se.kltn.spamanagement.dto.projection.TopCustomerStatisticInterface;
 import com.se.kltn.spamanagement.dto.projection.TopMostPopularProductInterface;
@@ -187,13 +187,13 @@ public class StatisticServiceImpl implements StatisticService {
         for (Invoice invoice : invoices) {
             List<InvoiceDetail> invoiceDetails = invoiceDetailRepository.findInvoiceDetailsByInvoice_Id(invoice.getId());
             for (InvoiceDetail invoiceDetail : invoiceDetails) {
-                if (invoiceDetail.getProduct().getCategory().equals(Category.SERVICE)) {
+                if (invoiceDetail.getProduct().getCategory().equals(ProductType.SERVICE)) {
                     totalServiceRevenue += invoiceDetail.getTotalPrice();
                     totalService += invoiceDetail.getTotalQuantity();
-                } else if (invoiceDetail.getProduct().getCategory().equals(Category.PRODUCT)) {
+                } else if (invoiceDetail.getProduct().getCategory().equals(ProductType.PRODUCT)) {
                     totalProductRevenue += invoiceDetail.getTotalPrice();
                     totalProduct += invoiceDetail.getTotalQuantity();
-                } else if (invoiceDetail.getProduct().getCategory().equals(Category.TREATMENT)) {
+                } else if (invoiceDetail.getProduct().getCategory().equals(ProductType.TREATMENT)) {
                     totalTreatmentRevenue += invoiceDetail.getTotalPrice();
                     totalTreatment += invoiceDetail.getTotalQuantity();
                 }

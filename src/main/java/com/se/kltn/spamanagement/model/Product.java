@@ -1,6 +1,6 @@
 package com.se.kltn.spamanagement.model;
 
-import com.se.kltn.spamanagement.constants.enums.Category;
+import com.se.kltn.spamanagement.constants.enums.ProductType;
 import com.se.kltn.spamanagement.constants.enums.Status;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -38,7 +38,7 @@ public class Product {
     private String imageUrl;
 
     @Enumerated(EnumType.STRING)
-    private Category category;
+    private ProductType category;
 
     private String description;
 

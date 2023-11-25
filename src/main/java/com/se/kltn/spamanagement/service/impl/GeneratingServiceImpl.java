@@ -1,6 +1,6 @@
 package com.se.kltn.spamanagement.service.impl;
 
-import com.se.kltn.spamanagement.constants.enums.Category;
+import com.se.kltn.spamanagement.constants.enums.ProductType;
 import com.se.kltn.spamanagement.dto.pojo.InvoiceDetailGeneratePojo;
 import com.se.kltn.spamanagement.dto.pojo.InvoiceGeneratePojo;
 import com.se.kltn.spamanagement.dto.response.ProductResponse;
@@ -82,7 +82,7 @@ public class GeneratingServiceImpl implements GeneratingService {
 
     @Override
     public String generateReport(String fileFormat) throws JRException, IOException {
-        List<ProductResponse> objects = this.productService.getProductsByCategory(Category.PRODUCT.name(), 0, 10);
+        List<ProductResponse> objects = this.productService.getProductsByCategory(ProductType.PRODUCT.name(), 0, 10);
         JasperPrint jasperPrint = getJasperPrint(objects, null, RESOURCE_REPORT);
         Path uploadPath = getUploadPath(fileFormat, jasperPrint, "report.pdf");
         return getPdfFileLink(uploadPath.toString());
@@ -140,12 +140,12 @@ public class GeneratingServiceImpl implements GeneratingService {
         return invoiceDetailGeneratePojo;
     }
 
-    private String convertTypeToString(Category category) {
-        if (category == Category.PRODUCT) {
+    private String convertTypeToString(ProductType category) {
+        if (category == ProductType.PRODUCT) {
             return "Sản phẩm";
-        } else if (category == Category.SERVICE) {
+        } else if (category == ProductType.SERVICE) {
             return "Dịch vụ";
-        } else if (category == Category.TREATMENT) {
+        } else if (category == ProductType.TREATMENT) {
             return "Liệu trình";
         }
         return null;
