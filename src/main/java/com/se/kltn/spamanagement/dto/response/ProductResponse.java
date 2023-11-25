@@ -23,6 +23,10 @@ public class ProductResponse {
 
     private ProductType productType;
 
+    private String supplier;
+
+    private String category;
+
     private String description;
 
     private Date createdDate;

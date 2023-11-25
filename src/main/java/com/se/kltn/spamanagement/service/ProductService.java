@@ -21,6 +21,8 @@ public interface ProductService {
 
     List<ProductResponse> getProductsByCategory(String categoryName, int page, int size);
 
+    List<ProductResponse> getProductsByType(String type, int page, int size);
+
     List<ProductResponse> filterProductsByPriceBetween(Double from, Double to);
 
     List<ProductResponse> searchByText(String text);

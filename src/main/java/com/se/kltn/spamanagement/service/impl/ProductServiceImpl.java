@@ -60,6 +60,7 @@ public class ProductServiceImpl implements ProductService {
         NullUtils.updateIfPresent(product::setQuantity, productRequest.getQuantity());
         NullUtils.updateIfPresent(product::setImageUrl, productRequest.getImageUrl());
         NullUtils.updateIfPresent(product::setType, productRequest.getProductType());
+        NullUtils.updateIfPresent(product::setCategory, productRequest.getCategory());
         NullUtils.updateIfPresent(product::setDescription, productRequest.getDescription());
         NullUtils.updateIfPresent(product::setStatus, productRequest.getStatus());
         NullUtils.updateIfPresent(product::setSupplier, product.getSupplier());
@@ -79,9 +80,16 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<ProductResponse> getProductsByCategory(String productType, int page, int size) {
+    public List<ProductResponse> getProductsByCategory(String category, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        List<Product> products = this.productRepository.getProductsByType(ProductType.valueOf(productType.toUpperCase()), pageable).getContent();
+        List<Product> products = this.productRepository.getProductsByCategory(category, pageable).getContent();
+        return MappingData.mapListObject(products, ProductResponse.class);
+    }
+
+    @Override
+    public List<ProductResponse> getProductsByType(String type, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        List<Product> products = this.productRepository.getProductsByType(ProductType.valueOf(type.toUpperCase()), pageable).getContent();
         return MappingData.mapListObject(products, ProductResponse.class);
     }
 

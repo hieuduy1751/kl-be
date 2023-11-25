@@ -74,12 +74,24 @@ public class ProductController {
         return ResponseEntity.ok().body(this.productService.createProduct(productRequest));
     }
 
-    @GetMapping("/category-name")
+    @GetMapping("/type")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "products founded"),
             @ApiResponse(responseCode = "404", description = "not found")
     })
-    @Operation(summary = "find products by category name")
+    @Operation(summary = "find products by type")
+    private ResponseEntity<Object> getProductsByType(@RequestParam("categoryName") String type,
+                                                     @RequestParam(defaultValue = "0", value = "page", required = false) int page,
+                                                     @RequestParam(defaultValue = "10", value = "size", required = false) int size) {
+        return ResponseEntity.ok().body(this.productService.getProductsByType(type, page, size));
+    }
+
+    @GetMapping("/category")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "products founded"),
+            @ApiResponse(responseCode = "404", description = "not found")
+    })
+    @Operation(summary = "find products by category")
     private ResponseEntity<Object> getProductsByCategory(@RequestParam("categoryName") String categoryName,
                                                          @RequestParam(defaultValue = "0", value = "page", required = false) int page,
                                                          @RequestParam(defaultValue = "10", value = "size", required = false) int size) {
@@ -112,7 +124,7 @@ public class ProductController {
             @ApiResponse(responseCode = "400", description = "bad request")
     })
     @Operation(summary = "search supplies by text")
-    public ResponseEntity<Object> findDevicesByText(@RequestParam(value = "text", required = false) String text) {
+    public ResponseEntity<Object> findSuppliersByText(@RequestParam(value = "text", required = false) String text) {
         return ResponseEntity.ok().body(this.productService.searchByTextForSupplies(text));
     }
 }

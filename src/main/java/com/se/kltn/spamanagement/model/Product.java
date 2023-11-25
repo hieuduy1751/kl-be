@@ -44,6 +44,8 @@ public class Product {
 
     private String supplier;
 
+    private String category;
+
     @Column(name = "created_date")
     private Date createdDate;
 

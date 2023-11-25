@@ -5,6 +5,8 @@ import com.se.kltn.spamanagement.constants.enums.Status;
 import lombok.Data;
 import org.hibernate.validator.constraints.Range;
 
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.validation.constraints.*;
 
 @Data
@@ -21,8 +23,10 @@ public class ProductRequest {
 
     private String imageUrl;
 
-    @NotBlank(message = "product type is require")
+    @NotNull(message = "product type is require")
     private ProductType productType;
+
+    private String category;
 
     private String description;
 
