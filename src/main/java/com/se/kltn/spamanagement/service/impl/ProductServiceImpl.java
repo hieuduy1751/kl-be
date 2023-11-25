@@ -59,9 +59,9 @@ public class ProductServiceImpl implements ProductService {
         NullUtils.updateIfPresent(product::setPrice, productRequest.getPrice());
         NullUtils.updateIfPresent(product::setQuantity, productRequest.getQuantity());
         NullUtils.updateIfPresent(product::setImageUrl, productRequest.getImageUrl());
-        NullUtils.updateIfPresent(product::setCategory, ProductType.valueOf(productRequest.getCategory().toUpperCase()));
+        NullUtils.updateIfPresent(product::setType, productRequest.getProductType());
         NullUtils.updateIfPresent(product::setDescription, productRequest.getDescription());
-        NullUtils.updateIfPresent(product::setStatus, Status.valueOf(productRequest.getStatus().toUpperCase()));
+        NullUtils.updateIfPresent(product::setStatus, productRequest.getStatus());
         NullUtils.updateIfPresent(product::setSupplier, product.getSupplier());
         product.setUpdatedDate(new Date());
         checkStatus(product);
@@ -72,16 +72,16 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductResponse createProduct(ProductRequest productRequest) {
         Product product = MappingData.mapObject(productRequest, Product.class);
-        product.setCategory(ProductType.valueOf(productRequest.getCategory().toUpperCase()));
+        product.setType(productRequest.getProductType());
         product.setCreatedDate(new Date());
         checkStatus(product);
         return MappingData.mapObject(this.productRepository.save(product), ProductResponse.class);
     }
 
     @Override
-    public List<ProductResponse> getProductsByCategory(String categoryName, int page, int size) {
+    public List<ProductResponse> getProductsByCategory(String productType, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        List<Product> products = this.productRepository.getProductsByCategory(ProductType.valueOf(categoryName.toUpperCase()), pageable).getContent();
+        List<Product> products = this.productRepository.getProductsByType(ProductType.valueOf(productType.toUpperCase()), pageable).getContent();
         return MappingData.mapListObject(products, ProductResponse.class);
     }
 

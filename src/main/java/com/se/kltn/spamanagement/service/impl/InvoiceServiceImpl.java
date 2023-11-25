@@ -153,7 +153,7 @@ public class InvoiceServiceImpl implements InvoiceService {
     private void checkToReduceProduct(Status status, Invoice invoice) {
         if (status.equals(Status.PAID)) {
             for (InvoiceDetail invoiceDetail : invoice.getInvoiceDetails()) {
-                if (invoiceDetail.getProduct().getCategory().equals(ProductType.PRODUCT)) {
+                if (invoiceDetail.getProduct().getType().equals(ProductType.PRODUCT)) {
                     invoiceDetail.getProduct().setQuantity(invoiceDetail.getProduct().getQuantity() - invoiceDetail.getTotalQuantity());
                     this.productRepository.save(invoiceDetail.getProduct());
                 }

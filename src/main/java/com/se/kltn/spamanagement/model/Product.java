@@ -38,7 +38,7 @@ public class Product {
     private String imageUrl;
 
     @Enumerated(EnumType.STRING)
-    private ProductType category;
+    private ProductType type;
 
     private String description;
 

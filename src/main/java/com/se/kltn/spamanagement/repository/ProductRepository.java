@@ -17,7 +17,7 @@ import java.util.Optional;
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
 
-    Page<Product> getProductsByCategory(ProductType category, Pageable pageable);
+    Page<Product> getProductsByType(ProductType productType, Pageable pageable);
 
     @Query(value = "SELECT * from products where price between :from and :to", nativeQuery = true)
     Optional<List<Product>> filterProductsByPriceBetween(@Param("from") Double from, @Param("to") Double to);

@@ -135,17 +135,17 @@ public class GeneratingServiceImpl implements GeneratingService {
         invoiceDetailGeneratePojo.setProductQuantity(invoiceDetail.getTotalQuantity());
         invoiceDetailGeneratePojo.setProductPrice(String.format("%.0f", product.getPrice()));
         invoiceDetailGeneratePojo.setProductName(product.getName());
-        invoiceDetailGeneratePojo.setProductType(convertTypeToString(product.getCategory()));
+        invoiceDetailGeneratePojo.setProductType(convertTypeToString(product.getType()));
         invoiceDetailGeneratePojo.setTotalPrice(String.format("%.0f", invoiceDetail.getTotalPrice()));
         return invoiceDetailGeneratePojo;
     }
 
-    private String convertTypeToString(ProductType category) {
-        if (category == ProductType.PRODUCT) {
+    private String convertTypeToString(ProductType productType) {
+        if (productType == ProductType.PRODUCT) {
             return "Sản phẩm";
-        } else if (category == ProductType.SERVICE) {
+        } else if (productType == ProductType.SERVICE) {
             return "Dịch vụ";
-        } else if (category == ProductType.TREATMENT) {
+        } else if (productType == ProductType.TREATMENT) {
             return "Liệu trình";
         }
         return null;

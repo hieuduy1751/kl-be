@@ -21,7 +21,7 @@ public class ProductResponse {
 
     private String imageUrl;
 
-    private ProductType category;
+    private ProductType productType;
 
     private String description;
 
@@ -29,8 +29,8 @@ public class ProductResponse {
 
     private Date updatedDate;
 
-    public String getCategory() {
-        return category.name();
+    public String getProductType() {
+        return productType.name();
     }
 
     public String getStatus() {

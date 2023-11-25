@@ -187,13 +187,13 @@ public class StatisticServiceImpl implements StatisticService {
         for (Invoice invoice : invoices) {
             List<InvoiceDetail> invoiceDetails = invoiceDetailRepository.findInvoiceDetailsByInvoice_Id(invoice.getId());
             for (InvoiceDetail invoiceDetail : invoiceDetails) {
-                if (invoiceDetail.getProduct().getCategory().equals(ProductType.SERVICE)) {
+                if (invoiceDetail.getProduct().getType().equals(ProductType.SERVICE)) {
                     totalServiceRevenue += invoiceDetail.getTotalPrice();
                     totalService += invoiceDetail.getTotalQuantity();
-                } else if (invoiceDetail.getProduct().getCategory().equals(ProductType.PRODUCT)) {
+                } else if (invoiceDetail.getProduct().getType().equals(ProductType.PRODUCT)) {
                     totalProductRevenue += invoiceDetail.getTotalPrice();
                     totalProduct += invoiceDetail.getTotalQuantity();
-                } else if (invoiceDetail.getProduct().getCategory().equals(ProductType.TREATMENT)) {
+                } else if (invoiceDetail.getProduct().getType().equals(ProductType.TREATMENT)) {
                     totalTreatmentRevenue += invoiceDetail.getTotalPrice();
                     totalTreatment += invoiceDetail.getTotalQuantity();
                 }
