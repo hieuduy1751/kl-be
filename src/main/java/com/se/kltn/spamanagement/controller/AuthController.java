@@ -34,12 +34,6 @@ public class AuthController {
         return ResponseEntity.ok().body(this.authService.registerCustomer(accountRequest));
     }
 
-    @PostMapping("/register-employee/{idEmployee}")
-    @Operation(summary = "register new account for employee")
-    public ResponseEntity<Object> registerCustomer(@Valid @RequestBody AccountRequest accountRequest, @PathVariable Long idEmployee) {
-        return ResponseEntity.ok().body(this.authService.registerEmployee(accountRequest, idEmployee));
-    }
-
     @PostMapping("/logout")
     @Operation(summary = "logout account")
     public void logout(HttpServletRequest request, HttpServletResponse response) {

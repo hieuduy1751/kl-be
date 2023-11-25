@@ -1,6 +1,8 @@
 package com.se.kltn.spamanagement.controller.admin;
 
+import com.se.kltn.spamanagement.dto.request.AccountRequest;
 import com.se.kltn.spamanagement.dto.request.EmployeeRequest;
+import com.se.kltn.spamanagement.service.AuthService;
 import com.se.kltn.spamanagement.service.EmployeeService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,9 +17,12 @@ public class EmployeeController {
 
     private final EmployeeService employeeService;
 
+    private final AuthService authService;
+
     @Autowired
-    public EmployeeController(EmployeeService employeeService) {
+    public EmployeeController(EmployeeService employeeService, AuthService authService) {
         this.employeeService = employeeService;
+        this.authService = authService;
     }
 
     @GetMapping("/{id}")
@@ -56,5 +61,11 @@ public class EmployeeController {
     @Operation(summary = "search employee by name")
     public ResponseEntity<Object> getEmployeeByText(@RequestParam(required = false) String text){
         return ResponseEntity.ok().body(this.employeeService.searchEmployeeByText(text));
+    }
+
+    @PostMapping("/register/{idEmployee}")
+    @Operation(summary = "register new account for employee")
+    public ResponseEntity<Object> registerCustomer(@Valid @RequestBody AccountRequest accountRequest, @PathVariable Long idEmployee) {
+        return ResponseEntity.ok().body(this.authService.registerEmployee(accountRequest, idEmployee));
     }
 }
