@@ -29,9 +29,15 @@ public class AuthController {
     }
 
     @PostMapping("/register-customer")
-    @Operation(summary = "register new account")
-    public ResponseEntity<Object> register(@Valid @RequestBody AccountRequest accountRequest) {
+    @Operation(summary = "register new account for customer")
+    public ResponseEntity<Object> registerCustomer(@Valid @RequestBody AccountRequest accountRequest) {
         return ResponseEntity.ok().body(this.authService.registerCustomer(accountRequest));
+    }
+
+    @PostMapping("/register-employee/{idEmployee}")
+    @Operation(summary = "register new account for employee")
+    public ResponseEntity<Object> registerCustomer(@Valid @RequestBody AccountRequest accountRequest, @PathVariable Long idEmployee) {
+        return ResponseEntity.ok().body(this.authService.registerEmployee(accountRequest, idEmployee));
     }
 
     @PostMapping("/logout")
