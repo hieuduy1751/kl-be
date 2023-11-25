@@ -64,6 +64,7 @@ public class AuthServiceImpl implements AuthService {
             Map<String, String> response = new HashMap<>();
             response.put("username", username);
             response.put("token", token);
+            response.put("role", role);
             return response;
         } catch (Exception e) {
             e.printStackTrace();
@@ -92,7 +93,7 @@ public class AuthServiceImpl implements AuthService {
                 () -> new ResourceNotFoundException(EMPLOYEE_NOT_FOUND));
         Account account = MappingData.mapObject(accountRequest, Account.class);
         account.setPassword(passwordEncoder.encode(accountRequest.getPassword()));
-        account.setRole(Role.USER);
+        account.setRole(Role.STAFF);
         account.setEmployee(employee);
         Account accountRegister = this.accountRepository.save(account);
         return MappingData.mapObject(accountRegister, AccountResponse.class);
