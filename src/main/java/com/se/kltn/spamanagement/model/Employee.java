@@ -1,6 +1,7 @@
 package com.se.kltn.spamanagement.model;
 
 import com.se.kltn.spamanagement.constants.enums.Gender;
+import com.se.kltn.spamanagement.constants.enums.Position;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -32,6 +33,9 @@ public class Employee {
 
     @Column(name = "avatar_url")
     private String avatarUrl;
+
+    @Enumerated(EnumType.STRING)
+    private Position position;
 
     @Column(unique = true)
     private String email;

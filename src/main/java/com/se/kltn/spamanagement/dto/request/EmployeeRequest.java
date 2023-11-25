@@ -25,6 +25,8 @@ public class EmployeeRequest {
 
     private String avatarUrl;
 
+    private String position;
+
     private String address;
 
     private String phoneNumber;

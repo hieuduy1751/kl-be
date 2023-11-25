@@ -2,6 +2,7 @@ package com.se.kltn.spamanagement.service.impl;
 
 import com.se.kltn.spamanagement.constants.ErrorMessage;
 import com.se.kltn.spamanagement.constants.enums.Gender;
+import com.se.kltn.spamanagement.constants.enums.Position;
 import com.se.kltn.spamanagement.dto.request.EmployeeRequest;
 import com.se.kltn.spamanagement.dto.response.EmployeeResponse;
 import com.se.kltn.spamanagement.exception.ResourceNotFoundException;
@@ -60,6 +61,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         NullUtils.updateIfPresent(employee::setGender, Gender.valueOf(employeeRequest.getGender()));
         NullUtils.updateIfPresent(employee::setAvatarUrl, employeeRequest.getAvatarUrl());
         NullUtils.updateIfPresent(employee::setAddress, employeeRequest.getAddress());
+        NullUtils.updateIfPresent(employee::setPosition, Position.valueOf(employeeRequest.getPosition()));
         NullUtils.updateIfPresent(employee::setEmail, employeeRequest.getEmail());
         NullUtils.updateIfPresent(employee::setBirthDay, employeeRequest.getBirthDay());
         NullUtils.updateIfPresent(employee::setSalaryGross, employeeRequest.getSalaryGross());

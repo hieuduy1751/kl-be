@@ -19,6 +19,8 @@ public class EmployeeResponse {
 
     private String avatarUrl;
 
+    private String position;
+
     private String address;
 
     private String phone;
