@@ -16,6 +16,7 @@ import com.se.kltn.spamanagement.repository.TreatmentDetailRepository;
 import com.se.kltn.spamanagement.service.TreatmentDetailService;
 import com.se.kltn.spamanagement.utils.MappingData;
 import com.se.kltn.spamanagement.utils.NullUtils;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -27,6 +28,7 @@ import java.util.List;
 import static com.se.kltn.spamanagement.constants.ErrorMessage.*;
 
 @Service
+@Log4j2
 public class TreatmentDetailServiceImpl implements TreatmentDetailService {
 
     private final TreatmentDetailRepository treatmentDetailRepository;
@@ -44,6 +46,7 @@ public class TreatmentDetailServiceImpl implements TreatmentDetailService {
 
     @Override
     public TreatmentDetailResponse addTreatmentDetail(TreatmentDetailId treatmentDetailId, TreatmentDetailRequest treatmentDetailRequest) {
+        log.debug("add treatment detail");
         TreatmentDetail treatmentDetail = MappingData.mapObject(treatmentDetailRequest, TreatmentDetail.class);
         treatmentDetail.setProduct(getTreatmentById(treatmentDetailId.getProductId()));
         treatmentDetail.setCustomer(getCustomerById(treatmentDetailId.getCustomerId()));
@@ -56,6 +59,7 @@ public class TreatmentDetailServiceImpl implements TreatmentDetailService {
 
     @Override
     public TreatmentDetailResponse updateTreatmentDetail(TreatmentDetailId treatmentDetailId, TreatmentDetailRequest treatmentDetailRequest) {
+        log.debug("update treatment detail");
         TreatmentDetail treatmentDetail = this.treatmentDetailRepository.findById(treatmentDetailId).orElseThrow(
                 () -> new ResourceNotFoundException(TREATMENT_DETAIL_NOT_FOUND));
         NullUtils.updateIfPresent(treatmentDetail::setNote, treatmentDetailRequest.getNote());
@@ -67,6 +71,7 @@ public class TreatmentDetailServiceImpl implements TreatmentDetailService {
 
     @Override
     public List<TreatmentDetailResponse> getTreatmentDetailByCustomer(Long customerId) {
+        log.debug("get treatment detail by customer have id: " + customerId );
         List<TreatmentDetail> treatmentDetails = this.treatmentDetailRepository.getTreatmentDetailsByCustomer_Id(customerId);
         return mappingTreatmentDetails(treatmentDetails);
     }
@@ -74,6 +79,7 @@ public class TreatmentDetailServiceImpl implements TreatmentDetailService {
 
     @Override
     public List<TreatmentDetailResponse> getListTreatmentDetail(int page, int size) {
+        log.debug("get list treatment detail");
         Pageable pageable = PageRequest.of(page, size);
         List<TreatmentDetail> treatmentDetails = this.treatmentDetailRepository.findAll(pageable).getContent();
         return mappingTreatmentDetails(treatmentDetails);
@@ -81,6 +87,7 @@ public class TreatmentDetailServiceImpl implements TreatmentDetailService {
 
     @Override
     public void deleteTreatmentDetail(TreatmentDetailId treatmentDetailId) {
+        log.debug("delete treatment detail");
         TreatmentDetail treatmentDetail = this.treatmentDetailRepository.findById(treatmentDetailId).orElseThrow(
                 () -> new ResourceNotFoundException(TREATMENT_DETAIL_NOT_FOUND));
         this.treatmentDetailRepository.delete(treatmentDetail);

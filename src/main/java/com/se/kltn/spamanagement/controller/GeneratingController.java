@@ -20,17 +20,12 @@ public class GeneratingController {
         this.reportService = reportService;
     }
 
-    @PostMapping("/report")
-    @Operation(summary = "generate report")
-    public String generateReport(@RequestParam(name = "fileFormat") String fileFormat) throws JRException, IOException {
-        String fileLink = reportService.generateReport(fileFormat);
-        return "redirect:/" + fileLink;
-    }
-
-    @GetMapping("/invoice/{idInvoice}")
+    @PostMapping(value = "/invoice/{idInvoice}")
     @Operation(summary = "generate invoice")
-    public String generateInvoice(@RequestParam(name = "fileFormat") String fileFormat, @PathVariable Long idInvoice) throws JRException, IOException {
-        String fileLink = reportService.generateInvoice(fileFormat, idInvoice);
-        return "redirect:/" + fileLink;
+    public ResponseEntity<String> generateInvoice(@RequestParam(name = "fileFormat", defaultValue = "pdf") String fileFormat,
+                                  @PathVariable Long idInvoice,
+                                  @RequestParam(name = "uploadDir") String uploadDir) throws JRException, IOException {
+        String fileLink = reportService.generateInvoice(fileFormat, idInvoice, uploadDir);
+        return ResponseEntity.ok().body(fileLink);
     }
 }

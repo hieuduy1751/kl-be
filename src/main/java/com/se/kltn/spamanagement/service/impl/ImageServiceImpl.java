@@ -7,6 +7,7 @@ import com.google.cloud.storage.BlobInfo;
 import com.google.cloud.storage.Storage;
 import com.google.cloud.storage.StorageOptions;
 import com.se.kltn.spamanagement.service.ImageService;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -23,6 +24,7 @@ import java.util.UUID;
 import static java.net.URLEncoder.encode;
 
 @Service
+@Log4j2
 public class ImageServiceImpl implements ImageService {
 
     private static final String DOWNLOAD_URL = "https://firebasestorage.googleapis.com/v0/b/kltn-spamanagement.appspot.com/o/%s?alt=media&token=%s";
@@ -31,6 +33,7 @@ public class ImageServiceImpl implements ImageService {
 
     @Override
     public String upload(MultipartFile multipartFile) throws IOException {
+        log.debug("Upload file");
         String fileName = multipartFile.getOriginalFilename();
         assert fileName != null;
         fileName = UUID.randomUUID().toString().concat(this.getExtension(fileName));

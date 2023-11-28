@@ -6,7 +6,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 public interface GeneratingService {
-    String generateReport(String fileFormat) throws JRException, IOException;
 
-    String generateInvoice(String fileFormat, Long invoiceId) throws JRException, IOException;
+    String generateInvoice(String fileFormat, Long invoiceId, String uploadPath) throws JRException, IOException;
 }

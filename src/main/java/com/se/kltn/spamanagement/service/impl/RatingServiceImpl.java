@@ -9,6 +9,7 @@ import com.se.kltn.spamanagement.repository.ProductRepository;
 import com.se.kltn.spamanagement.repository.RatingRepository;
 import com.se.kltn.spamanagement.service.RatingService;
 import com.se.kltn.spamanagement.utils.MappingData;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +19,7 @@ import java.util.List;
 import static com.se.kltn.spamanagement.constants.ErrorMessage.*;
 
 @Service
+@Log4j2
 public class RatingServiceImpl implements RatingService {
 
     private final RatingRepository ratingRepository;
@@ -35,6 +37,7 @@ public class RatingServiceImpl implements RatingService {
 
     @Override
     public RatingResponse addRatingToProduct(RatingRequest ratingRequest, Long idProduct, Long idCustomer) {
+        log.info("Add rating to product with id: " + idProduct + " and customer id: " + idCustomer);
         Rating rating = mapRating(ratingRequest);
         rating.setProduct(this.productRepository.findById(idProduct).orElseThrow(
                 () -> new ResourceNotFoundException(PRODUCT_NOT_FOUND)

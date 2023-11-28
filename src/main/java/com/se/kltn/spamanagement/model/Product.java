@@ -46,6 +46,8 @@ public class Product {
 
     private String category;
 
+    private String unit;
+
     @Column(name = "created_date")
     private Date createdDate;
 

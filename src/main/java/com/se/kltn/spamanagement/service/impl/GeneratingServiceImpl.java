@@ -3,7 +3,6 @@ package com.se.kltn.spamanagement.service.impl;
 import com.se.kltn.spamanagement.constants.enums.ProductType;
 import com.se.kltn.spamanagement.dto.pojo.InvoiceDetailGeneratePojo;
 import com.se.kltn.spamanagement.dto.pojo.InvoiceGeneratePojo;
-import com.se.kltn.spamanagement.dto.response.ProductResponse;
 import com.se.kltn.spamanagement.exception.ResourceNotFoundException;
 import com.se.kltn.spamanagement.model.Customer;
 import com.se.kltn.spamanagement.model.Invoice;
@@ -35,18 +34,10 @@ public class GeneratingServiceImpl implements GeneratingService {
 
     private static final String RESOURCE_INVOICE = "src/main/resources/report/invoice.jrxml";
 
-    private static final String RESOURCE_REPORT = "src/main/resources/report/invoice.jrxml";
-
-    private final InvoiceServiceImpl invoiceService;
-
-    private final ProductServiceImpl productService;
-
     private final InvoiceRepository invoiceRepository;
 
     @Autowired
-    public GeneratingServiceImpl(InvoiceServiceImpl invoiceService, ProductServiceImpl productService, InvoiceRepository invoiceRepository) {
-        this.invoiceService = invoiceService;
-        this.productService = productService;
+    public GeneratingServiceImpl(InvoiceRepository invoiceRepository) {
         this.invoiceRepository = invoiceRepository;
     }
 
@@ -55,16 +46,14 @@ public class GeneratingServiceImpl implements GeneratingService {
             JasperReport jasperReport = JasperCompileManager.compileReport(ResourceUtils.getFile(resourceLocation).getAbsolutePath());
             JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(collection);
             parameters.put("detailDataset", dataSource);
-            JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, new JREmptyDataSource());
-            return jasperPrint;
+            return JasperFillManager.fillReport(jasperReport, parameters, new JREmptyDataSource());
         } catch (Exception e) {
             e.printStackTrace();
             throw new JRException("Error generating JasperPrint.");
         }
     }
 
-    private Path getUploadPath(String fileFormat, JasperPrint jasperPrint, String fileName) throws IOException, JRException {
-        String uploadDir = StringUtils.cleanPath(".../generated-file");
+    private Path getUploadPath(String fileFormat, JasperPrint jasperPrint, String fileName, String uploadDir) throws IOException, JRException {
         Path uploadPath = Paths.get(uploadDir).toAbsolutePath().normalize();
         if (!Files.exists(uploadPath)) {
             Files.createDirectories(uploadPath);
@@ -76,21 +65,9 @@ public class GeneratingServiceImpl implements GeneratingService {
         return uploadPath;
     }
 
-    private String getPdfFileLink(String uploadPath) {
-        return uploadPath + "/" + "productReport.pdf";
-    }
-
-    @Override
-    public String generateReport(String fileFormat) throws JRException, IOException {
-        List<ProductResponse> objects = this.productService.getProductsByCategory(ProductType.PRODUCT.name(), 0, 10);
-        JasperPrint jasperPrint = getJasperPrint(objects, null, RESOURCE_REPORT);
-        Path uploadPath = getUploadPath(fileFormat, jasperPrint, "report.pdf");
-        return getPdfFileLink(uploadPath.toString());
-    }
-
     @Override
     @Transactional
-    public String generateInvoice(String fileFormat, Long invoiceId) throws JRException, IOException {
+    public String generateInvoice(String fileFormat, Long invoiceId, String uploadDir) throws JRException, IOException {
         log.info("Generating invoice to pdf with id: " + invoiceId);
         try {
             Invoice invoice = this.invoiceRepository.findById(invoiceId)
@@ -103,9 +80,9 @@ public class GeneratingServiceImpl implements GeneratingService {
             String fileName = "invoice_" + invoiceGeneratePojo.getIdInvoice() + "_" + invoiceGeneratePojo.getCustomerName() + ".pdf";
 
             JasperPrint jasperPrint = getJasperPrint(listInvoiceDetailPojo, parameters, RESOURCE_INVOICE);
-            Path uploadPath = getUploadPath(fileFormat, jasperPrint, fileName);
+            Path uploadPath = getUploadPath(fileFormat, jasperPrint, fileName, uploadDir);
 
-            String pdfFileLink = getPdfFileLink(uploadPath.toString());
+            String pdfFileLink = StringUtils.cleanPath(uploadPath + "\\" + fileName);
             // Log thông tin
             log.info("file invoice pdf generated to pdf: " + pdfFileLink);
 

@@ -88,6 +88,9 @@ public class EmployeeServiceImpl implements EmployeeService {
         log.info("delete employee");
         Employee employee = this.employeeRepository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException(EMPLOYEE_NOT_FOUND));
+        if (employee.getAccount() != null) {
+            this.accountRepository.delete(employee.getAccount());
+        }
         this.employeeRepository.delete(employee);
     }
 

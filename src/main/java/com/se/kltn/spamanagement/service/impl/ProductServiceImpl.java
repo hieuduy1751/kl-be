@@ -10,6 +10,7 @@ import com.se.kltn.spamanagement.repository.ProductRepository;
 import com.se.kltn.spamanagement.service.ProductService;
 import com.se.kltn.spamanagement.utils.MappingData;
 import com.se.kltn.spamanagement.utils.NullUtils;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -21,6 +22,7 @@ import java.util.List;
 import static com.se.kltn.spamanagement.constants.ErrorMessage.PRODUCT_NOT_FOUND;
 
 @Service
+@Log4j2
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
@@ -32,6 +34,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductResponse getProductById(Long id) {
+        log.info("get product by id: " + id);
         Product product = this.productRepository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException(PRODUCT_NOT_FOUND));
         return MappingData.mapObject(product, ProductResponse.class);
@@ -39,6 +42,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<ProductResponse> getProducts(int page, int size) {
+        log.info("get list product");
         Pageable pageable = PageRequest.of(page, size);
         List<Product> products = this.productRepository.findAll(pageable).getContent();
         return MappingData.mapListObject(products, ProductResponse.class);
@@ -46,6 +50,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public void deleteProduct(Long id) {
+        log.info("delete product by id: " + id);
         Product product = this.productRepository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException(PRODUCT_NOT_FOUND));
         this.productRepository.delete(product);
@@ -53,6 +58,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductResponse updateProduct(Long id, ProductRequest productRequest) {
+        log.info("update product by id: " + id);
         Product product = this.productRepository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException(PRODUCT_NOT_FOUND));
         NullUtils.updateIfPresent(product::setName, productRequest.getName());
@@ -72,6 +78,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductResponse createProduct(ProductRequest productRequest) {
+        log.info("create product");
         Product product = MappingData.mapObject(productRequest, Product.class);
         product.setType(productRequest.getProductType());
         product.setCreatedDate(new Date());
@@ -81,6 +88,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<ProductResponse> getProductsByCategory(String category, int page, int size) {
+        log.info("get list product by category");
         Pageable pageable = PageRequest.of(page, size);
         List<Product> products = this.productRepository.getProductsByCategory(category, pageable).getContent();
         return MappingData.mapListObject(products, ProductResponse.class);
@@ -88,6 +96,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<ProductResponse> getProductsByType(String type, int page, int size) {
+        log.info("get list product by type");
         Pageable pageable = PageRequest.of(page, size);
         List<Product> products = this.productRepository.getProductsByType(ProductType.valueOf(type.toUpperCase()), pageable).getContent();
         return MappingData.mapListObject(products, ProductResponse.class);
@@ -95,12 +104,14 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<ProductResponse> filterProductsByPriceBetween(Double from, Double to) {
+        log.info("filter product by price between " + from + " and " + to);
         List<Product> products = this.productRepository.filterProductsByPriceBetween(from, to).orElse(null);
         return MappingData.mapListObject(products, ProductResponse.class);
     }
 
     @Override
     public List<ProductResponse> searchByText(String text) {
+        log.info("search product by text: " + text);
         if (text == null) {
             return getProducts(0, 10);
         }
@@ -109,6 +120,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<ProductResponse> searchByTextForSupplies(String text) {
+        log.info("search suppliers by text: " + text);
         if (text == null) {
             this.getProductsByCategory(String.valueOf(ProductType.SUPPLIES), 0, 10);
         }
