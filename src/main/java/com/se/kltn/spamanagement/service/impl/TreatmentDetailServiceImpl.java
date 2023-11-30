@@ -2,6 +2,7 @@ package com.se.kltn.spamanagement.service.impl;
 
 import com.se.kltn.spamanagement.dto.request.TreatmentDetailRequest;
 import com.se.kltn.spamanagement.dto.response.CustomerResponse;
+import com.se.kltn.spamanagement.dto.response.EmployeeResponse;
 import com.se.kltn.spamanagement.dto.response.ProductResponse;
 import com.se.kltn.spamanagement.dto.response.TreatmentDetailResponse;
 import com.se.kltn.spamanagement.exception.ResourceNotFoundException;
@@ -117,6 +118,8 @@ public class TreatmentDetailServiceImpl implements TreatmentDetailService {
                             .get(treatmentDetailResponses.indexOf(treatmentDetailResponse)).getCustomer(), CustomerResponse.class));
                     treatmentDetailResponse.setProductResponse(MappingData.mapObject(treatmentDetails
                             .get(treatmentDetailResponses.indexOf(treatmentDetailResponse)).getProduct(), ProductResponse.class));
+                    treatmentDetailResponse.setEmployeeResponse(MappingData.mapObject(treatmentDetails
+                            .get(treatmentDetailResponses.indexOf(treatmentDetailResponse)).getEmployee(), EmployeeResponse.class));
                 }
         );
         return treatmentDetailResponses;
@@ -126,6 +129,7 @@ public class TreatmentDetailServiceImpl implements TreatmentDetailService {
         TreatmentDetailResponse treatmentDetailResponse = MappingData.mapObject(treatmentDetail, TreatmentDetailResponse.class);
         treatmentDetailResponse.setCustomerResponse(MappingData.mapObject(treatmentDetail.getCustomer(), CustomerResponse.class));
         treatmentDetailResponse.setProductResponse(MappingData.mapObject(treatmentDetail.getProduct(), ProductResponse.class));
+        treatmentDetailResponse.setEmployeeResponse(MappingData.mapObject(treatmentDetail.getEmployee(), EmployeeResponse.class));
         return treatmentDetailResponse;
     }
 }

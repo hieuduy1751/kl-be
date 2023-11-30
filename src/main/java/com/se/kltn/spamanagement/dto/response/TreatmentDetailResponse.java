@@ -27,4 +27,6 @@ public class TreatmentDetailResponse {
     private String createdDate;
 
     private String updatedDate;
+
+    private EmployeeResponse employeeResponse;
 }
