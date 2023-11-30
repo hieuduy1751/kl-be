@@ -67,6 +67,7 @@ public class ProductServiceImpl implements ProductService {
         NullUtils.updateIfPresent(product::setImageUrl, productRequest.getImageUrl());
         NullUtils.updateIfPresent(product::setType, productRequest.getProductType());
         NullUtils.updateIfPresent(product::setCategory, productRequest.getCategory());
+        NullUtils.updateIfPresent(product::setUnit, productRequest.getUnit());
         NullUtils.updateIfPresent(product::setDescription, productRequest.getDescription());
         NullUtils.updateIfPresent(product::setStatus, productRequest.getStatus());
         NullUtils.updateIfPresent(product::setSupplier, product.getSupplier());
@@ -120,11 +121,20 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<ProductResponse> searchByTextForSupplies(String text) {
-        log.info("search suppliers by text: " + text);
+        log.info("search supplies by text: " + text);
         if (text == null) {
             this.getProductsByCategory(String.valueOf(ProductType.SUPPLIES), 0, 10);
         }
-        return MappingData.mapListObject(this.productRepository.getProductsByTextAndCategoryIsDevice(text), ProductResponse.class);
+        return MappingData.mapListObject(this.productRepository.getProductsByTextAndTypeIsSupplies(text), ProductResponse.class);
+    }
+
+    @Override
+    public List<ProductResponse> searchByTextForService(String text) {
+        log.info("search service by text: " + text);
+        if (text == null) {
+            this.getProductsByCategory(String.valueOf(ProductType.SUPPLIES), 0, 10);
+        }
+        return MappingData.mapListObject(this.productRepository.getProductsByTextAndTypeIsService(text), ProductResponse.class);
     }
 
     private void checkStatus(Product product) {

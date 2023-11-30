@@ -28,4 +28,6 @@ public interface ProductService {
     List<ProductResponse> searchByText(String text);
 
     List<ProductResponse> searchByTextForSupplies(String text);
+
+    List<ProductResponse> searchByTextForService(String text);
 }

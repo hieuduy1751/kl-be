@@ -33,4 +33,6 @@ public class ProductRequest {
     private String supplier;
 
     private Status status;
+
+    private String unit;
 }

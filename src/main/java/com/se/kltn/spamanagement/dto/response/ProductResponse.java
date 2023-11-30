@@ -27,6 +27,8 @@ public class ProductResponse {
 
     private String category;
 
+    private String unit;
+
     private String description;
 
     private Date createdDate;

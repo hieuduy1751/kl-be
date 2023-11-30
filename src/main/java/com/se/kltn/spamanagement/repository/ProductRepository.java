@@ -44,7 +44,13 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     @Query(value = "SELECT * FROM products p WHERE " +
             "LOWER(REPLACE(CONCAT(UNACCENT(p.name), ' ', UNACCENT(p.description)), ' ', '')) LIKE " +
-            "LOWER(REPLACE(CONCAT('%', UNACCENT(:text), '%'), ' ', '')" +
-            "AND p.category = 'DEVICE')", nativeQuery = true)
-    List<Product> getProductsByTextAndCategoryIsDevice(@Param("text") String text);
+            "LOWER(REPLACE(CONCAT('%', UNACCENT(:text), '%'), ' ', ''))" +
+            "AND p.\"type\" = 'SUPPLIES'", nativeQuery = true)
+    List<Product> getProductsByTextAndTypeIsSupplies(@Param("text") String text);
+
+    @Query(value = "SELECT * FROM products p WHERE " +
+            "LOWER(REPLACE(CONCAT(UNACCENT(p.name), ' ', UNACCENT(p.description)), ' ', '')) LIKE " +
+            "LOWER(REPLACE(CONCAT('%', UNACCENT(:text), '%'), ' ', ''))" +
+            "AND p.\"type\" = 'SERVICE'", nativeQuery = true)
+    List<Product> getProductsByTextAndTypeIsService(@Param("text") String text);
 }

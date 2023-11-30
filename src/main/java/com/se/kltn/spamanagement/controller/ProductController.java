@@ -127,4 +127,14 @@ public class ProductController {
     public ResponseEntity<Object> findSuppliersByText(@RequestParam(value = "text", required = false) String text) {
         return ResponseEntity.ok().body(this.productService.searchByTextForSupplies(text));
     }
+
+    @GetMapping("/search/service/text")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "service founded"),
+            @ApiResponse(responseCode = "400", description = "bad request")
+    })
+    @Operation(summary = "search service by text")
+    public ResponseEntity<Object> findServiceByText(@RequestParam(value = "text", required = false) String text) {
+        return ResponseEntity.ok().body(this.productService.searchByTextForService(text));
+    }
 }
