@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.text.ParseException;
 
 @RestController
 @RequestMapping("/api/appointment")
@@ -29,7 +30,7 @@ public class AppointmentController {
 
     @PostMapping
     @Operation(summary = "create appointment")
-    public ResponseEntity<Object> createAppointment(@Valid @RequestBody AppointmentRequest appointmentRequest) {
+    public ResponseEntity<Object> createAppointment(@Valid @RequestBody AppointmentRequest appointmentRequest) throws ParseException {
         return ResponseEntity.ok().body(this.appointmentService.createAppointment(appointmentRequest));
     }
 
