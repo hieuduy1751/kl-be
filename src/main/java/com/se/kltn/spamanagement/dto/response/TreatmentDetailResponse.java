@@ -22,7 +22,7 @@ public class TreatmentDetailResponse {
 
     private String imageCurrent;
 
-    private String imageAfter;
+    private String imageResult;
 
     private String createdDate;
 

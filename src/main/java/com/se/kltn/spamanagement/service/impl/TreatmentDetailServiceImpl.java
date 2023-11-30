@@ -73,7 +73,7 @@ public class TreatmentDetailServiceImpl implements TreatmentDetailService {
         NullUtils.updateIfPresent(treatmentDetail::setImageBefore, treatmentDetailRequest.getImageBefore());
         NullUtils.updateIfPresent(treatmentDetail::setStatus, treatmentDetailRequest.getStatus());
         NullUtils.updateIfPresent(treatmentDetail::setImageCurrent, treatmentDetailRequest.getImageCurrent());
-        NullUtils.updateIfPresent(treatmentDetail::setImageResult, treatmentDetailRequest.getImageAfter());
+        NullUtils.updateIfPresent(treatmentDetail::setImageResult, treatmentDetailRequest.getImageResult());
         treatmentDetail.setUpdatedDate(new Date());
         return mapToTreatmentDetailResponse(this.treatmentDetailRepository.save(treatmentDetail));
     }

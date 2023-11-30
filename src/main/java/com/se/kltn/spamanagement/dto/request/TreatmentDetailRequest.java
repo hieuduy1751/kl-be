@@ -20,7 +20,7 @@ public class TreatmentDetailRequest {
 
     private String imageCurrent;
 
-    private String imageAfter;
+    private String imageResult;
 
     @Enumerated(EnumType.STRING)
     @NotNull(message = "status is required")
