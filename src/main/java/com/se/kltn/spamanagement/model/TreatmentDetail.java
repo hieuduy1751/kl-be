@@ -48,4 +48,8 @@ public class TreatmentDetail {
 
     @Column(name = "updated_date")
     private Date updatedDate;
+
+    @ManyToOne
+    @JoinColumn(name = "employee_id")
+    private Employee employee;
 }

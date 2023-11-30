@@ -25,7 +25,7 @@ public class TreatmentDetailController {
     @Operation(summary = "add treatment detail")
     public ResponseEntity<Object> addTreatmentDetail(@RequestParam("customerId") Long customerId,
                                                      @RequestParam("productId") Long productId,
-                                                     @RequestBody TreatmentDetailRequest treatmentDetailRequest) {
+                                                     @RequestBody @Valid TreatmentDetailRequest treatmentDetailRequest) {
         return ResponseEntity.ok().body(this.treatmentDetailService.addTreatmentDetail(new TreatmentDetailId(productId, customerId), treatmentDetailRequest));
     }
 
@@ -33,7 +33,7 @@ public class TreatmentDetailController {
     @Operation(summary = "update treatment detail")
     public ResponseEntity<Object> updateTreatmentDetail(@RequestParam("customerId") Long customerId,
                                                         @RequestParam("productId") Long productId,
-                                                        @Valid @RequestBody TreatmentDetailRequest treatmentDetailRequest) {
+                                                        @RequestBody TreatmentDetailRequest treatmentDetailRequest) {
         return ResponseEntity.ok().body(this.treatmentDetailService.updateTreatmentDetail(new TreatmentDetailId(productId, customerId), treatmentDetailRequest));
     }
 

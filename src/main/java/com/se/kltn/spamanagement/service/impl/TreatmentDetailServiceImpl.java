@@ -11,6 +11,7 @@ import com.se.kltn.spamanagement.model.TreatmentDetail;
 import com.se.kltn.spamanagement.model.TreatmentDetailId;
 import com.se.kltn.spamanagement.constants.enums.Status;
 import com.se.kltn.spamanagement.repository.CustomerRepository;
+import com.se.kltn.spamanagement.repository.EmployeeRepository;
 import com.se.kltn.spamanagement.repository.ProductRepository;
 import com.se.kltn.spamanagement.repository.TreatmentDetailRepository;
 import com.se.kltn.spamanagement.service.TreatmentDetailService;
@@ -37,11 +38,14 @@ public class TreatmentDetailServiceImpl implements TreatmentDetailService {
 
     private final ProductRepository productRepository;
 
+    private final EmployeeRepository employeeRepository;
+
     @Autowired
-    public TreatmentDetailServiceImpl(TreatmentDetailRepository treatmentDetailRepository, CustomerRepository customerRepository, ProductRepository productRepository) {
+    public TreatmentDetailServiceImpl(TreatmentDetailRepository treatmentDetailRepository, CustomerRepository customerRepository, ProductRepository productRepository, EmployeeRepository employeeRepository) {
         this.treatmentDetailRepository = treatmentDetailRepository;
         this.customerRepository = customerRepository;
         this.productRepository = productRepository;
+        this.employeeRepository = employeeRepository;
     }
 
     @Override
@@ -53,6 +57,8 @@ public class TreatmentDetailServiceImpl implements TreatmentDetailService {
         treatmentDetail.setTreatmentDetailId(treatmentDetailId);
         treatmentDetail.setStatus(Status.NEW);
         treatmentDetail.setCreatedDate(new Date());
+        treatmentDetail.setEmployee(this.employeeRepository.findById(treatmentDetailRequest.getIdEmployee()).orElseThrow(
+                () -> new ResourceNotFoundException(EMPLOYEE_NOT_FOUND)));
         return mapToTreatmentDetailResponse(this.treatmentDetailRepository.save(treatmentDetail));
     }
 
@@ -64,14 +70,16 @@ public class TreatmentDetailServiceImpl implements TreatmentDetailService {
                 () -> new ResourceNotFoundException(TREATMENT_DETAIL_NOT_FOUND));
         NullUtils.updateIfPresent(treatmentDetail::setNote, treatmentDetailRequest.getNote());
         NullUtils.updateIfPresent(treatmentDetail::setImageBefore, treatmentDetailRequest.getImageBefore());
+        NullUtils.updateIfPresent(treatmentDetail::setStatus, treatmentDetailRequest.getStatus());
         NullUtils.updateIfPresent(treatmentDetail::setImageCurrent, treatmentDetailRequest.getImageCurrent());
         NullUtils.updateIfPresent(treatmentDetail::setImageResult, treatmentDetailRequest.getImageAfter());
+        treatmentDetail.setUpdatedDate(new Date());
         return mapToTreatmentDetailResponse(this.treatmentDetailRepository.save(treatmentDetail));
     }
 
     @Override
     public List<TreatmentDetailResponse> getTreatmentDetailByCustomer(Long customerId) {
-        log.debug("get treatment detail by customer have id: " + customerId );
+        log.debug("get treatment detail by customer have id: " + customerId);
         List<TreatmentDetail> treatmentDetails = this.treatmentDetailRepository.getTreatmentDetailsByCustomer_Id(customerId);
         return mappingTreatmentDetails(treatmentDetails);
     }

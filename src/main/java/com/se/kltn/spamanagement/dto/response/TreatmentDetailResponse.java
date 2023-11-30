@@ -23,4 +23,8 @@ public class TreatmentDetailResponse {
     private String imageCurrent;
 
     private String imageAfter;
+
+    private String createdDate;
+
+    private String updatedDate;
 }
