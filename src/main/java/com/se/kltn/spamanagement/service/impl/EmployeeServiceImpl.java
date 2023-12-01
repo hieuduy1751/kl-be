@@ -105,10 +105,20 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public List<EmployeeResponse> searchEmployeeByText(String text) {
+        log.info("search employee by text");
         if (text == null) {
             return this.getAllEmployeePaging(0, 10);
         }
         return mappingEmployeeResponse(this.employeeRepository.getEmployeesByText(text));
+    }
+
+    @Override
+    public List<EmployeeResponse> searchEmployeeIsTherapistByText(String text) {
+        log.info("search employee is therapist by text");
+        if (text == null) {
+            return this.getAllEmployeePaging(0, 10);
+        }
+        return MappingData.mapListObject(this.employeeRepository.getEmployeesIsTherapistByText(text), EmployeeResponse.class);
     }
 
     private void checkEmployeeAccount(EmployeeResponse employeeResponse, Employee employee) {

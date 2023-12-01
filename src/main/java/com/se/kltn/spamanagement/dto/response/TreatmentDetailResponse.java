@@ -14,6 +14,10 @@ public class TreatmentDetailResponse {
 
     private CustomerResponse customerResponse;
 
+    private EmployeeResponse employeeResponse;
+
+    private InvoiceResponse invoiceResponse;
+
     private Status status;
 
     private String note;
@@ -28,5 +32,5 @@ public class TreatmentDetailResponse {
 
     private String updatedDate;
 
-    private EmployeeResponse employeeResponse;
+
 }

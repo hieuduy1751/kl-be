@@ -54,7 +54,13 @@ public class CustomerController {
 
     @GetMapping("search")
     @Operation(summary = "search customer by text")
-    public ResponseEntity<Object> findCustomerByName(@RequestParam(required = false) String text) {
+    public ResponseEntity<Object> findCustomerByText(@RequestParam(required = false) String text) {
         return ResponseEntity.ok().body(this.customerService.getCustomerByText(text));
+    }
+
+    @GetMapping("search/username")
+    @Operation(summary = "search customer by username")
+    public ResponseEntity<Object> findCustomerByUsername(@RequestParam("username") String username) {
+        return ResponseEntity.ok().body(this.customerService.getCustomerByUsername(username));
     }
 }

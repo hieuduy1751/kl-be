@@ -56,5 +56,6 @@ public class Invoice {
     @JoinColumn(name = "employee_id")
     private Employee employee;
 
-
+    @OneToOne(mappedBy = "invoice", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private TreatmentDetail treatmentDetail;
 }

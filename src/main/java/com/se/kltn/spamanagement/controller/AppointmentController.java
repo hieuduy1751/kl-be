@@ -2,6 +2,7 @@ package com.se.kltn.spamanagement.controller;
 
 import com.se.kltn.spamanagement.dto.request.AppointmentRequest;
 import com.se.kltn.spamanagement.service.AppointmentService;
+import com.se.kltn.spamanagement.service.EmployeeService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,9 +17,12 @@ public class AppointmentController {
 
     private final AppointmentService appointmentService;
 
+    private final EmployeeService employeeService;
+
     @Autowired
-    public AppointmentController(AppointmentService appointmentService) {
+    public AppointmentController(AppointmentService appointmentService, EmployeeService employeeService) {
         this.appointmentService = appointmentService;
+        this.employeeService = employeeService;
     }
 
     @GetMapping
@@ -53,5 +57,13 @@ public class AppointmentController {
                                                                @RequestParam(defaultValue = "0", value = "page", required = false) int page,
                                                                @RequestParam(defaultValue = "10", value = "size", required = false) int size) {
         return ResponseEntity.ok().body(this.appointmentService.getAllAppointmentByCustomer(idCustomer, page, size));
+    }
+
+    @GetMapping("/search/employee/text")
+    @Operation(summary = "search employee is therapist by text")
+    public ResponseEntity<Object> getEmployeeIsTherapistByText(@RequestParam("username") String text,
+                                                               @RequestParam(defaultValue = "0", value = "page", required = false) int page,
+                                                               @RequestParam(defaultValue = "10", value = "size", required = false) int size) {
+        return ResponseEntity.ok().body(this.employeeService.searchEmployeeIsTherapistByText(text));
     }
 }

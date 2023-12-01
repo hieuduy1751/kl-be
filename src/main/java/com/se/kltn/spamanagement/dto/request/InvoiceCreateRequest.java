@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.validation.constraints.NotBlank;
 import java.util.Date;
 import java.util.List;
@@ -21,6 +23,7 @@ public class InvoiceCreateRequest {
     private String note;
 
     @NotBlank(message = "paymentMethod is require and must be CAST or CREDIT_CARD or BANKING")
+    @Enumerated(EnumType.STRING)
     private PaymentMethod paymentMethod;
 
     @NotBlank(message = "customerId is required")

@@ -19,4 +19,7 @@ public interface EmployeeService {
     List<EmployeeResponse> getAllEmployeePaging(int page, int size);
 
     List<EmployeeResponse> searchEmployeeByText(String text);
+
+    List<EmployeeResponse> searchEmployeeIsTherapistByText(String text);
+
 }

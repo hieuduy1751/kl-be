@@ -1,20 +1,14 @@
 package com.se.kltn.spamanagement.service.impl;
 
+import com.se.kltn.spamanagement.dto.request.InvoiceCreateRequest;
+import com.se.kltn.spamanagement.dto.request.InvoiceDetailRequest;
 import com.se.kltn.spamanagement.dto.request.TreatmentDetailRequest;
-import com.se.kltn.spamanagement.dto.response.CustomerResponse;
-import com.se.kltn.spamanagement.dto.response.EmployeeResponse;
-import com.se.kltn.spamanagement.dto.response.ProductResponse;
-import com.se.kltn.spamanagement.dto.response.TreatmentDetailResponse;
+import com.se.kltn.spamanagement.dto.response.*;
 import com.se.kltn.spamanagement.exception.ResourceNotFoundException;
-import com.se.kltn.spamanagement.model.Customer;
-import com.se.kltn.spamanagement.model.Product;
-import com.se.kltn.spamanagement.model.TreatmentDetail;
-import com.se.kltn.spamanagement.model.TreatmentDetailId;
+import com.se.kltn.spamanagement.model.*;
 import com.se.kltn.spamanagement.constants.enums.Status;
-import com.se.kltn.spamanagement.repository.CustomerRepository;
-import com.se.kltn.spamanagement.repository.EmployeeRepository;
-import com.se.kltn.spamanagement.repository.ProductRepository;
-import com.se.kltn.spamanagement.repository.TreatmentDetailRepository;
+import com.se.kltn.spamanagement.repository.*;
+import com.se.kltn.spamanagement.service.InvoiceService;
 import com.se.kltn.spamanagement.service.TreatmentDetailService;
 import com.se.kltn.spamanagement.utils.MappingData;
 import com.se.kltn.spamanagement.utils.NullUtils;
@@ -24,6 +18,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.Date;
 import java.util.List;
 
@@ -41,15 +36,23 @@ public class TreatmentDetailServiceImpl implements TreatmentDetailService {
 
     private final EmployeeRepository employeeRepository;
 
+    private final InvoiceRepository invoiceRepository;
+
+    private final InvoiceService invoiceService;
+    ;
+
     @Autowired
-    public TreatmentDetailServiceImpl(TreatmentDetailRepository treatmentDetailRepository, CustomerRepository customerRepository, ProductRepository productRepository, EmployeeRepository employeeRepository) {
+    public TreatmentDetailServiceImpl(TreatmentDetailRepository treatmentDetailRepository, CustomerRepository customerRepository, ProductRepository productRepository, EmployeeRepository employeeRepository, InvoiceRepository invoiceRepository, InvoiceService invoiceService) {
         this.treatmentDetailRepository = treatmentDetailRepository;
         this.customerRepository = customerRepository;
         this.productRepository = productRepository;
         this.employeeRepository = employeeRepository;
+        this.invoiceRepository = invoiceRepository;
+        this.invoiceService = invoiceService;
     }
 
     @Override
+    @Transactional
     public TreatmentDetailResponse addTreatmentDetail(TreatmentDetailId treatmentDetailId, TreatmentDetailRequest treatmentDetailRequest) {
         log.debug("add treatment detail");
         TreatmentDetail treatmentDetail = MappingData.mapObject(treatmentDetailRequest, TreatmentDetail.class);
@@ -60,7 +63,25 @@ public class TreatmentDetailServiceImpl implements TreatmentDetailService {
         treatmentDetail.setCreatedDate(new Date());
         treatmentDetail.setEmployee(this.employeeRepository.findById(treatmentDetailRequest.getIdEmployee()).orElseThrow(
                 () -> new ResourceNotFoundException(EMPLOYEE_NOT_FOUND)));
-        return mapToTreatmentDetailResponse(this.treatmentDetailRepository.save(treatmentDetail));
+        // create invoice
+        InvoiceCreateRequest invoiceCreateRequest = getInvoiceCreateRequest(treatmentDetailId, treatmentDetailRequest);
+        InvoiceResponse invoiceResponse = this.invoiceService.createInvoice(invoiceCreateRequest);
+        treatmentDetail.setInvoice(this.invoiceRepository.findById(invoiceResponse.getId()).orElseThrow(
+                () -> new ResourceNotFoundException(INVOICE_NOT_FOUND)));
+        TreatmentDetailResponse treatmentDetailResponse = mapToTreatmentDetailResponse(this.treatmentDetailRepository.save(treatmentDetail));
+        treatmentDetailResponse.setInvoiceResponse(invoiceResponse);
+        return treatmentDetailResponse;
+    }
+
+    private static InvoiceCreateRequest getInvoiceCreateRequest(TreatmentDetailId treatmentDetailId, TreatmentDetailRequest treatmentDetailRequest) {
+        InvoiceCreateRequest invoiceCreateRequest = new InvoiceCreateRequest();
+        invoiceCreateRequest.setCustomerId(treatmentDetailId.getCustomerId());
+        invoiceCreateRequest.setEmployeeId(treatmentDetailRequest.getIdEmployee());
+        InvoiceDetailRequest invoiceDetailRequest = new InvoiceDetailRequest();
+        invoiceDetailRequest.setIdProduct(treatmentDetailId.getProductId());
+        invoiceDetailRequest.setTotalQuantity(1);
+        invoiceCreateRequest.setInvoiceDetailRequests(List.of(invoiceDetailRequest));
+        return invoiceCreateRequest;
     }
 
 

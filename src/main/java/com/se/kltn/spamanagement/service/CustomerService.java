@@ -18,4 +18,6 @@ public interface CustomerService {
     List<CustomerResponse> getAllCustomer(int page, int size);
 
     List<CustomerResponse> getCustomerByText(String name);
+
+    CustomerResponse getCustomerByUsername(String username);
 }

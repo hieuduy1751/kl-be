@@ -2,8 +2,6 @@ package com.se.kltn.spamanagement.service;
 
 import com.se.kltn.spamanagement.dto.request.TreatmentDetailRequest;
 import com.se.kltn.spamanagement.dto.response.TreatmentDetailResponse;
-import com.se.kltn.spamanagement.dto.response.TreatmentResponse;
-import com.se.kltn.spamanagement.model.TreatmentDetail;
 import com.se.kltn.spamanagement.model.TreatmentDetailId;
 
 import java.util.List;

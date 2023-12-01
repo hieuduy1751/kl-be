@@ -95,4 +95,12 @@ public class CustomerServiceImpl implements CustomerService {
         }
         return MappingData.mapListObject(this.customerRepository.getCustomersByText(text), CustomerResponse.class);
     }
+
+    @Override
+    public CustomerResponse getCustomerByUsername(String username) {
+        log.debug("find customer by username: " + username);
+        Customer customer = this.customerRepository.findCustomerByAccount_Username(username).orElseThrow(
+                () -> new ResourceNotFoundException(CUSTOMER_NOT_FOUND));
+        return MappingData.mapObject(customer, CustomerResponse.class);
+    }
 }

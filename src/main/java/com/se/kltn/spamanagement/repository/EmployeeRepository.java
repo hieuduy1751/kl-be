@@ -15,4 +15,9 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
             "LOWER(REPLACE(CONCAT(UNACCENT(e.first_name), ' ', UNACCENT(e.last_name)), ' ', '')) LIKE " +
             "LOWER(REPLACE(CONCAT('%', UNACCENT(:text), '%'), ' ', ''))", nativeQuery = true)
     List<Employee> getEmployeesByText(@Param("text") String text);
+
+    @Query(value = "SELECT * FROM employees e WHERE " +
+            "LOWER(REPLACE(CONCAT(UNACCENT(e.first_name), ' ', UNACCENT(e.last_name)), ' ', '')) LIKE " +
+            "LOWER(REPLACE(CONCAT('%', UNACCENT(:text), '%'), ' ', '')) AND e.position ='THERAPIST'", nativeQuery = true)
+    List<Employee> getEmployeesIsTherapistByText(@Param("text") String text);
 }
