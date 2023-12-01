@@ -5,11 +5,10 @@ import com.se.kltn.spamanagement.constants.enums.Gender;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
-import javax.persistence.Column;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 @Data
@@ -22,7 +21,8 @@ public class CustomerRequest {
     @NotBlank(message = "lastName is required")
     private String lastName;
 
-    @NotBlank(message = "gender is required")
+    @NotNull(message = "gender is required")
+    @Enumerated(EnumType.STRING)
     private Gender gender;
 
     private String avatarUrl;
@@ -38,5 +38,6 @@ public class CustomerRequest {
     @Temporal(TemporalType.DATE)
     private Date birthDay;
 
+    @Enumerated(EnumType.STRING)
     private CustomerClass customerClass;
 }
