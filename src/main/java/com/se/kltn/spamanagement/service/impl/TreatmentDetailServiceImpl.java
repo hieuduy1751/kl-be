@@ -25,6 +25,7 @@ import java.util.List;
 import static com.se.kltn.spamanagement.constants.ErrorMessage.*;
 
 @Service
+@Transactional
 @Log4j2
 public class TreatmentDetailServiceImpl implements TreatmentDetailService {
 
@@ -141,6 +142,8 @@ public class TreatmentDetailServiceImpl implements TreatmentDetailService {
                             .get(treatmentDetailResponses.indexOf(treatmentDetailResponse)).getProduct(), ProductResponse.class));
                     treatmentDetailResponse.setEmployeeResponse(MappingData.mapObject(treatmentDetails
                             .get(treatmentDetailResponses.indexOf(treatmentDetailResponse)).getEmployee(), EmployeeResponse.class));
+                    treatmentDetailResponse.setInvoiceResponse(mapToInvoiceResponse(treatmentDetails
+                            .get(treatmentDetailResponses.indexOf(treatmentDetailResponse)).getInvoice()));
                 }
         );
         return treatmentDetailResponses;
@@ -151,6 +154,20 @@ public class TreatmentDetailServiceImpl implements TreatmentDetailService {
         treatmentDetailResponse.setCustomerResponse(MappingData.mapObject(treatmentDetail.getCustomer(), CustomerResponse.class));
         treatmentDetailResponse.setProductResponse(MappingData.mapObject(treatmentDetail.getProduct(), ProductResponse.class));
         treatmentDetailResponse.setEmployeeResponse(MappingData.mapObject(treatmentDetail.getEmployee(), EmployeeResponse.class));
+        treatmentDetailResponse.setInvoiceResponse(mapToInvoiceResponse(treatmentDetail.getInvoice()));
         return treatmentDetailResponse;
+    }
+
+    private InvoiceResponse mapToInvoiceResponse(Invoice invoice) {
+        if (invoice == null) {
+            return null;
+        }
+        InvoiceResponse invoiceResponse = MappingData.mapObject(invoice, InvoiceResponse.class);
+        List<InvoiceDetailResponse> invoiceDetailResponses = MappingData.mapListObject(invoice.getInvoiceDetails(), InvoiceDetailResponse.class);
+        invoiceDetailResponses.forEach(invoiceDetailResponse -> invoice.getInvoiceDetails().forEach(
+                invoiceDetail -> invoiceDetailResponse.setProductResponse(MappingData.mapObject(invoiceDetail.getProduct(), ProductResponse.class))
+        ));
+        invoiceResponse.setInvoiceDetailResponses(invoiceDetailResponses);
+        return invoiceResponse;
     }
 }
