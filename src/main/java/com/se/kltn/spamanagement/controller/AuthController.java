@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -30,9 +31,26 @@ public class AuthController {
 
     @PostMapping("/register-customer")
     @Operation(summary = "register new account for customer")
-    public ResponseEntity<Object> registerCustomer(@Valid @RequestBody AccountRequest accountRequest) {
-        return ResponseEntity.ok().body(this.authService.registerCustomer(accountRequest));
+    public ResponseEntity<String> registerCustomer(@Valid @RequestBody AccountRequest accountRequest, @RequestParam("email") String email, HttpServletRequest request) throws MessagingException {
+        this.authService.registerCustomer(accountRequest, email, getSiteURL(request));
+        return ResponseEntity.ok().body("Register successfully");
     }
+
+    @GetMapping("/verify")
+    @Operation(summary = "verify account")
+    public ResponseEntity<String> verify(@RequestParam("code") String verificationCode) {
+        if (this.authService.verify(verificationCode)) {
+            return ResponseEntity.ok().body("Verify successfully");
+        } else {
+            return ResponseEntity.badRequest().body("Error: Couldn't verify email");
+        }
+    }
+
+    private String getSiteURL(HttpServletRequest request) {
+        String siteURL = request.getRequestURL().toString();
+        return siteURL.replace(request.getServletPath(), "");
+    }
+
 
     @PostMapping("/logout")
     @Operation(summary = "logout account")

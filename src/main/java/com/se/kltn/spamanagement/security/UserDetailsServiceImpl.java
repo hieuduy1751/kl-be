@@ -1,5 +1,6 @@
 package com.se.kltn.spamanagement.security;
 
+import com.se.kltn.spamanagement.exception.BadRequestException;
 import com.se.kltn.spamanagement.model.Account;
 import com.se.kltn.spamanagement.repository.AccountRepository;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Account account = accountRepository.findAccountByUsername(username).orElseThrow(
                 () -> new UsernameNotFoundException("account cannot found"));
+        if (!account.getEnabled()){
+            throw new BadRequestException("account is not enabled");
+        }
         return UserPrinciple.createUser(account);
     }
 }

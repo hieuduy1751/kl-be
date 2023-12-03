@@ -12,5 +12,6 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
 
     Optional<Account> findAccountByEmployee_Id(Long idEmployee);
 
-    Optional<Account> findAccountByCustomer_Id(Long idCustomer);
+    Optional<Account> findAccountByEmailVerificationCode(String emailVerificationCode);
+
 }

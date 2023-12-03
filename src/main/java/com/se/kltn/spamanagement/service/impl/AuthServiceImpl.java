@@ -1,6 +1,5 @@
 package com.se.kltn.spamanagement.service.impl;
 
-import com.se.kltn.spamanagement.constants.ErrorMessage;
 import com.se.kltn.spamanagement.dto.request.AccountRequest;
 import com.se.kltn.spamanagement.dto.response.AccountResponse;
 import com.se.kltn.spamanagement.exception.BadRequestException;
@@ -16,7 +15,11 @@ import com.se.kltn.spamanagement.security.jwt.JwtProvider;
 import com.se.kltn.spamanagement.service.AuthService;
 import com.se.kltn.spamanagement.utils.MappingData;
 import lombok.extern.log4j.Log4j2;
+import net.bytebuddy.utility.RandomString;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -24,12 +27,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Service;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.se.kltn.spamanagement.constants.ErrorMessage.CUSTOMER_NOT_FOUND;
 import static com.se.kltn.spamanagement.constants.ErrorMessage.EMPLOYEE_NOT_FOUND;
 
 @Service
@@ -42,15 +46,22 @@ public class AuthServiceImpl implements AuthService {
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final JwtProvider jwtProvider;
+    private final JavaMailSender javaMailSender;
+
+    @Value("${spring.mail.username}")
+    private String sender;
 
     @Autowired
-    public AuthServiceImpl(AccountRepository accountRepository, EmployeeRepository employeeRepository, CustomerRepository customerRepository, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, JwtProvider jwtProvider) {
+    public AuthServiceImpl(AccountRepository accountRepository, EmployeeRepository employeeRepository,
+                           CustomerRepository customerRepository, PasswordEncoder passwordEncoder,
+                           AuthenticationManager authenticationManager, JwtProvider jwtProvider, JavaMailSender javaMailSender) {
         this.accountRepository = accountRepository;
         this.employeeRepository = employeeRepository;
         this.customerRepository = customerRepository;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
         this.jwtProvider = jwtProvider;
+        this.javaMailSender = javaMailSender;
     }
 
     @Override
@@ -67,12 +78,12 @@ public class AuthServiceImpl implements AuthService {
             return response;
         } catch (Exception e) {
             e.printStackTrace();
-            throw new RuntimeException("incorrect username or password");
+            throw new ResourceNotFoundException("incorrect username or password or account is not enable");
         }
     }
 
     @Override
-    public AccountResponse registerCustomer(AccountRequest accountRequest) {
+    public void registerCustomer(AccountRequest accountRequest, String email, String siteUrl) throws MessagingException {
         log.debug("register new account for customer");
         checkAccountRequest(accountRequest);
         Customer customer = this.customerRepository.save(new Customer());
@@ -80,8 +91,10 @@ public class AuthServiceImpl implements AuthService {
         account.setPassword(passwordEncoder.encode(accountRequest.getPassword()));
         account.setRole(Role.CUSTOMER);
         account.setCustomer(customer);
+        account.setEmailVerificationCode(RandomString.make(64));
+        account.setEnabled(false);
         Account accountRegister = this.accountRepository.save(account);
-        return MappingData.mapObject(accountRegister, AccountResponse.class);
+        sendVerificationEmail(accountRegister, email, siteUrl);
     }
 
     @Override
@@ -103,6 +116,45 @@ public class AuthServiceImpl implements AuthService {
         log.debug("logout account");
         SecurityContextLogoutHandler logoutHandler = new SecurityContextLogoutHandler();
         logoutHandler.logout(request, response, null);
+    }
+
+    @Override
+    public boolean verify(String verificationCode) {
+        log.debug("verify account");
+        Account account = this.accountRepository.findAccountByEmailVerificationCode(verificationCode).orElse(null);
+        if (account == null || account.getEnabled()) {
+            return false;
+        } else {
+            account.setEnabled(true);
+            account.setEmailVerificationCode(null);
+            this.accountRepository.save(account);
+            return true;
+        }
+    }
+
+    private void sendVerificationEmail(Account accountRegister, String email, String siteUrl) throws MessagingException {
+        log.debug("send verification email");
+        MimeMessage mimeMailMessage = javaMailSender.createMimeMessage();
+        MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMailMessage);
+        try {
+            mimeMessageHelper.setTo(email);
+            mimeMessageHelper.setFrom(sender);
+            mimeMessageHelper.setSubject("Complete Registration!");
+            String content = "Dear [[name]],<br>" +
+                    "Please click the link below to verify your registration:<br>\n" +
+                    "<h3><a href=\"[[URL]]\" target=\"_self\">VERIFY</a></h3>\n" +
+                    "Thank you,<br>\n" +
+                    "VH Spa.";
+
+            String verifyURL = siteUrl + "/api/auth/verify?code=" + accountRegister.getEmailVerificationCode();
+            String message = content.replace("[[name]]", accountRegister.getUsername());
+            message = message.replace("[[URL]]", verifyURL);
+            mimeMessageHelper.setText(message, true /* isHtml */);
+            javaMailSender.send(mimeMailMessage);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new MessagingException("Error sending email");
+        }
     }
 
     private void checkAccountRequest(AccountRequest accountRequest) {

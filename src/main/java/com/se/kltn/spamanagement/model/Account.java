@@ -20,12 +20,15 @@ public class Account {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(unique = true)
     private String username;
 
     private String password;
 
     @Column(name = "email_verification_code")
     private String emailVerificationCode;
+
+    private Boolean enabled;
 
     @Enumerated(EnumType.STRING)
     private Role role;
