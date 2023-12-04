@@ -31,4 +31,6 @@ public class InvoiceResponse {
     private Date updatedDate;
 
     private List<InvoiceDetailResponse> invoiceDetailResponses;
+
+    private CustomerResponse customerResponse;
 }

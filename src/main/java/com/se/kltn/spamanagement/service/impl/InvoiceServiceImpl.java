@@ -3,6 +3,7 @@ package com.se.kltn.spamanagement.service.impl;
 import com.se.kltn.spamanagement.dto.request.InvoiceCreateRequest;
 import com.se.kltn.spamanagement.dto.request.InvoiceDetailRequest;
 import com.se.kltn.spamanagement.dto.request.InvoiceUpdateRequest;
+import com.se.kltn.spamanagement.dto.response.CustomerResponse;
 import com.se.kltn.spamanagement.dto.response.InvoiceDetailResponse;
 import com.se.kltn.spamanagement.dto.response.InvoiceResponse;
 import com.se.kltn.spamanagement.dto.response.ProductResponse;
@@ -144,6 +145,7 @@ public class InvoiceServiceImpl implements InvoiceService {
                 invoiceDetailResponses.forEach(invoiceDetailResponse -> invoice.getInvoiceDetails().forEach(
                         invoiceDetail -> invoiceDetailResponse.setProductResponse(MappingData.mapObject(invoiceDetail.getProduct(), ProductResponse.class))
                 ));
+                invoiceResponse.setCustomerResponse(MappingData.mapObject(invoice.getCustomer(), CustomerResponse.class));
                 invoiceResponse.setInvoiceDetailResponses(invoiceDetailResponses);
             }
         }));
@@ -167,6 +169,7 @@ public class InvoiceServiceImpl implements InvoiceService {
         invoiceDetailResponses.forEach(invoiceDetailResponse -> invoice.getInvoiceDetails().forEach(
                 invoiceDetail -> invoiceDetailResponse.setProductResponse(MappingData.mapObject(invoiceDetail.getProduct(), ProductResponse.class))
         ));
+        invoiceResponse.setCustomerResponse(MappingData.mapObject(invoice.getCustomer(), CustomerResponse.class));
         invoiceResponse.setInvoiceDetailResponses(invoiceDetailResponses);
         return invoiceResponse;
     }
