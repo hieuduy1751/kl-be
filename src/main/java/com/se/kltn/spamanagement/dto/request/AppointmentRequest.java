@@ -25,9 +25,6 @@ public class AppointmentRequest {
 
     private String note;
 
-    @NotNull(message = "idEmployee is required")
-    private Long idEmployee;
-
     @NotNull(message = "idProduct is required")
     private Long idProduct;
 

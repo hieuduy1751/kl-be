@@ -6,6 +6,7 @@ import com.se.kltn.spamanagement.exception.BadRequestException;
 import com.se.kltn.spamanagement.exception.ResourceNotFoundException;
 import com.se.kltn.spamanagement.model.Appointment;
 import com.se.kltn.spamanagement.constants.enums.Status;
+import com.se.kltn.spamanagement.model.Employee;
 import com.se.kltn.spamanagement.repository.AppointmentRepository;
 import com.se.kltn.spamanagement.repository.CustomerRepository;
 import com.se.kltn.spamanagement.repository.EmployeeRepository;
@@ -24,6 +25,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
@@ -60,9 +62,8 @@ public class AppointmentServiceImpl implements AppointmentService {
         }
         appointment.setCreatedDate(new Date());
         appointment.setUpdatedDate(new Date());
-        appointment.setEmployee(this.employeeRepository.findById(appointmentRequest.getIdEmployee()).orElseThrow(
-                () -> new ResourceNotFoundException(EMPLOYEE_NOT_FOUND)
-        ));
+        //
+        checkEmployeeIsBusy(appointmentRequest.getTime(),appointment);
         appointment.setCustomer(this.customerRepository.findById(appointmentRequest.getIdCustomer()).orElseThrow(
                 () -> new ResourceNotFoundException(CUSTOMER_NOT_FOUND)
         ));
@@ -73,6 +74,20 @@ public class AppointmentServiceImpl implements AppointmentService {
         AppointmentResponse appointmentResponse = MappingData.mapObject(appointmentSaved, AppointmentResponse.class);
         appointmentResponse.setReference(getReference(appointmentSaved));
         return appointmentResponse;
+    }
+
+    private void checkEmployeeIsBusy(Date time, Appointment appointment) {
+        time.setHours(time.getHours() -1);
+        System.err.println(time);
+        LocalDateTime startDate = time.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+        time.setHours(time.getHours() +2);
+        System.err.println(time);
+        LocalDateTime endDate = time.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+        List<Employee> employees = this.employeeRepository.findEmployeesNotInAppointmentTime(startDate, endDate);
+        if (employees.isEmpty()) {
+            throw new BadRequestException("All employees are busy");
+        }
+        appointment.setEmployee(employees.get(0));
     }
 
 
