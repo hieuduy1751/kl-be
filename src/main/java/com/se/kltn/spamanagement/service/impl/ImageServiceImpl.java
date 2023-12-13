@@ -29,7 +29,7 @@ public class ImageServiceImpl implements ImageService {
 
     private static final String DOWNLOAD_URL = "https://firebasestorage.googleapis.com/v0/b/kltn-spamanagement.appspot.com/o/%s?alt=media&token=%s";
 
-    private static final String CREDENTIAL_PATH="D:\\personal\\KLTN\\code\\KLTN-SpaManagement-BackEnd\\src\\main\\resources\\static\\credential.json";
+    private static final String CREDENTIAL_PATH="/Users/hieud/workspace/do-an/KLTN-SpaManagement-BackEnd/src/main/resources/static/credential.json";
 
     @Override
     public String upload(MultipartFile multipartFile) throws IOException {

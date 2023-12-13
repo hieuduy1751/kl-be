@@ -50,7 +50,7 @@
                 <textElement>
                     <font size="33" isBold="true"/>
                 </textElement>
-                <text><![CDATA[VH SPA]]></text>
+                <text><![CDATA[NATURE BEAUTY]]></text>
             </staticText>
             <textField>
                 <reportElement x="10" y="45" width="235" height="31" uuid="9d9930de-9725-4829-836e-10b53bbe1157"/>
@@ -87,7 +87,7 @@
 "Nếu quý khách có thắc mắc gì về hóa đơn xin vui lòng liện hệ với chúng tôi qua:\n" +
 "Số điện thoại: 0983586953 (T2-CN 8:00AM-21:00PM)\n" +
 "Email: sieuviet00@gmail.com\n" +
-"Web: http://www.vhspa.com"]]></textFieldExpression>
+"Web: http://www.naturebeautyspa.com"]]></textFieldExpression>
             </textField>
             <textField pattern="MMMMM dd, yyyy">
                 <reportElement x="2" y="90" width="220" height="60" uuid="24c2cb58-b1f8-4296-876b-f54e835bc5d1"/>

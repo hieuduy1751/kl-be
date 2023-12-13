@@ -86,11 +86,13 @@ public class AuthServiceImpl implements AuthService {
     public void registerCustomer(AccountRequest accountRequest, String email, String siteUrl) throws MessagingException {
         log.debug("register new account for customer");
         checkAccountRequest(accountRequest);
-        Customer customer = this.customerRepository.save(new Customer());
+        Customer customer = new Customer();
+        customer.setEmail(email);
+        Customer customerRegister = this.customerRepository.save(customer);
         Account account = MappingData.mapObject(accountRequest, Account.class);
         account.setPassword(passwordEncoder.encode(accountRequest.getPassword()));
         account.setRole(Role.CUSTOMER);
-        account.setCustomer(customer);
+        account.setCustomer(customerRegister);
         account.setEmailVerificationCode(RandomString.make(64));
         account.setEnabled(false);
         Account accountRegister = this.accountRepository.save(account);

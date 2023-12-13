@@ -10,7 +10,6 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 public class EmployeeResponse {
-
     private Long id;
 
     private String firstName;

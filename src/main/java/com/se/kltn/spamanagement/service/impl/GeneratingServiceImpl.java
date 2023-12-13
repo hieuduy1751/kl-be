@@ -77,7 +77,7 @@ public class GeneratingServiceImpl implements GeneratingService {
             List<InvoiceDetailGeneratePojo> listInvoiceDetailPojo = getListInvoiceDetailPojo(invoice);
             Map<String, Object> parameters = new HashMap<>();
             parameters.put("invoice", invoiceGeneratePojo);
-            String fileName = "invoice_" + invoiceGeneratePojo.getIdInvoice() + "_" + invoiceGeneratePojo.getCustomerName() + ".pdf";
+            String fileName = "invoice_" + invoiceGeneratePojo.getIdInvoice() + "_" + invoiceGeneratePojo.getCustomerName().replaceAll("\\s+","_") + ".pdf";
 
             JasperPrint jasperPrint = getJasperPrint(listInvoiceDetailPojo, parameters, RESOURCE_INVOICE);
             Path uploadPath = getUploadPath(fileFormat, jasperPrint, fileName, uploadDir);

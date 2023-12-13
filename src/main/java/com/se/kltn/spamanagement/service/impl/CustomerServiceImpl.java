@@ -64,6 +64,7 @@ public class CustomerServiceImpl implements CustomerService {
         NullUtils.updateIfPresent(customer::setEmail, customerRequest.getEmail());
         NullUtils.updateIfPresent(customer::setBirthDay, customerRequest.getBirthDay());
         NullUtils.updateIfPresent(customer::setCustomerClass, customerRequest.getCustomerClass());
+        NullUtils.updateIfPresent(customer::setPhoneNumber, customerRequest.getPhoneNumber());
         customer.setUpdatedDate(new Date());
         return MappingData.mapObject(this.customerRepository.save(customer), CustomerResponse.class);
     }

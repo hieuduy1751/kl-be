@@ -61,7 +61,7 @@ public class AppointmentController {
 
     @GetMapping("/search/employee/text")
     @Operation(summary = "search employee is therapist by text")
-    public ResponseEntity<Object> getEmployeeIsTherapistByText(@RequestParam("username") String text,
+    public ResponseEntity<Object> getEmployeeIsTherapistByText(@RequestParam(value = "text", required = false) String text,
                                                                @RequestParam(defaultValue = "0", value = "page", required = false) int page,
                                                                @RequestParam(defaultValue = "10", value = "size", required = false) int size) {
         return ResponseEntity.ok().body(this.employeeService.searchEmployeeIsTherapistByText(text));
