@@ -53,7 +53,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**").allowedMethods("*")
-                        .allowedOrigins("*").allowedHeaders("*").allowedOrigins("http://localhost:5173", "http://localhost:3000").allowCredentials(true);
+                        .allowedOrigins("*").allowedHeaders("*").allowedOrigins("https://kltn-spamanagement--manageapp-6y0e143x.web.app/", "https://kltn-spamanagement.web.app").allowCredentials(true);
             }
         };
     }
